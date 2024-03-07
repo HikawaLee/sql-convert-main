@@ -10,7 +10,7 @@
         <div class="label">
           <span class="label-text">{{ props.state.label }}</span>
         </div>
-        <input class="input input-bordered" :placeholder="props.state.placeholder"/>
+        <input class="input input-bordered" v-model="savedConfig" @change="updateConfig" :placeholder="props.state.placeholder"/>
         <div class="label">
           <span class="label-text-alt">{{ props.state.desc }}</span>
         </div>
@@ -23,7 +23,8 @@
         <div class="label">
           <span class="label-text">{{ props.state.label }}</span>
         </div>
-        <select class="select select-bordered select-md w-full max-w-xl">
+        <select class="select select-bordered select-md w-full max-w-xl" v-model="savedConfig" @change="updateConfig">
+
           <template v-for="(val, index) in props.state.options" :key="index">
             <option>{{ val }}</option>
           </template>
@@ -38,7 +39,7 @@
         <div class="label">
           <span class="label-text">{{ props.state.label }}</span>
         </div>
-        <input class="input input-bordered" TABINDEX="0" :placeholder="props.state.placeholder"/>
+        <input class="input input-bordered" v-model="props.state.value" TABINDEX="0" :placeholder="props.state.data" @change="handleCheckbox"/>
         <div class="label">
           <span class="label-text-alt">{{ props.state.desc }}</span>
         </div>
@@ -48,9 +49,8 @@
 
         <template v-for="(val, index) in props.state.options" :key="index">
           <label class="label cursor-pointer ">
-
             <div class="label">{{ val }}</div>
-            <input type="checkbox" checked="checked" class="checkbox checkbox-primary"/>
+            <input type="checkbox" v-bind:checked="props.state.value.default" @change="handleCheckbox" class="checkbox checkbox-primary"/>
           </label>
         </template>
       </ul>
@@ -84,14 +84,13 @@
 </template>
 
 <script setup>
-
+import { ref } from 'vue'
 const props = defineProps({
   state: {
     type: Object,
     required: true,
     default: () => {
       return {
-
         "type": "input",//不能为空
         "label": "默认输入框", //不能为空
         "desc": "这是一个默认输入框", //默认为空
@@ -110,6 +109,46 @@ const props = defineProps({
     }
   }
 })
+
+
+const emits = defineEmits(['updateState']);
+
+const savedConfig = ref(null);
+
+const handleInput = (e) => {
+  //todo: 校验
+  return e.target.value.trim();
+}
+const updateConfig = (e) => {
+
+  const data = handleInput(e);
+  console.log('当前选中值: ', data);
+  const conf = {
+    ...props.state,
+    data: {
+      ...props.state.data,
+      selected: [data]
+    }
+  }
+  emits('updateState', conf);
+}
+
+const checkboxList = ref([]);
+const handleCheckbox = (e) => {
+  const data = e.target.value;
+  console.log('当前选中值: ', data);
+  checkboxList.value.push(data);
+  const conf = {
+    ...props.state,
+    data: {
+      ...props.state.data,
+      selected: checkboxList.value
+    }
+  }
+  emits('updateState', conf);
+}
+
+
 </script>
 
 <style scoped></style>

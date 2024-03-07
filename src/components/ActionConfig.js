@@ -1,4 +1,4 @@
-export default [
+const actions = [
     {
             "desc": "增加字段",
             "layout": [
@@ -285,6 +285,14 @@ export default [
 
 
 ]
+
+
+export default actions.map((action) => {
+    return {
+        name: action.desc,
+        action: action
+    }
+})
 
 
 
