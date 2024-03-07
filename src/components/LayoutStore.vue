@@ -38,9 +38,8 @@
       <label class="form-control w-full max-w-xl">
         <div class="label " TABINDEX="0" >
           <span class="label-text">{{ props.state.label }}</span>
-          <span class="label-text">{{ checkboxState}}</span>
         </div>
-        <input class="input input-bordered" v-model="props.state.options" disabled :placeholder="props.state.data" @change="handleCheckbox"/>
+        <input class="input input-bordered" v-model="checkboxSelected" disabled :placeholder="props.state.data" @change="handleCheckbox"/>
         <div class="label">
           <span class="label-text-alt">{{ props.state.desc }}</span>
         </div>
@@ -51,10 +50,12 @@
         <template v-for="(val, index) in props.state.options" :key="index">
           <label class="label cursor-pointer ">
             <div class="label">{{ val }}</div>
-            <input type="checkbox" v-bind:checked="props.state.value.default" @change="handleCheckbox" class="checkbox checkbox-primary"/>
+            <input type="checkbox" :value="val" v-model="checkboxSelected" @change="handleCheckbox" class="checkbox checkbox-primary"/>
           </label>
         </template>
       </ul>
+
+
 
     </div>
 
@@ -85,7 +86,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import {onMounted, ref} from 'vue'
 const props = defineProps({
   state: {
     type: Object,
@@ -112,6 +113,7 @@ const props = defineProps({
 })
 
 
+
 const emits = defineEmits(['updateState']);
 
 const savedConfig = ref(null);
@@ -134,29 +136,13 @@ const updateConfig = (e) => {
   emits('updateState', conf);
 }
 
-const checkboxState = new Map();
-if(props.state.type === 'checkbox' && props.state.options.length > 0) {
-  props.state.options.forEach((item) => {
-    checkboxState.set(item, true);
-  })
-}
 const checkboxSelected = ref([]);
-
-if(props.state.type === 'checkbox' && props.state.options.length > 0) {
-  props.state.options.forEach((item) => {
-    checkboxSelected.value.push(item);
-  })
-
-}
 const handleCheckbox = (e) => {
-  const data = e.target.value;
-  console.log('当前选中值: ', data);
-  checkboxList.value.push(data);
   const conf = {
     ...props.state,
     data: {
       ...props.state.data,
-      selected: checkboxList.value
+      selected: checkboxSelected.value
     }
   }
   emits('updateState', conf);
