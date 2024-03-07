@@ -33,13 +33,14 @@
     </div>
 
 
-    <div v-if="props.state.type === 'checkbox'" class="form-control w-full max-w-xl dropdown dropdown-bottom">
+    <div v-if="props.state.type === 'checkbox'" class="form-control w-full max-w-xl dropdown dropdown-bottom dropdown-hover">
 
       <label class="form-control w-full max-w-xl">
-        <div class="label">
+        <div class="label " TABINDEX="0" >
           <span class="label-text">{{ props.state.label }}</span>
+<!--          <span class="label-text">{{ props.state }}</span>-->
         </div>
-        <input class="input input-bordered" v-model="props.state.value" TABINDEX="0" :placeholder="props.state.data" @change="handleCheckbox"/>
+        <input class="input input-bordered" v-model="props.state.options" disabled :placeholder="props.state.data" @change="handleCheckbox"/>
         <div class="label">
           <span class="label-text-alt">{{ props.state.desc }}</span>
         </div>
