@@ -38,7 +38,7 @@
       <label class="form-control w-full max-w-xl">
         <div class="label " TABINDEX="0" >
           <span class="label-text">{{ props.state.label }}</span>
-<!--          <span class="label-text">{{ props.state }}</span>-->
+          <span class="label-text">{{ checkboxState}}</span>
         </div>
         <input class="input input-bordered" v-model="props.state.options" disabled :placeholder="props.state.data" @change="handleCheckbox"/>
         <div class="label">
@@ -134,7 +134,20 @@ const updateConfig = (e) => {
   emits('updateState', conf);
 }
 
-const checkboxList = ref([]);
+const checkboxState = new Map();
+if(props.state.type === 'checkbox' && props.state.options.length > 0) {
+  props.state.options.forEach((item) => {
+    checkboxState.set(item, true);
+  })
+}
+const checkboxSelected = ref([]);
+
+if(props.state.type === 'checkbox' && props.state.options.length > 0) {
+  props.state.options.forEach((item) => {
+    checkboxSelected.value.push(item);
+  })
+
+}
 const handleCheckbox = (e) => {
   const data = e.target.value;
   console.log('当前选中值: ', data);
