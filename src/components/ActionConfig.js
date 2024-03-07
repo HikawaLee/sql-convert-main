@@ -4,11 +4,12 @@ export default [
             "layout": [
                 {
                     "type": "input",
-                    "title": "数据库名",
+                    "title": "数据库名名非常长数据库名",
                     "value": {
                         "type": String,
                         "default": "",
                     },
+                    "desc": "请选择要迁移的数据库, 例如: test, 注意: 请勿输入中文",
                     "rules": [], //校验规则, 待定
                 },
                 {
@@ -63,6 +64,24 @@ export default [
                         ["达梦",
                         "TD SQL",
                         ],
+                },
+                {
+                    "type": "toggle",
+                    "title": "是否大表",
+                    "value": {
+                        "type": String,
+                        "default": "否",
+                    },
+                    "options": ["是", "否"],
+                },
+                {
+                    "type": "radio",
+                    "title": "大小表切换",
+                    "value": {
+                        "type": String,
+                        "default": "小表",
+                    },
+                    "options": ["大表", "小表"],
                 },
                 {
                     "type": "radio",

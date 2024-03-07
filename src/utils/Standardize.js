@@ -40,6 +40,16 @@ const standardize = (layoutState) => {
                     type: "textarea",
                     label: layoutState.title,
                 }
+
+                case "toggle":
+                return {
+                    ...layoutState,
+                    label: layoutState.title,
+                    desc: layoutState.desc || "",
+                    placeholder:  layoutState.placeholder || "",
+                    options: layoutState.options,
+                }
+
             default:
                 return {
                     type: "input",

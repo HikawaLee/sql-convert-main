@@ -1,7 +1,7 @@
 <template>
 
 
-  <div class="navbar bg-base-100">
+  <div class="navbar bg-slate-100 mt-2.5">
     <div class="navbar-start">
       <div class="dropdown">
         <select class="select select-bordered w-full max-w-xs" v-model="selected" @change="">
@@ -26,17 +26,10 @@
 
 
   <div class="flex flex-col justify-center items-center">
-
-
-
-
-    <div class="grid grid-cols-3 gap-x-24">
+    <div class="grid grid-cols-1 my-0 md:grid-cols-2 xl:grid-cols-3 md:gap-x-16 ">
       <div v-for="(layoutState, index) in layoutStates" :key="index">
-
         <LayoutStore :state="standardize(layoutState)" />
-
       </div>
-
     </div>
 
   </div>
@@ -46,7 +39,7 @@
 
 
 
-  <!-- <span v-if="loading" class="loading loading-infinity loading-lg"></span> -->
+   <span v-if="loading" class="loading loading-infinity loading-lg"></span>
 
   <div class="m-2.5 bg-base-200 border-2 rounded-md shadow-sm">
     <Output />

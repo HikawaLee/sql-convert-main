@@ -1,34 +1,30 @@
 <template>
 
 
-  <div class="divider divider-horizontal" />
-  <div class="flex w-full m-2.5">
+  <div class="divider divider-horizontal"/>
+  <div class="flex w-full p-2.5">
 
 
-    <div v-if="props.state.type === 'input'" class="join w-full max-w-2xl">
-      <label class="form-control w-full max-w-2xl">
+    <div v-if="props.state.type === 'input'" class="form-control w-full max-w-xl">
+      <label class="form-control w-full max-w-xl">
         <div class="label">
-            <span class="label-text">{{ props.state.label }}</span>
+          <span class="label-text">{{ props.state.label }}</span>
         </div>
-
-        <input class="input input-bordered" :placeholder="props.state.placeholder" />
-
+        <input class="input input-bordered" :placeholder="props.state.placeholder"/>
         <div class="label">
-            <span class="label-text-alt">{{ props.state.desc }}</span>
+          <span class="label-text-alt">{{ props.state.desc }}</span>
         </div>
-    </label>
+      </label>
     </div>
 
 
-
-    <div v-if="props.state.type === 'select'" class="join w-full max-w-2xl">
-      <label class="form-control w-full max-w-xs">
+    <div v-if="props.state.type === 'select'" class="form-control w-full max-w-xl">
+      <label class="form-control w-full max-w-xl">
         <div class="label">
-            <span class="label-text">{{ props.state.label }}</span>
+          <span class="label-text">{{ props.state.label }}</span>
         </div>
-
-        <select class="select select-bordered select-md w-full max-w-2xl">
-           <template v-for="(val, index) in props.state.options" :key="index">
+        <select class="select select-bordered select-md w-full max-w-xl">
+          <template v-for="(val, index) in props.state.options" :key="index">
             <option>{{ val }}</option>
           </template>
         </select>
@@ -36,61 +32,48 @@
     </div>
 
 
+    <div v-if="props.state.type === 'checkbox'" class="form-control w-full max-w-xl dropdown dropdown-bottom">
 
-
-
-
-
-    <div v-if="props.state.type === 'checkbox'">
-
-      <label class="form-control w-full max-w-xs">
+      <label class="form-control w-full max-w-xl">
         <div class="label">
-            <span class="label-text">{{ props.state.label }}</span>
+          <span class="label-text">{{ props.state.label }}</span>
         </div>
-
-        
+        <input class="input input-bordered" TABINDEX="0" :placeholder="props.state.placeholder"/>
+        <div class="label">
+          <span class="label-text-alt">{{ props.state.desc }}</span>
+        </div>
       </label>
 
-      <div class="dropdown dropdown-right">
-        <div class="join w-full max-w-xl">
-    
-          <div>
-            <input class="input input-bordered join-item grow" placeholder="" />
-          </div>
-        </div>
+      <ul tabindex="0" class="dropdown-content  z-[1] menu  shadow rounded-box w-full">
 
+        <template v-for="(val, index) in props.state.options" :key="index">
+          <label class="label cursor-pointer ">
 
-        <ul tabindex="0" class="dropdown-content dropdown-right  z-[1] menu p-2 shadow rounded-box w-52">
+            <div class="label">{{ val }}</div>
+            <input type="checkbox" checked="checked" class="checkbox checkbox-primary"/>
+          </label>
+        </template>
+      </ul>
 
-          <template v-for="(val, index) in props.state.options" :key="index">
-            <label class="label cursor-pointer space-x-2.5">
-
-              <div class="label">{{ val }}</div>
-              <input type="checkbox" checked="checked" class="checkbox checkbox-primary" />
-            </label>
-          </template>
-        </ul>
-      </div>
     </div>
 
 
-
-    <div v-if="props.state.type === 'radio'" class="flex">
-      <div class="join w-full max-w-xl">
-          <div tabindex="0" role="" class="flex join-item input input-bordered items-center bg-base-200">
-            {{ props.state.label }}
-
-          </div>
-          <template v-for="(val, index) in props.state.options" :key="index">
-        <label class="label cursor-pointer">
-          <div class="label">{{ val }}</div>
-          <input type="radio" name="radio-2" class="radio radio-primary block" checked />
-
-        </label>
-      </template>
+    <div v-if="props.state.type === 'toggle'" class="form-control w-full max-w-xl">
+      <label class="form-control w-full max-w-xl">
+        <div class="label">
+          <span class="label-text">{{ props.state.label }}</span>
         </div>
-
-
+        <div class="form-control">
+          <label class="label cursor-pointer">
+            <span class="label-text">{{props.state.options[0]}}</span>
+            <input type="checkbox" class="toggle toggle-lg [--tglbg:white] bg-blue-500 hover:bg-blue-700 border-blue-500" checked />
+            <span class="label-text">{{props.state.options[1]}}</span>
+          </label>
+        </div>
+        <div class="label">
+          <span class="label-text-alt">{{ props.state.desc }}</span>
+        </div>
+      </label>
     </div>
 
 
@@ -127,30 +110,6 @@ const props = defineProps({
     }
   }
 })
-
-
-// export default {
-//   name: 'FormComponent',
-//   props: {
-//     element: {
-//       type: Object
-//     }
-//   },
-//   data () {
-//     return {
-//
-//       form: {
-//         name: '',
-//         region: undefined,
-//         date1: undefined,
-//         delivery: false,
-//         type: [],
-//         resource: '',
-//         desc: ''
-//       }
-//     }
-//   },
-// }
 </script>
 
 <style scoped></style>

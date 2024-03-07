@@ -9,7 +9,7 @@ import Main from './views/Main.vue';
 
 
 
-  <div class="p-2.5 w-2/3 bg-slate-100 mx-auto">
+  <div class="p-2.5 w-3/4 bg-slate-100 mx-auto min-w-96 min-h-full">
     <Main/>
   </div>
 </template>
