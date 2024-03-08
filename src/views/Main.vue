@@ -25,8 +25,6 @@
     <div class="grid grid-cols-1 my-0 md:grid-cols-2 xl:grid-cols-3 md:gap-x-16 ">
       <div v-for="(layoutState, index) in componentStates" :key="componentKey[index]">
         <LayoutStore :state="layoutState" @update-state="updateState"/>
-        <span>当前组件key: {{componentKey[index]}}</span>
-        <div class="divider"></div>
       </div>
     </div>
 
@@ -34,21 +32,14 @@
   </div>
   <span v-if="loading" class="loading loading-infinity loading-lg"></span>
 
+
   <div class="divider"></div>
   <div>
     <pre>
       inputData is:
       {{ JSON.stringify(inputData, null, 2) }}
     </pre>
-<!-- -&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;-->
-<!--    <pre>-->
-<!--    {{JSON.stringify(collectArgs)}}-->
-<!--    </pre>-->
   </div>
-  <div class="divider"></div>
-  <pre>
-    componentState is: {{ JSON.stringify(componentStates, null, 2) }}
-  </pre>
   <div>
 
     <div class="divider"></div>
@@ -64,6 +55,8 @@
       selected is: {{ selected }}
     </pre>
   </div>
+
+
   <div class="m-2.5 bg-base-200 border-2 rounded-md shadow-sm">
     <Output/>
   </div>

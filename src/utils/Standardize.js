@@ -1,8 +1,6 @@
 
 const standardize = (layoutState, componentKey) => {
     if(componentKey === '') componentKey = Math.random().toString(36).substring(7);
-    console.log("componentKey", componentKey);
-    console.log('----------')
     switch (layoutState.type) {
     case "input":
                 return {

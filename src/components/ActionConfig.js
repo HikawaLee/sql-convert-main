@@ -98,28 +98,28 @@ const actions = [
                     },
                     "options": ["是", "否"],
                 },
-                {
-                    "type": "radio",
-                    "title": "大小表切换",
-                    "value": {
-                        "type": String,
-                        "default": "小表",
-                    },
-                    "options": ["大表", "小表"],
-                },
-                {
-                    "type": "radio",
-                    "title": "是否大表",
-                    "value": {
-                        "type": String,
-                        "default": "否",
-                    },
-                    "options": ["是", "否"],
-                },
-                {
-                    "type": "textarea",
-                    "title": "目标SQL输出",
-                }
+                // {
+                //     "type": "radio",
+                //     "title": "大小表切换",
+                //     "value": {
+                //         "type": String,
+                //         "default": "小表",
+                //     },
+                //     "options": ["大表", "小表"],
+                // },
+                // {
+                //     "type": "radio",
+                //     "title": "是否大表",
+                //     "value": {
+                //         "type": String,
+                //         "default": "否",
+                //     },
+                //     "options": ["是", "否"],
+                // },
+                // {
+                //     "type": "textarea",
+                //     "title": "目标SQL输出",
+                // }
             ],
     },
     {
@@ -178,15 +178,6 @@ const actions = [
                     ["达梦",
                         "TD SQL",
                     ],
-            },
-            {
-                "type": "radio",
-                "title": "是否大表",
-                "value": {
-                    "type": String,
-                    "default": "否",
-                },
-                "options": ["是", "否"],
             },
         ],
     },
@@ -365,15 +356,6 @@ const actions = [
                     "default": "否",
                 },
                 "options": ["是", "否"],
-            },
-            {
-                "type": "radio",
-                "title": "大小表切换",
-                "value": {
-                    "type": String,
-                    "default": "小表",
-                },
-                "options": ["大表", "小表"],
             },
         ],
     },
