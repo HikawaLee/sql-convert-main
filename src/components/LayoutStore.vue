@@ -2,6 +2,7 @@
 
 
   <div class="divider divider-horizontal"/>
+  <span>{{props.state.id}}</span>
   <div class="flex w-full p-2.5">
 
 
@@ -39,7 +40,7 @@
         <div class="label " TABINDEX="0" >
           <span class="label-text">{{ props.state.label }}</span>
         </div>
-        <input class="input input-bordered" v-model="checkboxSelected" disabled :placeholder="props.state.data" @change="handleCheckbox"/>
+        <input class="input input-bordered" v-model="checkboxSelected" disabled :placeholder="''" @change="handleCheckbox"/>
         <div class="label">
           <span class="label-text-alt">{{ props.state.desc }}</span>
         </div>
@@ -86,7 +87,8 @@
 </template>
 
 <script setup>
-import {onMounted, ref} from 'vue'
+import {ref} from 'vue'
+import UniqueID from "../utils/UniqueID.js";
 const props = defineProps({
   state: {
     type: Object,
@@ -95,6 +97,7 @@ const props = defineProps({
       return {
         "type": "input",//不能为空
         "label": "默认输入框", //不能为空
+        "id": '', //不能为空 ///FIXME: 有可能出现bug
         "desc": "这是一个默认输入框", //默认为空
         "placeholder": "这是默认的placeholder", // 仅input, radio, select具有
         "value": {
@@ -113,11 +116,11 @@ const props = defineProps({
 })
 
 
-
 const emits = defineEmits(['updateState']);
 
 const savedConfig = ref(null);
 
+const inputText = ref('')
 const handleInput = (e) => {
   //todo: 校验
   return e.target.value.trim();
@@ -125,7 +128,7 @@ const handleInput = (e) => {
 const updateConfig = (e) => {
 
   const data = handleInput(e);
-  console.log('当前选中值: ', data);
+    // console.log('当前选中值: ', data);
   const conf = {
     ...props.state,
     data: {
@@ -135,6 +138,8 @@ const updateConfig = (e) => {
   }
   emits('updateState', conf);
 }
+
+
 
 const checkboxSelected = ref([]);
 const handleCheckbox = (e) => {

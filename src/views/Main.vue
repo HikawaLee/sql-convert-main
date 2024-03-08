@@ -24,7 +24,9 @@
   <div class="flex flex-col justify-center items-center">
     <div class="grid grid-cols-1 my-0 md:grid-cols-2 xl:grid-cols-3 md:gap-x-16 ">
       <div v-for="(layoutState, index) in layoutStates" :key="componentKey[index]">
-        <LayoutStore :state="standardize(layoutState)" @update-state="updateState"/>
+        <LayoutStore :state="standardize(layoutState, componentKey[index])" @update-state="updateState"/>
+        <span>当前组件key: {{componentKey[index]}}</span>
+        <div class="divider"></div>
       </div>
     </div>
 
@@ -42,11 +44,6 @@
 <!--    </pre>-->
   </div>
   <div>
-    <div class="divider"></div>
-
-    <pre>
-      NamedActionMap is: {{ NamedActionMap }}
-    </pre>
 
     <div class="divider"></div>
 
@@ -71,8 +68,8 @@ import LayoutStore from '../components/LayoutStore.vue';
 import Output from '../components/Output.vue';
 import NamedActionMap from "../components/ActionConfig.js";
 import standardize from "../utils/Standardize.js";
-import {computed, ref, watchEffect, reactive} from "vue";
-import {nanoid} from "nanoid";
+import {computed, ref,  reactive} from "vue";
+import UniqueID from "../utils/UniqueID.js";
 const defaultAction = NamedActionMap.find((item) => item.name === '修改主键') || NamedActionMap[0];
 const selected = ref(defaultAction.name)
 const activeAction = computed(() => {
@@ -83,23 +80,31 @@ const layoutStates = computed(() => {
   return activeAction.value.action.layout
 })
 
-const componentCnt = activeAction.value.action.layout.length;
+
+
+const componentCnt = computed(() => {
+  return activeAction.value.action.layout.length;
+})
+
 const componentKey = ref([]);
 
-// const inputData = ref({})
+const freshComponentKey = () => {
+  for (let i = 0; i < componentCnt.value; i++) {
+    componentKey.value[i] = UniqueID();
+  }
+}
+
+freshComponentKey();
+
+
 const inputData = reactive({})
 activeAction.value.action.layout.forEach((state) => {
   inputData[state.label] = state.data;
 })
 
 
-
-
 const updateState = (data) => {
-  console.log("父组件更新了。。。")
   inputData[data.label] = data;
-  console.log("新内容为： ", inputData)
-
 }
 
 const loading = ref(false);
@@ -112,14 +117,13 @@ const generate = (action) => {
   }, 500)
 }
 const resetInput = () => {
-  // inputData.value = [];
   for (const key in inputData) {
     delete inputData[key]
   }
-  for (let i = 0; i < componentCnt; i++) {
-    componentKey.value[i] = nanoid();
-  }
+  freshComponentKey();
 }
+
+
 
 
 
