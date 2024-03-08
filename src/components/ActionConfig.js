@@ -5,6 +5,10 @@ const actions = [
                 {
                     "type": "input",
                     "title": "数据库名",
+                    "required": {
+                        "message": "请选择要迁移的数据库, 例如: test, 注意: 请勿输入中文",
+                        "trigger": "blur",
+                    },
                     "value": {
                         "type": String,
                         "default": "",
@@ -15,6 +19,9 @@ const actions = [
                 {
                     "type": "input",
                     "title": "表名",
+                    "required": {
+                        "message": "请填入表名, 例如: test, 注意: 请勿输入中文",
+                    },
                     "value": {
                         "type": String,
                         "default": "",
@@ -24,14 +31,20 @@ const actions = [
                 {
                     "type": "input",
                     "title": "字段名",
+                    "required": {
+                        "message": "请填入字段名, 例如: test",
+                    },
                     "value": {
                         "type": String,
-                        "default": "",
+                        "default": "t_id",
                     },
                 },
                 {
                     "type": "checkbox",
                     "title": "测试多个多选框",
+                    "required": {
+                        "message": "请选择目标数据库类型, 可多选",
+                    },
                     "value": {
                         "type": String,
                         "default": "达梦",
@@ -65,6 +78,9 @@ const actions = [
                 {
                     "type": "select",
                     "title": "字段类型",
+                    "required": {
+                        "message": "请选择字段类型",
+                    },
                     "placeholder": "",
                     "value": {
                         "type": String,
@@ -87,6 +103,15 @@ const actions = [
                     "options":
                         ["达梦",
                         "TD SQL",
+                            "人大金仓",
+                            "Postgres",
+                            "Oracle",
+                            "SQL Server",
+                            "DB2",
+                            "MongoDB",
+                            "ClickHouse",
+                            "TiDB",
+                            "Kylin",
                         ],
                 },
                 {
@@ -360,6 +385,59 @@ const actions = [
         ],
     },
 
+
+    {
+        "desc": "测试自动布局",
+        "layout": [
+            {
+                "type": "input",
+                "title": "数据库名名非常长数据库名",
+                "value": {
+                    "type": String,
+                    "default": "",
+                },
+                "desc": "请选择要迁移的数据库, 例如: test, 注意: 请勿输入中文",
+                "rules": [], //校验规则, 待定
+            },
+
+            {
+                "type": "select",
+                "title": "字段类型",
+                "placeholder": "",
+                "value": {
+                    "type": String,
+                    "default": "String(Java兼容)",
+                },
+                "options": [
+                    "String(Java兼容)",
+                    "Date(Java兼容)",
+                    "Number(Java兼容)",
+                    "Byte[](Java兼容)",
+                ],
+            },
+            {
+                "type": "checkbox",
+                "title": "目标数据库",
+                "value": {
+                    "type": String,
+                    "default": "达梦",
+                },
+                "options":
+                    ["达梦",
+                        "TD SQL",
+                    ],
+            },
+            {
+                "type": "toggle",
+                "title": "是否大表",
+                "value": {
+                    "type": String,
+                    "default": "否",
+                },
+                "options": ["是", "否"],
+            },
+        ],
+    },
 
 ]
 

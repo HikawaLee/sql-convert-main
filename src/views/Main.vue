@@ -1,5 +1,7 @@
 <template>
-  <div class="navbar bg-slate-100 mt-2.5">
+
+  <div class="navbar bg-slate-100 mt-2.5 relative">
+    <!-- 功能選擇框 值域：新增字段、修改字段等  -->
     <div class="navbar-start">
       <div class="dropdown">
         <select class="select select-bordered w-full max-w-xs" v-model="selected" @change="resetInput">
@@ -9,22 +11,30 @@
         </select>
       </div>
     </div>
+
+<!--  title  -->
     <div class="navbar-center">
       <a class="btn btn-ghost text-xl">SQL生成器</a>
     </div>
+<!-- 功能按鈕區 -->
     <div class="navbar-end">
       <button class="btn btn-ghost btn-circle" @click="resetInput">
         重置
       </button>
-      <button class="btn btn-ghost btn-circle" @click="generate">
+      <button class="btn btn-ghost btn-circle" @click="generate(componentStates, inputData)">
         生成
       </button>
     </div>
+<!--  校驗提醒信息  -->
+    <div v-if="alterShow" role="alert" class="flex justify-center alert alert-error absolute -top-1/4 left-1/2 -translate-x-1/2 max-h-4 max-w-xs">
+      <span>{{alertContent}}</span>
+    </div>
   </div>
+  <!--  主界面佈局  -->
   <div class="flex flex-col justify-center items-center">
     <div class="grid grid-cols-1 my-0 md:grid-cols-2 xl:grid-cols-3 md:gap-x-16 ">
-      <div v-for="(layoutState, index) in componentStates" :key="componentKey[index]">
-        <LayoutStore :state="layoutState" @update-state="updateState"/>
+      <div v-for="(componentState, index) in componentStates" :key="componentKey[index]">
+        <LayoutStore :state="componentState" @update-state="updateState"/>
       </div>
     </div>
 
@@ -82,6 +92,7 @@ const componentCnt = computed(() => {
 
 const componentKey = ref([]);
 
+
 const freshComponentKey = () => {
   for (let i = 0; i < componentCnt.value; i++) {
     componentKey.value[i] = UniqueID();
@@ -121,13 +132,66 @@ const updateState = (data) => {
 
 const loading = ref(false);
 
-const generate = (action) => {
-  activeAction.value = action;
+
+const alertContent = ref('')
+const alterShow = ref(false);
+// const generate = (action, data) => {
+//   // console.log("JSON.stringify(data): ", JSON.stringify(data));
+//   // console.log("JSON.stringify(action): ", JSON.stringify(action));
+//
+//   const actionName = activeAction.value.name;
+//   const layout = componentStates.value.reduce((acc, cur) => {
+//     acc[cur.id] = cur;
+//     if(data.hasOwnProperty(cur.id)) {
+//       alertContent.value = `请填写表单"${cur.label}"`;
+//       alterShow.value = true;
+//       setTimeout(() => {
+//         alterShow.value = false;
+//       }, 500)
+//       return
+//     }
+//     return acc;
+//   }, {})
+//   console.log(`actionName: ${actionName}\n, layout: ${JSON.stringify(layout)}\n, data: ${JSON.stringify(data)}`);
+//
+//   loading.value = true;
+//   setTimeout(() => {
+//     loading.value = false;
+//   }, 500)
+// }
+
+
+const generate = (action, data) => {
+  const actionName = activeAction.value.name;
+  let shouldReturn = false;
+
+  const layout = componentStates.value.reduce((acc, cur) => {
+    acc[cur.id] = cur;
+    if(!data.hasOwnProperty(cur.id)) {
+      alertContent.value = `请填写表单"${cur.label}"`;
+      alterShow.value = true;
+      setTimeout(() => {
+      alterShow.value = false;
+      }, 500)
+
+      shouldReturn = true;
+    }
+    return acc;
+  }, {})
+
+  if (shouldReturn) {
+    return;
+  }
+
+  console.log(`actionName: ${actionName}\n, layout: ${JSON.stringify(layout)}\n, data: ${JSON.stringify(data)}`);
+
   loading.value = true;
   setTimeout(() => {
     loading.value = false;
   }, 500)
 }
+
+
 const resetInput = () => {
   for (const key in inputData) {
     delete inputData[key]

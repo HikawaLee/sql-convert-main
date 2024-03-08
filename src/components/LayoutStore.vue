@@ -10,6 +10,7 @@
       <label class="form-control w-full max-w-xl">
         <div class="label">
           <span class="label-text">{{ props.state.label }}</span>
+          <span v-if="props.state.required" class="text-red-500">*</span>
         </div>
         <input class="input input-bordered" v-model.trim="singleAns" @change="updateConfig" :placeholder="props.state.placeholder"/>
         <div class="label">
@@ -23,6 +24,7 @@
       <label class="form-control w-full max-w-xl">
         <div class="label">
           <span class="label-text">{{ props.state.label }}</span>
+          <span v-if="props.state.required" class="text-red-500">*</span>
         </div>
         <select class="select select-bordered select-md w-full max-w-xl" v-model="singleAns" @change="updateConfig">
 
@@ -39,6 +41,7 @@
       <label class="form-control w-full max-w-xl">
         <div class="label " TABINDEX="0" >
           <span class="label-text">{{ props.state.label }}</span>
+          <span v-if="props.state.required" class="text-red-500">*</span>
         </div>
         <input class="input input-bordered" v-model="multipleAns" disabled :placeholder="''" @change="updateConfig"/>
         <div class="label">
@@ -101,7 +104,8 @@ const props = defineProps({
         "type": "input",//不能为空
         "label": "默认输入框", //不能为空
         "id": '', //不能为空 ///FIXME: 有可能出现bug
-        "desc": "这是一个默认输入框", //默认为空
+        "required": true, //是否必填
+        "desc": "该项目为必填项", //默认为空
         "placeholder": "这是默认的placeholder", // 仅input, radio, select具有
         "value": {
           "type": String,
