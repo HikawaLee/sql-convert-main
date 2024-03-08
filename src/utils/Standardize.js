@@ -1,9 +1,8 @@
 
 const standardize = (layoutState, componentKey) => {
-
-    console.log(`开始标准化数据：${new Date().toLocaleTimeString()}, 
-    当前组件为: ${layoutState.type}, 要赋值的ID为: ${componentKey},
-    当前组件的布局状态为: ${JSON.stringify(layoutState)}`);
+    if(componentKey === '') componentKey = Math.random().toString(36).substring(7);
+    console.log("componentKey", componentKey);
+    console.log('----------')
     switch (layoutState.type) {
     case "input":
                 return {

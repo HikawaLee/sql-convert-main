@@ -23,8 +23,8 @@
   </div>
   <div class="flex flex-col justify-center items-center">
     <div class="grid grid-cols-1 my-0 md:grid-cols-2 xl:grid-cols-3 md:gap-x-16 ">
-      <div v-for="(layoutState, index) in layoutStates" :key="componentKey[index]">
-        <LayoutStore :state="standardize(layoutState, componentKey[index])" @update-state="updateState"/>
+      <div v-for="(layoutState, index) in componentStates" :key="componentKey[index]">
+        <LayoutStore :state="layoutState" @update-state="updateState"/>
         <span>当前组件key: {{componentKey[index]}}</span>
         <div class="divider"></div>
       </div>
@@ -33,9 +33,11 @@
 
   </div>
   <span v-if="loading" class="loading loading-infinity loading-lg"></span>
+
   <div class="divider"></div>
   <div>
     <pre>
+      inputData is:
       {{ JSON.stringify(inputData, null, 2) }}
     </pre>
 <!-- -&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;-->
@@ -43,6 +45,10 @@
 <!--    {{JSON.stringify(collectArgs)}}-->
 <!--    </pre>-->
   </div>
+  <div class="divider"></div>
+  <pre>
+    componentState is: {{ JSON.stringify(componentStates, null, 2) }}
+  </pre>
   <div>
 
     <div class="divider"></div>
@@ -76,11 +82,6 @@ const activeAction = computed(() => {
   return NamedActionMap.find((item) => item.name === selected.value) || defaultAction;
 })
 
-const layoutStates = computed(() => {
-  return activeAction.value.action.layout
-})
-
-
 
 const componentCnt = computed(() => {
   return activeAction.value.action.layout.length;
@@ -93,8 +94,21 @@ const freshComponentKey = () => {
     componentKey.value[i] = UniqueID();
   }
 }
-
 freshComponentKey();
+
+const layoutStates = computed(() => {
+  return activeAction.value.action.layout
+})
+
+const componentStates = computed(() => {
+  return layoutStates.value.map((state, index) => {
+    return {
+      ...standardize(state, componentKey.value[index]),
+    }
+  })
+})
+
+
 
 
 const inputData = reactive({})
@@ -104,7 +118,12 @@ activeAction.value.action.layout.forEach((state) => {
 
 
 const updateState = (data) => {
-  inputData[data.label] = data;
+  // inputData[data.label] = data;
+  inputData[data.id] = {
+    label: data.label,
+    selected: data.selected
+
+  }
 }
 
 const loading = ref(false);

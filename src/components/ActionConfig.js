@@ -4,7 +4,7 @@ const actions = [
             "layout": [
                 {
                     "type": "input",
-                    "title": "数据库名名非常长数据库名",
+                    "title": "数据库名",
                     "value": {
                         "type": String,
                         "default": "",

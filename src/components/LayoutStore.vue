@@ -11,7 +11,7 @@
         <div class="label">
           <span class="label-text">{{ props.state.label }}</span>
         </div>
-        <input class="input input-bordered" v-model="savedConfig" @change="updateConfig" :placeholder="props.state.placeholder"/>
+        <input class="input input-bordered" v-model="singleAns" @change="updateConfig" :placeholder="props.state.placeholder"/>
         <div class="label">
           <span class="label-text-alt">{{ props.state.desc }}</span>
         </div>
@@ -24,7 +24,7 @@
         <div class="label">
           <span class="label-text">{{ props.state.label }}</span>
         </div>
-        <select class="select select-bordered select-md w-full max-w-xl" v-model="savedConfig" @change="updateConfig">
+        <select class="select select-bordered select-md w-full max-w-xl" v-model="singleAns" @change="updateConfig">
 
           <template v-for="(val, index) in props.state.options" :key="index">
             <option>{{ val }}</option>
@@ -120,22 +120,32 @@ const emits = defineEmits(['updateState']);
 
 const savedConfig = ref(null);
 
-const inputText = ref('')
+const singleAns = ref(null)
+
 const handleInput = (e) => {
   //todo: 校验
-  return e.target.value.trim();
+  const rules = props.state.rules;
+  const rawData = e.target.value.trim();
+  const processedData = rawData;
+  return processedData;
 }
 const updateConfig = (e) => {
 
   const data = handleInput(e);
     // console.log('当前选中值: ', data);
+  // const conf = {
+  //   ...props.state,
+  //   data: {
+  //     ...props.state.data,
+  //     selected: [data]
+  //   }
+  // }
   const conf = {
-    ...props.state,
-    data: {
-      ...props.state.data,
-      selected: [data]
-    }
+    id: props.state.id,
+    label: props.state.label,
+    selected: data
   }
+  console.log(`更新的配置: ${JSON.stringify(conf)}`);
   emits('updateState', conf);
 }
 
