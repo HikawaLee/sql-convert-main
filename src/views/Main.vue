@@ -44,27 +44,27 @@
 
 
   <div class="divider"></div>
-<!--  <div>-->
-<!--    <pre>-->
-<!--      inputData is:-->
-<!--      {{ JSON.stringify(inputData, null, 2) }}-->
-<!--    </pre>-->
-<!--  </div>-->
-<!--  <div>-->
+  <div>
+    <pre>
+      inputData is:
+      {{ JSON.stringify(inputData, null, 2) }}
+    </pre>
+  </div>
+  <div>
 
-<!--    <div class="divider"></div>-->
+    <div class="divider"></div>
 
-<!--    <pre>-->
-<!--      activeAction is: {{ activeAction }}-->
-<!--    </pre>-->
+    <pre>
+      activeAction is: {{ activeAction }}
+    </pre>
 
 
 
-<!--    <div class="divider"></div>-->
-<!--    <pre>-->
-<!--      selected is: {{ selected }}-->
-<!--    </pre>-->
-<!--  </div>-->
+    <div class="divider"></div>
+    <pre>
+      selected is: {{ selected }}
+    </pre>
+  </div>
 
 
   <div class="m-2.5 bg-base-200 border-2 rounded-md shadow-sm">
@@ -79,7 +79,7 @@ import NamedActionMap from "../components/ActionConfig.js";
 import standardize from "../utils/Standardize.js";
 import {computed, ref,  reactive} from "vue";
 import UniqueID from "../utils/UniqueID.js";
-import buildAddColumnSql from "../scripts/sqlbuilder.js";
+// import buildAddColumnSql from "../scripts/sqlBuilder.js";
 
 
 

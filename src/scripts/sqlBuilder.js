@@ -45,6 +45,43 @@
 // ]
 
 // 该脚本的目的是为了生成sql，所以不需要考虑sql注入问题，但是需要考虑sql的正确性，例如字段类型和长度的匹配，以及事务的处理
+// function generateSQL(inputData) {
+//     // 遍历 inputData，整理出我们需要的信息
+//     const result = [];
+//     let info = {};
+//     for (let id in inputData) {
+//         info[inputData[id].label] = inputData[id].selected;
+//     }
+//
+//     // 准备基础SQL语句
+//     let sqlBase = `ALTER TABLE ${info['数据库名']}.${info['表名']} ADD COLUMN ${info['字段名']} ${getType(info['字段类型'], info['字段长度'])}`;
+//
+//
+//     // 根据不同数据库类型，返回不同的SQL语句
+//     if (info['目标数据库'].includes('达梦')) {
+//         let dmSql = `BEGIN WMSYS.WM_concat('${sqlBase}'); COMMIT; END;`;
+//         console.log('达梦数据库SQL：', dmSql);
+//         result.push({
+//             sql: dmSql,
+//             dbType: '达梦'
+//         });
+//     }
+//     if (info['目标数据库'].includes('TD SQL')) {
+//         let tdSql = `BEGIN TRANSACTION; ${sqlBase} COMMIT; ROLLBACK;`;
+//         console.log('TD SQL数据库SQL：', tdSql);
+//         result.push({
+//             sql: tdSql,
+//             dbType: 'TD SQL'
+//         });
+//     }
+//
+//     // 返回SQL语句
+//     return result;
+// }
+//
+
+import damengSQL from   './dameng_func.js';
+
 function generateSQL(inputData) {
     // 遍历 inputData，整理出我们需要的信息
     const result = [];
@@ -53,41 +90,11 @@ function generateSQL(inputData) {
         info[inputData[id].label] = inputData[id].selected;
     }
 
-    // 准备基础SQL语句
-    let sqlBase = `ALTER TABLE ${info['数据库名']}.${info['表名']} ADD COLUMN ${info['字段名']} ${getType(info['字段类型'], info['字段长度'])}`;
-
-
-    // 根据不同数据库类型，返回不同的SQL语句
-    if (info['目标数据库'].includes('达梦')) {
-        let dmSql = `BEGIN WMSYS.WM_concat('${sqlBase}'); COMMIT; END;`;
-        console.log('达梦数据库SQL：', dmSql);
-        result.push({
-            sql: dmSql,
-            dbType: '达梦'
-        });
-    }
-    if (info['目标数据库'].includes('TD SQL')) {
-        let tdSql = `BEGIN TRANSACTION; ${sqlBase} COMMIT; ROLLBACK;`;
-        console.log('TD SQL数据库SQL：', tdSql);
-        result.push({
-            sql: tdSql,
-            dbType: 'TD SQL'
-        });
-    }
-
-    // 返回SQL语句
-    return result;
-}
-
-// 获取字段类型SQL表示
-// 这个只是一个示例，你可能需要考虑更多的数据类型，并处理好每种类型的数据长度
-function getType(type, len) {
-    switch(type) {
-        case 'String(Java兼容)':
-            return `VARCHAR(${len});`;
-        // ......
+    //获取目标数据库类型并生成SQL
+    let dbType = info['目标数据库'];
+    if (dbType.includes('达梦')) {
+        result.push(damengSQL.generateAddColumnSQL(info));
     }
 }
 
 
-export default generateSQL;

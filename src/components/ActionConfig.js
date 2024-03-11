@@ -194,13 +194,16 @@ const actions = [
                 "placeholder": "",
                 "value": {
                     "type": String,
-                    "default": "String(Java兼容)",
+                    "default": "VARCHAR",
                 },
                 "options": [
-                    "String(Java兼容)",
-                    "Date(Java兼容)",
-                    "Number(Java兼容)",
-                    "Byte[](Java兼容)",
+                    "VARCHAR",
+                    "DATE",
+                    "INT",
+                    "DECIMAL",
+                    "TINYINT",
+                    "TINYINT(1)",
+                    "BLOB",
                 ],
             },
             {
