@@ -44,31 +44,31 @@
 
 
   <div class="divider"></div>
-  <div>
-    <pre>
-      inputData is:
-      {{ JSON.stringify(inputData, null, 2) }}
-    </pre>
-  </div>
-  <div>
+<!--  <div>-->
+<!--    <pre>-->
+<!--      inputData is:-->
+<!--      {{ JSON.stringify(inputData, null, 2) }}-->
+<!--    </pre>-->
+<!--  </div>-->
+<!--  <div>-->
 
-    <div class="divider"></div>
+<!--    <div class="divider"></div>-->
 
-    <pre>
-      activeAction is: {{ activeAction }}
-    </pre>
+<!--    <pre>-->
+<!--      activeAction is: {{ activeAction }}-->
+<!--    </pre>-->
 
 
 
-    <div class="divider"></div>
-    <pre>
-      selected is: {{ selected }}
-    </pre>
-  </div>
+<!--    <div class="divider"></div>-->
+<!--    <pre>-->
+<!--      selected is: {{ selected }}-->
+<!--    </pre>-->
+<!--  </div>-->
 
 
   <div class="m-2.5 bg-base-200 border-2 rounded-md shadow-sm">
-    <Output/>
+    <Output :sql-list="sqlList"/>
   </div>
 </template>
 
@@ -79,6 +79,10 @@ import NamedActionMap from "../components/ActionConfig.js";
 import standardize from "../utils/Standardize.js";
 import {computed, ref,  reactive} from "vue";
 import UniqueID from "../utils/UniqueID.js";
+import buildAddColumnSql from "../scripts/sqlbuilder.js";
+
+
+
 const defaultAction = NamedActionMap.find((item) => item.name === '修改主键') || NamedActionMap[0];
 const selected = ref(defaultAction.name)
 const activeAction = computed(() => {
@@ -91,7 +95,6 @@ const componentCnt = computed(() => {
 })
 
 const componentKey = ref([]);
-
 
 const freshComponentKey = () => {
   for (let i = 0; i < componentCnt.value; i++) {
@@ -161,6 +164,7 @@ const alterShow = ref(false);
 // }
 
 
+const sqlList = ref([])
 const generate = (action, data) => {
   const actionName = activeAction.value.name;
   let shouldReturn = false;
@@ -189,6 +193,9 @@ const generate = (action, data) => {
   setTimeout(() => {
     loading.value = false;
   }, 500)
+
+  sqlList.value = buildAddColumnSql(data)
+  console.log(`生成的sql是: ${JSON.stringify(sqlList.value)}`);
 }
 
 

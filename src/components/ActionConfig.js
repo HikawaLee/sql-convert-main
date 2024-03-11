@@ -159,7 +159,18 @@ const actions = [
                 },
                 "rules": [], //校验规则, 待定
             },
-    
+            {
+                "type": "input",
+                "title": "表名",
+                "required": {
+                    "message": "请填入表名, 例如: test, 注意: 请勿输入中文",
+                },
+                "value": {
+                    "type": String,
+                    "default": "",
+                },
+                "rules": [],
+            },
             {
                 "type": "input",
                 "title": "字段名",
