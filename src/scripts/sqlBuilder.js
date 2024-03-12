@@ -66,21 +66,11 @@
 //             dbType: '达梦'
 //         });
 //     }
-//     if (info['目标数据库'].includes('TD SQL')) {
-//         let tdSql = `BEGIN TRANSACTION; ${sqlBase} COMMIT; ROLLBACK;`;
-//         console.log('TD SQL数据库SQL：', tdSql);
-//         result.push({
-//             sql: tdSql,
-//             dbType: 'TD SQL'
-//         });
-//     }
-//
-//     // 返回SQL语句
-//     return result;
 // }
 //
 
 import damengSQL from   './dameng_func.js';
+import mysqlSQL from   './mysql_func.js';
 
 function generateSQL(inputData) {
     // 遍历 inputData，整理出我们需要的信息
@@ -93,8 +83,24 @@ function generateSQL(inputData) {
     //获取目标数据库类型并生成SQL
     let dbType = info['目标数据库'];
     if (dbType.includes('达梦')) {
-        result.push(damengSQL.generateAddColumnSQL(info));
+        result.push({
+            sql: damengSQL.generateAddColumnSQL(info),
+            dbType: '达梦'
+
+        });
     }
+
+    if (dbType.includes('MySQL')) {
+        result.push({
+            sql: mysqlSQL.generateAddColumnSQL(info),
+            dbType: 'MySQL'
+
+        });
+    }
+    return result;
 }
 
+export default {
+    generateSQL
+}
 

@@ -52,13 +52,6 @@
   </div>
   <div>
 
-    <div class="divider"></div>
-
-    <pre>
-      activeAction is: {{ activeAction }}
-    </pre>
-
-
 
     <div class="divider"></div>
     <pre>
@@ -79,7 +72,7 @@ import NamedActionMap from "../components/ActionConfig.js";
 import standardize from "../utils/Standardize.js";
 import {computed, ref,  reactive} from "vue";
 import UniqueID from "../utils/UniqueID.js";
-// import buildAddColumnSql from "../scripts/sqlBuilder.js";
+import sqlbuilder from "../scripts/sqlBuilder.js";
 
 
 
@@ -187,14 +180,15 @@ const generate = (action, data) => {
     return;
   }
 
-  console.log(`actionName: ${actionName}\n, layout: ${JSON.stringify(layout)}\n, data: ${JSON.stringify(data)}`);
+  // console.log(`actionName: ${actionName}\n, layout: ${JSON.stringify(layout)}\n, data: ${JSON.stringify(data)}`);
 
   loading.value = true;
   setTimeout(() => {
     loading.value = false;
   }, 500)
 
-  sqlList.value = buildAddColumnSql(data)
+  // sqlList.value = buildAddColumnSql(data)
+  sqlList.value = sqlbuilder.generateSQL(data)
   console.log(`生成的sql是: ${JSON.stringify(sqlList.value)}`);
 }
 
