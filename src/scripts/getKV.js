@@ -1,5 +1,16 @@
 //
 const KV = {
+
+
+    //region 输入框类型
+    input: 'input',
+    textarea: 'textarea',
+    select: 'select',
+    checkbox: 'checkbox',
+    radio: 'radio',
+    //endregion
+
+
      //region 前端自定义标准字段类型
     STDint2_t: 'STDint2_t',
     STDint3_t: 'STDint3_t',
@@ -25,6 +36,7 @@ const KV = {
     fieldName: '字段名',
     fieldType: '字段类型',
     fieldLength: '字段长度',
+    fieldPrecision: '字段精度',
     fieldDefault: '默认值',
     fieldNullable: '是否为空',
     fieldComment: '字段注释',

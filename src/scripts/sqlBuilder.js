@@ -71,6 +71,7 @@
 
 import damengSQL from   './dameng_func.js';
 import mysqlSQL from   './mysql_func.js';
+import oracleSQL from   './oracle_func.js';
 
 function generateSQL(inputData) {
     // 遍历 inputData，整理出我们需要的信息
@@ -97,6 +98,14 @@ function generateSQL(inputData) {
 
         });
     }
+
+    if(dbType.includes('Oracle')){
+        result.push({
+            sql: oracleSQL.generateAddColumnSQL(info),
+            dbType: 'Oracle'
+        });
+    }
+
     return result;
 }
 

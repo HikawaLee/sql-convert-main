@@ -34,7 +34,7 @@
   <div class="flex flex-col justify-center items-center">
     <div class="grid grid-cols-1 my-0 md:grid-cols-2 xl:grid-cols-3 md:gap-x-16 ">
       <div v-for="(componentState, index) in componentStates" :key="componentKey[index]">
-        <LayoutStore :state="componentState" @update-state="updateState"/>
+        <LayoutStore :state="componentState" @update-state="updateState" />
       </div>
     </div>
 
@@ -43,21 +43,21 @@
   <span v-if="loading" class="loading loading-infinity loading-lg"></span>
 
 
-  <div class="divider"></div>
-  <div>
-    <pre>
-      inputData is:
-      {{ JSON.stringify(inputData, null, 2) }}
-    </pre>
-  </div>
-  <div>
+<!--  <div class="divider"></div>-->
+<!--  <div>-->
+<!--    <pre>-->
+<!--      inputData is:-->
+<!--      {{ JSON.stringify(inputData, null, 2) }}-->
+<!--    </pre>-->
+<!--  </div>-->
+<!--  <div>-->
 
 
-    <div class="divider"></div>
-    <pre>
-      selected is: {{ selected }}
-    </pre>
-  </div>
+<!--    <div class="divider"></div>-->
+<!--    <pre>-->
+<!--      selected is: {{ selected }}-->
+<!--    </pre>-->
+<!--  </div>-->
 
 
   <div class="m-2.5 bg-base-200 border-2 rounded-md shadow-sm">
