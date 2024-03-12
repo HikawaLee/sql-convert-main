@@ -2,6 +2,7 @@
 
 
   <div class="divider divider-horizontal"/>
+
 <!--  <span>{{props.state.id}}</span>-->
   <div class="flex w-full p-2.5">
 

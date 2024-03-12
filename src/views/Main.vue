@@ -43,21 +43,21 @@
   <span v-if="loading" class="loading loading-infinity loading-lg"></span>
 
 
-<!--  <div class="divider"></div>-->
-<!--  <div>-->
-<!--    <pre>-->
-<!--      inputData is:-->
-<!--      {{ JSON.stringify(inputData, null, 2) }}-->
-<!--    </pre>-->
-<!--  </div>-->
-<!--  <div>-->
+  <div class="divider"></div>
+  <div>
+    <pre>
+      inputData is:
+      {{ JSON.stringify(inputData, null, 2) }}
+    </pre>
+  </div>
+  <div>
 
 
-<!--    <div class="divider"></div>-->
-<!--    <pre>-->
-<!--      selected is: {{ selected }}-->
-<!--    </pre>-->
-<!--  </div>-->
+    <div class="divider"></div>
+    <pre>
+      selected is: {{ selected }}
+    </pre>
+  </div>
 
 
   <div class="m-2.5 bg-base-200 border-2 rounded-md shadow-sm">
@@ -72,21 +72,17 @@ import NamedActionMap from "../components/ActionConfig.js";
 import standardize from "../utils/Standardize.js";
 import {computed, ref,  reactive} from "vue";
 import UniqueID from "../utils/UniqueID.js";
-import sqlbuilder from "../scripts/sqlBuilder.js";
+import actionType from "../types/actionType.js";
+import dbMap from "../scripts/dbMap.js";
 
-
-
-const defaultAction = NamedActionMap.find((item) => item.name === '修改主键') || NamedActionMap[0];
+const defaultAction = NamedActionMap.find((item) => item.name === actionType.ADD) || NamedActionMap[0];
 const selected = ref(defaultAction.name)
 const activeAction = computed(() => {
   return NamedActionMap.find((item) => item.name === selected.value) || defaultAction;
 })
-
-
 const componentCnt = computed(() => {
   return activeAction.value.action.layout.length;
 })
-
 const componentKey = ref([]);
 
 const freshComponentKey = () => {
@@ -131,35 +127,15 @@ const loading = ref(false);
 
 const alertContent = ref('')
 const alterShow = ref(false);
-// const generate = (action, data) => {
-//   // console.log("JSON.stringify(data): ", JSON.stringify(data));
-//   // console.log("JSON.stringify(action): ", JSON.stringify(action));
-//
-//   const actionName = activeAction.value.name;
-//   const layout = componentStates.value.reduce((acc, cur) => {
-//     acc[cur.id] = cur;
-//     if(data.hasOwnProperty(cur.id)) {
-//       alertContent.value = `请填写表单"${cur.label}"`;
-//       alterShow.value = true;
-//       setTimeout(() => {
-//         alterShow.value = false;
-//       }, 500)
-//       return
-//     }
-//     return acc;
-//   }, {})
-//   console.log(`actionName: ${actionName}\n, layout: ${JSON.stringify(layout)}\n, data: ${JSON.stringify(data)}`);
-//
-//   loading.value = true;
-//   setTimeout(() => {
-//     loading.value = false;
-//   }, 500)
-// }
-
 
 const sqlList = ref([])
 const generate = (action, data) => {
+
+
+
+
   const actionName = activeAction.value.name;
+
   let shouldReturn = false;
 
   const layout = componentStates.value.reduce((acc, cur) => {
@@ -170,7 +146,6 @@ const generate = (action, data) => {
       setTimeout(() => {
       alterShow.value = false;
       }, 500)
-
       shouldReturn = true;
     }
     return acc;
@@ -180,7 +155,7 @@ const generate = (action, data) => {
     return;
   }
 
-  // console.log(`actionName: ${actionName}\n, layout: ${JSON.stringify(layout)}\n, data: ${JSON.stringify(data)}`);
+  console.log(`actionName: ${actionName}\n, layout: ${JSON.stringify(layout, null, 2)}\n, data: ${JSON.stringify(data, null, 2)}`)
 
   loading.value = true;
   setTimeout(() => {
@@ -188,7 +163,30 @@ const generate = (action, data) => {
   }, 500)
 
   // sqlList.value = buildAddColumnSql(data)
-  sqlList.value = sqlbuilder.generateSQL(data)
+
+
+
+  switch (actionName) {
+    case actionType.ADD:
+      console.log(`add action: ${dbMap.add(data)}`);
+      // sqlList.value = dbMap.add(data);
+      break;
+    //   addColumn(action, data);
+    //   break;
+    // case actionType.MODIFY:
+    //   modifyColumn(action, data);
+    //   break;
+    // case actionType.DELETE:
+    //   deleteColumn(action, data);
+    //   break;
+    // case actionType.SELECT:
+    //   selectColumn(action, data);
+    //   break;
+    // default:
+    //   break;
+  }
+
+
   console.log(`生成的sql是: ${JSON.stringify(sqlList.value)}`);
 }
 

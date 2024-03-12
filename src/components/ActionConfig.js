@@ -1,8 +1,9 @@
 import inputType from '../types/inputType.js'
-
+import actionType from "../types/actionType.js";
+import dbConf from "../types/dbConf.js";
 const actions = [
     {
-            "desc": "增加字段",
+            "desc": actionType.ADD,
             "layout": [
                 {
                     "type": inputType.INPUT,
@@ -62,10 +63,21 @@ const actions = [
                         "default": "String(Java兼容)",
                     },
                     "options": [
-                        "String(Java兼容)",
-                        "Date(Java兼容)",
-                        "Number(Java兼容)",
-                        "Byte[](Java兼容)",
+                        dbConf.STDint2_t,
+                        dbConf.STDint3_t,
+                        dbConf.STDint4_t,
+                        dbConf.STDint6_t,
+                        dbConf.STDint8_t,
+                        dbConf.STDint10_t,
+                        dbConf.STDdouble,
+                        dbConf.STDchar,
+                        dbConf.STDstr,
+                        dbConf.STDdate,
+                        dbConf.STDtime,
+                        dbConf.STDdatetime,
+                        dbConf.STDtimestamp,
+                        dbConf.STDclob,
+                        dbConf.STDBlob,
                     ],
                 },
                 {
@@ -76,17 +88,11 @@ const actions = [
                         "default": "达梦",
                     },
                     "options":
-                        ["达梦",
-                        "TD SQL",
-                            "人大金仓",
-                            "Postgres",
-                            "Oracle",
-                            "SQL Server",
-                            "DB2",
-                            "MongoDB",
-                            "ClickHouse",
-                            "TiDB",
-                            "Kylin",
+                        [
+                            dbConf.dameng,
+                            dbConf.mysql,
+                            dbConf.oracle,
+                            dbConf.tdsql,
                         ],
                 },
                 {
@@ -123,7 +129,7 @@ const actions = [
             ],
     },
     {
-        "desc": "减少字段",
+        "desc": actionType.DELETE,
         "layout": [
             {
                 "type": inputType.INPUT,
@@ -172,22 +178,21 @@ const actions = [
                     "default": "VARCHAR",
                 },
                 "options": [
-                    "STDint2_t",
-                    "STDint3_t",
-                    "STDint4_t",
-                    "STDint6_t",
-                    "STDint8_t",
-                    "STDint10_t",
-                    "STDdouble",
-                    "STDchar",
-                    "STDstr",
-                    "STDdate",
-                    "STDtime",
-                    "STDdatetime",
-                    "STDtimestamp",
-                    "STDclob",
-                    "STDBlob",
-                    "UInt32"
+                    dbConf.STDint2_t,
+                    dbConf.STDint3_t,
+                    dbConf.STDint4_t,
+                    dbConf.STDint6_t,
+                    dbConf.STDint8_t,
+                    dbConf.STDint10_t,
+                    dbConf.STDdouble,
+                    dbConf.STDchar,
+                    dbConf.STDstr,
+                    dbConf.STDdate,
+                    dbConf.STDtime,
+                    dbConf.STDdatetime,
+                    dbConf.STDtimestamp,
+                    dbConf.STDclob,
+                    dbConf.STDBlob,
                 ],
             },
             {
@@ -198,9 +203,11 @@ const actions = [
                     "default": "达梦",
                 },
                 "options":
-                    ["Oracle",
-                        "MySQL", "达梦",
-                     "TD SQL",
+                    [
+                        dbConf.dameng,
+                        dbConf.mysql,
+                        dbConf.oracle,
+                        dbConf.tdsql,
                     ],
             },
         ],
@@ -208,7 +215,7 @@ const actions = [
 
 
     {
-        "desc": "修改字段",
+        "desc": actionType.MODIFY,
         "layout": [
             {
                 "type": inputType.INPUT,
@@ -254,10 +261,21 @@ const actions = [
                     "default": "String(Java兼容)",
                 },
                 "options": [
-                    "String(Java兼容)",
-                    "Date(Java兼容)",
-                    "Number(Java兼容)",
-                    "Byte[](Java兼容)",
+                    dbConf.STDint2_t,
+                    dbConf.STDint3_t,
+                    dbConf.STDint4_t,
+                    dbConf.STDint6_t,
+                    dbConf.STDint8_t,
+                    dbConf.STDint10_t,
+                    dbConf.STDdouble,
+                    dbConf.STDchar,
+                    dbConf.STDstr,
+                    dbConf.STDdate,
+                    dbConf.STDtime,
+                    dbConf.STDdatetime,
+                    dbConf.STDtimestamp,
+                    dbConf.STDclob,
+                    dbConf.STDBlob,
                 ],
             },
   

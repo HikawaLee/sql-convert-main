@@ -69,44 +69,33 @@
 // }
 //
 
-import damengSQL from   './dameng_func.js';
-import mysqlSQL from   './mysql_func.js';
-import oracleSQL from   './oracle_func.js';
-
 function generateSQL(inputData) {
+    console.log('inputData:', JSON.stringify(inputData, null, 2));
     // 遍历 inputData，整理出我们需要的信息
     const result = [];
     let info = {};
+    // for (let id in inputData) {
+    //     // info[inputData[id].label] = inputData[id].selected;
+    // }
+
+
     for (let id in inputData) {
-        info[inputData[id].label] = inputData[id].selected;
+        info[id.label] = inputData[id].selected;
+        ///FIXME: 以下代码有问题，需要修改
     }
+    console.log('info:', JSON.stringify(info, null, 2));
 
+    return 'generateSQL...'
     //获取目标数据库类型并生成SQL
-    let dbType = info['目标数据库'];
-    if (dbType.includes('达梦')) {
-        result.push({
-            sql: damengSQL.generateAddColumnSQL(info),
-            dbType: '达梦'
-
-        });
-    }
-
-    if (dbType.includes('MySQL')) {
-        result.push({
-            sql: mysqlSQL.generateAddColumnSQL(info),
-            dbType: 'MySQL'
-
-        });
-    }
-
-    if(dbType.includes('Oracle')){
-        result.push({
-            sql: oracleSQL.generateAddColumnSQL(info),
-            dbType: 'Oracle'
-        });
-    }
-
-    return result;
+    // const dbType = info[dbConf.dbType];
+    // console.log(`最终生成的目标数据库类型: ${JSON.stringify(dbType, null, 2)}`);
+    // dbType.forEach((dbName) => {
+    //     result.push({
+    //         sql: dbMap.add[dbName](info),
+    //         dbType: dbName
+    //     });
+    // })
+    // return result;
 }
 
 export default {
