@@ -74,6 +74,7 @@ import {computed, ref,  reactive} from "vue";
 import UniqueID from "../utils/UniqueID.js";
 import actionType from "../types/actionType.js";
 import dbMap from "../scripts/dbMap.js";
+import sqlBuilder from "../scripts/sqlBuilder.js";
 
 const defaultAction = NamedActionMap.find((item) => item.name === actionType.ADD) || NamedActionMap[0];
 const selected = ref(defaultAction.name)
@@ -155,7 +156,7 @@ const generate = (action, data) => {
     return;
   }
 
-  console.log(`actionName: ${actionName}\n, layout: ${JSON.stringify(layout, null, 2)}\n, data: ${JSON.stringify(data, null, 2)}`)
+  // console.log(`actionName: ${actionName}\n, layout: ${JSON.stringify(layout, null, 2)}\n, data: ${JSON.stringify(data, null, 2)}`)
 
   loading.value = true;
   setTimeout(() => {
@@ -168,7 +169,7 @@ const generate = (action, data) => {
 
   switch (actionName) {
     case actionType.ADD:
-      console.log(`add action: ${dbMap.add(data)}`);
+      sqlList.value = sqlBuilder.add(data);
       // sqlList.value = dbMap.add(data);
       break;
     //   addColumn(action, data);

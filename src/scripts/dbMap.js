@@ -1,34 +1,33 @@
-import mysql_func from "./mysql_func.js";
-import oracle_func from "./oracle_func.js";
-import dameng_func from "./dameng_func.js";
+import {generateAddColumnSQL} from "./mysql_func.js";
+import damengFunc from "./dameng_func.js";
+import oracleFunc from "./oracle_func.js";
+
 import dbConf from "../types/dbConf.js";
-import sqlBuilder from "./sqlBuilder.js";
-
-export default {
-    // [dbConf.mysql] : mysql_func,
-    // [dbConf.oracle] : oracle_func,
-    // [dbConf.dameng] : dameng_func,
-
-    // modify: [mysql_func.generateModifyColumnSQL, oracle_func.generateModifyColumnSQL, dameng_func.generateModifyColumnSQL],
-    // delete: [mysql_func.generateDeleteColumnSQL, oracle_func.generateDeleteColumnSQL, dameng_func.generateDeleteColumnSQL],
-    // addIndex: [mysql_func.generateAddIndexSQL, oracle_func.generateAddIndexSQL, dameng_func.generateAddIndexSQL],
-    // modifyIndex: [mysql_func.generateModifyIndexSQL, oracle_func.generateModifyIndexSQL, dameng_func.generateModifyIndexSQL],
-
-    add: sqlBuilder.generateSQL,
-    // modify: {
-    //     [dbConf.mysql]: mysql_func.generateModifyColumnSQL,
-    //     [dbConf.oracle]: oracle_func.generateModifyColumnSQL,
-    //     [dbConf.dameng]: dameng_func.generateModifyColumnSQL
-    // },
-    // delete: {
-    //     [dbConf.mysql]: mysql_func.generateDeleteColumnSQL,
-    //     [dbConf.oracle]: oracle_func.generateDeleteColumnSQL,
-    //     [dbConf.dameng]: dameng_func.generateDeleteColumnSQL
-    // },
-    // addIndex: {
-    //     [dbConf.mysql]: mysql_func.generateAddIndexSQL,
-    //     [dbConf.oracle]: oracle_func.generateAddIndexSQL,
-    //     [dbConf.dameng]: dameng_func.generateAddIndexSQL
-    // },
+import temp from "./temp.js";
+// Now you can use the functions:
+const addColumnMySQL = generateAddColumnSQL;
+const addColumnOracle = oracleFunc.generateAddColumnSQL;
+const addColumnDameng = damengFunc.generateAddColumnSQL;
+export const test = temp.test;
+export const test2 = temp.test2;
+export const test3 = temp.test3;
+export default{
+    add: {
+        [dbConf.mysql]: addColumnMySQL,
+        [dbConf.oracle]: addColumnOracle,
+        [dbConf.dameng]: addColumnDameng
+    },
+    delete: {
+        [dbConf.mysql]: 'generateDeleteColumnSQL',
+        [dbConf.oracle]: 'generateDeleteColumnSQL',
+        [dbConf.dameng]: 'generateDeleteColumnSQL'
+    },
+    test: {
+        [dbConf.mysql]: temp.test,
+        [dbConf.oracle]: temp.test2,
+        [dbConf.dameng]: temp.test3,
+    }
 
 }
+
+

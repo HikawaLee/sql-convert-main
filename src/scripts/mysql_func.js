@@ -7,7 +7,7 @@ import KV from './getKV.js';
  * @param opts
  * @returns {string}
  */
-function generateAddColumnSQL(inputData, opts = {}) {
+const generateAddColumnSQL = (inputData, opts = {}) => {
         const dbName = inputData[KV.dbName];
         const tableName = inputData[KV.tableName];
         const fieldName = inputData[KV.fieldName];
@@ -97,6 +97,6 @@ function getType(type, L, P) {
     }
 }
 
-export default {
-    generateAddColumnSQL
+export  {
+    generateAddColumnSQL,
 }
