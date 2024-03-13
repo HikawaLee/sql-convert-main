@@ -34,7 +34,9 @@ function generateAddColumnSQL(inputData, opts = {}) {
     // END;
     // /
 
-    const sql = `ALTER TABLE ${dbName}.${tableName} ADD ${fieldName} ${getType(fieldType, fieldLength, fieldPrecision)}`;
+    const sql =
+        `ALTER TABLE ${dbName}.${tableName}
+            ADD ${fieldName} ${getType(fieldType, fieldLength, fieldPrecision)};`;
     //adding-column can have many options, such as default value, not null, comment, index, unique, primary key, auto increment, unsigned, zerofill, charset, collation, check, reference, expression, function, constraint
     // 1.  with a Default Value / NOT NULL
     // ALTER TABLE your_table ADD new_column VARCHAR2(255) DEFAULT 'default_value' / NOT NULL;
@@ -46,7 +48,6 @@ function generateAddColumnSQL(inputData, opts = {}) {
     //   suburb VARCHAR2(100),
     //   postcode VARCHAR2(20)
     // );
-    console.log('Oracle SQL：', sql);
     return sql;
 }
 
@@ -59,7 +60,7 @@ function generateAddColumnSQL(inputData, opts = {}) {
  * @param opts {object} The options.
  * @returns {string} The SQL statement for drop column.
  */
-function genDropColumnSQL(inputData, opts = {}) {
+function generateDropColumnSQL(inputData, opts = {}) {
 
     const dbName = inputData[dbConf.dbName];
     const tableName = inputData[dbConf.tableName];
@@ -67,12 +68,101 @@ function genDropColumnSQL(inputData, opts = {}) {
 
     //ALTER TABLE table_name DROP COLUMN column_name;Alternatively,
     // you can use Unused Columns to drop a column from a table.
-    const sql = `ALTER TABLE ${dbName}.${tableName} DROP COLUMN ${fieldName}`;
+    const sql =
+        `ALTER TABLE ${dbName}.${tableName}
+            DROP (
+                  ${fieldName}
+                );`;
 
     return sql;
 }
 
 
+function generateModifyColumnSQL(inputData, opts = {}) {
+    const dbName = inputData[dbConf.dbName];
+    const tableName = inputData[dbConf.tableName];
+    const fieldName = inputData[dbConf.fieldName];
+    const fieldType = inputData[dbConf.fieldType];
+    const fieldLength = inputData[dbConf.fieldLength];
+    const fieldPrecision = inputData[dbConf.fieldPrecision];
+
+    const sql =
+        `ALTER TABLE ${dbName}.${tableName}
+            MODIFY ${fieldName} ${getType(fieldType, fieldLength, fieldPrecision)};`;
+
+    return sql;
+}
+
+
+function generateRenameTableSQL(inputData, opts = {}) {
+    const dbName = inputData[dbConf.dbName];
+    const tableName = inputData[dbConf.tableName];
+    const newTableName = inputData[dbConf.newTableName];
+
+    const sql =
+        `RENAME ${tableName} 
+    TO ${newTableName};`;
+
+    return sql;
+
+}
+
+
+function generateAddIndexSQL(inputData, opts = {}) {
+    const dbName = inputData[dbConf.dbName];
+    const tableName = inputData[dbConf.tableName];
+    const fieldName = inputData[dbConf.fieldName];
+    const indexName = inputData[dbConf.fieldIndex];
+
+    const sql =
+        `CREATE INDEX ${indexName}
+            ON ${dbName}.${tableName} (${fieldName});`;
+
+    return sql;
+}
+
+
+function generateDropIndexSQL(inputData, opts = {}) {
+    const dbName = inputData[dbConf.dbName];
+    const tableName = inputData[dbConf.tableName];
+    const indexName = inputData[dbConf.fieldIndex];
+
+    //const sql = `DROP INDEX ${tableName}.${indexName};`;
+    const sql =
+        `        DECLARE
+            COUNT_INDEXES   INTEGER;
+        BEGIN
+            SELECT COUNT ( * )
+                INTO COUNT_INDEXES
+            FROM USER_INDEXES
+                WHERE INDEX_NAME = ${indexName};
+                
+            IF COUNT_INDEXES > 0 THEN
+                    EXECUTE IMMEDIATE 'DROP INDEX ${indexName}';
+                END IF;
+            END;
+        /`
+
+
+    return sql;
+
+}
+
+
+function generateRebuildIndexSQL(inputData, opts = {}) {
+    const dbName = inputData[dbConf.dbName];
+    const tableName = inputData[dbConf.tableName];
+    const indexName = inputData[dbConf.fieldIndex];
+
+    const sql =
+        `ALTER INDEX ${indexName}
+            REBUILD ONLINE;`;
+
+
+    return sql;
+
+
+}
 
 
 
@@ -125,5 +215,10 @@ function getType(type, L, P) {
 
 export default {
     generateAddColumnSQL,
-    genDropColumnSQL
+    generateDropColumnSQL,
+    generateModifyColumnSQL,
+    generateRenameTableSQL,
+    generateAddIndexSQL,
+    generateDropIndexSQL,
+    generateRebuildIndexSQL
 }

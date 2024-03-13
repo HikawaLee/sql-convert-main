@@ -52,6 +52,14 @@ const actions = [
 
                 },
                 {
+                  type: inputType.INPUT,
+                  title: dbConf.fieldPrecision,
+                    value: {
+                        type: String,
+                        default: "",
+                    },
+                },
+                {
                     "type": inputType.SELECT,
                     "title": dbConf.fieldType,
                     "required": {
@@ -128,6 +136,8 @@ const actions = [
                 // }
             ],
     },
+
+
 
     {
         "desc": actionType.DELETE,
@@ -362,6 +372,291 @@ const actions = [
             //     "type": "textarea",
             //     "title": "目标SQL输出",
             // }
+        ],
+    },
+
+    {
+        "desc": actionType.RENAMETABLE,
+        "layout": [
+            {
+                "type": inputType.INPUT,
+                "title": dbConf.dbName,
+                "required": {
+                    "message": "请选择要迁移的数据库, 例如: test, 注意: 请勿输入中文",
+                    "trigger": "blur",
+                },
+                "value": {
+                    "type": String,
+                    "default": "",
+                },
+                "desc": "请选择要迁移的数据库, 例如: test, 注意: 请勿输入中文",
+                "rules": [], //校验规则, 待定
+            },
+            {
+                "type": inputType.INPUT,
+                "title": dbConf.tableName,
+                "required": {
+                    "message": "请填入表名, 例如: test, 注意: 请勿输入中文",
+                },
+                "value": {
+                    "type": String,
+                    "default": "",
+                },
+                "rules": [],
+            },
+            {
+                "type": inputType.INPUT,
+                "title": dbConf.newTableName,
+                "required": {
+                    "message": "请填入新表名, 例如: test, 注意: 请勿输入中文",
+                },
+                "value": {
+                    "type": String,
+                    "default": "",
+                },
+                "rules": [],
+            },
+            {
+                "type": inputType.CHECKBOX,
+                "title": dbConf.dbType,
+                "value": {
+                    "type": String,
+                    "default": "达梦",
+                },
+                "options":
+                    [
+                        dbConf.dameng,
+                        dbConf.mysql,
+                        dbConf.oracle,
+                        dbConf.tdsql,
+                    ],
+            },
+            {
+                "type": inputType.TOGGLE,
+                "title": dbConf.bigTableLabel,
+                "value": {
+                    "type": String,
+                    "default": "否",
+                },
+                "options": ["是", "否"],
+            },
+        ],
+    },
+
+    {
+        "desc": actionType.ADDINDEX,
+        "layout": [
+            {
+                "type": inputType.INPUT,
+                "title": dbConf.dbName,
+                "required": {
+                    "message": "请选择要迁移的数据库, 例如: test, 注意: 请勿输入中文",
+                    "trigger": "blur",
+                },
+                "value": {
+                    "type": String,
+                    "default": "",
+                },
+                "desc": "请选择要迁移的数据库, 例如: test, 注意: 请勿输入中文",
+                "rules": [], //校验规则, 待定
+            },
+            {
+                "type": inputType.INPUT,
+                "title": dbConf.tableName,
+                "required": {
+                    "message": "请填入表名, 例如: test, 注意: 请勿输入中文",
+                },
+                "value": {
+                    "type": String,
+                    "default": "",
+                },
+                "rules": [],
+            },
+            {
+                "type": inputType.INPUT,
+                "title": dbConf.fieldName,
+                "required": {
+                    "message": "请填入索引字段, 例如: test, 注意: 请勿输入中文",
+                },
+                "value": {
+                    "type": String,
+                    "default": "",
+                },
+                "rules": [],
+            },
+            {
+                "type": inputType.INPUT,
+                "title": dbConf.fieldIndex,
+                "required": {
+                    "message": "请填入索引名, 例如: test, 注意: 请勿输入中文",
+                },
+                "value": {
+                    "type": String,
+                    "default": "",
+                },
+                "rules": [],
+            },
+            {
+                "type": inputType.CHECKBOX,
+                "title": dbConf.dbType,
+                "value": {
+                    "type": String,
+                    "default": "达梦",
+                },
+                "options":
+                    [
+                        dbConf.dameng,
+                        dbConf.mysql,
+                        dbConf.oracle,
+                        dbConf.tdsql,
+                    ],
+            },
+            {
+                "type": inputType.TOGGLE,
+                "title": dbConf.bigTableLabel,
+                "value": {
+                    "type": String,
+                    "default": "否",
+                },
+                "options": ["是", "否"],
+            },
+        ],
+    },
+
+
+    {
+        "desc": actionType.DELETEINDEX,
+        "layout": [
+            {
+                "type": inputType.INPUT,
+                "title": dbConf.dbName,
+                "required": {
+                    "message": "请选择要迁移的数据库, 例如: test, 注意: 请勿输入中文",
+                    "trigger": "blur",
+                },
+                "value": {
+                    "type": String,
+                    "default": "",
+                },
+                "desc": "请选择要迁移的数据库, 例如: test, 注意: 请勿输入中文",
+                "rules": [], //校验规则, 待定
+            },
+            {
+                "type": inputType.INPUT,
+                "title": dbConf.tableName,
+                "required": {
+                    "message": "请填入表名, 例如: test, 注意: 请勿输入中文",
+                },
+                "value": {
+                    "type": String,
+                    "default": "",
+                },
+                "rules": [],
+            },
+            {
+                "type": inputType.INPUT,
+                "title": dbConf.fieldIndex,
+                "required": {
+                    "message": "请填入表名, 例如: test, 注意: 请勿输入中文",
+                },
+                "value": {
+                    "type": String,
+                    "default": "",
+                },
+                "rules": [],
+            },
+            {
+                "type": inputType.CHECKBOX,
+                "title": dbConf.dbType,
+                "value": {
+                    "type": String,
+                    "default": "达梦",
+                },
+                "options":
+                    [
+                        dbConf.dameng,
+                        dbConf.mysql,
+                        dbConf.oracle,
+                        dbConf.tdsql,
+                    ],
+            },
+            {
+                "type": inputType.TOGGLE,
+                "title": dbConf.bigTableLabel,
+                "value": {
+                    "type": String,
+                    "default": "否",
+                },
+                "options": ["是", "否"],
+            },
+        ],
+    },
+
+    {
+        "desc": actionType.REBUILDINDEX,
+        "layout": [
+            {
+                "type": inputType.INPUT,
+                "title": dbConf.dbName,
+                "required": {
+                    "message": "请选择要迁移的数据库, 例如: test, 注意: 请勿输入中文",
+                    "trigger": "blur",
+                },
+                "value": {
+                    "type": String,
+                    "default": "",
+                },
+                "desc": "请选择要迁移的数据库, 例如: test, 注意: 请勿输入中文",
+                "rules": [], //校验规则, 待定
+            },
+            {
+                "type": inputType.INPUT,
+                "title": dbConf.tableName,
+                "required": {
+                    "message": "请填入表名, 例如: test, 注意: 请勿输入中文",
+                },
+                "value": {
+                    "type": String,
+                    "default": "",
+                },
+                "rules": [],
+            },
+            {
+                "type": inputType.INPUT,
+                "title": dbConf.fieldIndex,
+                "required": {
+                    "message": "请填入表名, 例如: test, 注意: 请勿输入中文",
+                },
+                "value": {
+                    "type": String,
+                    "default": "",
+                },
+                "rules": [],
+            },
+            {
+                "type": inputType.CHECKBOX,
+                "title": dbConf.dbType,
+                "value": {
+                    "type": String,
+                    "default": "达梦",
+                },
+                "options":
+                    [
+                        dbConf.dameng,
+                        dbConf.mysql,
+                        dbConf.oracle,
+                        dbConf.tdsql,
+                    ],
+            },
+            {
+                "type": inputType.TOGGLE,
+                "title": dbConf.bigTableLabel,
+                "value": {
+                    "type": String,
+                    "default": "否",
+                },
+                "options": ["是", "否"],
+            },
         ],
     },
 

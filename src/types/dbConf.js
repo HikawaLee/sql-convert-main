@@ -33,6 +33,9 @@ export default {
     dbType: '目标数据库',
     dbName: '数据库名',
     tableName: '表名',
+
+    newTableName: '新表名',
+
     fieldName: '字段名',
     fieldType: '字段类型',
     fieldLength: '字段长度',
@@ -40,7 +43,8 @@ export default {
     fieldDefault: '默认值',
     fieldNullable: '是否为空',
     fieldComment: '字段注释',
-    fieldIndex: '索引',
+    fieldIndex: '索引名',
+    fieldIndexType: '索引类型',
     fieldUnique: '唯一索引',
     fieldPrimaryKey: '主键',
     fieldAutoIncrement: '自增',

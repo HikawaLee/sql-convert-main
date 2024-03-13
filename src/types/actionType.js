@@ -6,5 +6,7 @@ export default {
     ADDINDEX: '增加索引',
     MODIFYINDEX: '修改索引',
     DELETEINDEX: '删除索引',
+    RENAMETABLE: '重命名表',
+    REBUILDINDEX: '重建索引',
     //endregion
 }

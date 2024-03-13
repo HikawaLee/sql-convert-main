@@ -12,6 +12,21 @@ export default {
         [dbConf.dameng]: damengFunc.generateAddColumnSQL,
     },
     [actionType.DELETE]:{
-        [dbConf.oracle]: oracleFunc.genDropColumnSQL
+        [dbConf.oracle]: oracleFunc.generateDropColumnSQL,
+    },
+    [actionType.MODIFY]: {
+        [dbConf.oracle]: oracleFunc.generateModifyColumnSQL,
+    },
+    [actionType.RENAMETABLE]: {
+        [dbConf.oracle]: oracleFunc.generateRenameTableSQL,
+    },
+    [actionType.ADDINDEX]: {
+        [dbConf.oracle]: oracleFunc.generateAddIndexSQL,
+    },
+    [actionType.DELETEINDEX]: {
+        [dbConf.oracle]: oracleFunc.generateDropIndexSQL,
+    },
+    [actionType.REBUILDINDEX]: {
+        [dbConf.oracle]: oracleFunc.generateRebuildIndexSQL,
     }
 }
