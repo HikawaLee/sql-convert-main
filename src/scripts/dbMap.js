@@ -28,5 +28,11 @@ export default {
     },
     [actionType.REBUILDINDEX]: {
         [dbConf.oracle]: oracleFunc.generateRebuildIndexSQL,
+    },
+    [actionType.ADDPRIMARYKEY]: {
+        [dbConf.oracle]: oracleFunc.generateAddPrimaryKeySQL,
+    },
+    [actionType.DELETEPRIMARYKEY]: {
+        [dbConf.oracle]: oracleFunc.generateDropPrimaryKeySQL
     }
 }

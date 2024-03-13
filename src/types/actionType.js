@@ -8,5 +8,9 @@ export default {
     DELETEINDEX: '删除索引',
     RENAMETABLE: '重命名表',
     REBUILDINDEX: '重建索引',
+    ADDPRIMARYKEY: '添加主键',
+    DELETEPRIMARYKEY: '删除主键',
+
+
     //endregion
 }

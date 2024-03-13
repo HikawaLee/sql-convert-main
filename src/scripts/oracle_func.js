@@ -160,9 +160,56 @@ function generateRebuildIndexSQL(inputData, opts = {}) {
 
 
     return sql;
-
-
 }
+
+
+function generateAddPrimaryKeySQL(inputData, opts = {}) {
+    const dbName = inputData[dbConf.dbName];
+    const tableName = inputData[dbConf.tableName];
+    const fieldName = inputData[dbConf.fieldName];
+
+    //命名主键 ALTER TABLE table_name ADD CONSTRAINT constraint_name PRIMARY KEY (column1, column2, ... column_n);
+    const sql =
+        `ALTER TABLE ${tableName}
+            ADD PRIMARY KEY (${fieldName});`;
+    return sql;
+}
+
+function generateDropPrimaryKeySQL(inputData, opts = {}) {
+    const dbName = inputData[dbConf.dbName];
+    const tableName = inputData[dbConf.tableName];
+    const fieldName = inputData[dbConf.fieldName];
+
+
+    //1. ①先查出来主键名（constraint_name）
+    //SELECT t.* from user_cons_columns t where t.table_name  = 'TABLE_TEST' and t.position is not null;
+    // 公式：SELECT t.* from user_cons_columns t where t.table_name  = '表名' and t.position is not null;   --表名必须大写，如：TABLE_TEST
+    // user_constraints：是表约束的视图,描述的是约束类型(constraint_type)是什么,属于哪些表(table_name),如果约束的类型为R(外键)的话,那么r_constraint_name字段存放的就是被引用主表中的主键约束名。
+    //         user_cons_columns：是表约束字段的视图,说明表中的和约束相关的列参与了哪些约束。这些约束有主键约束,外键约束,索引约束.
+    //         两者可以通过(owner,constraint_name,table_name)关联
+
+    //2. ②删除主键
+    //ALTER TABLE table_name DROP CONSTRAINT constraint_name;
+    const constraintName =
+        `SELECT t.* from user_cons_columns t where t.table_name  = '${tableName}' and t.position is not null;`; ///Todo: 未完成
+    const sql =
+        `ALTER TABLE ${tableName}
+            DROP CONSTRAINT ${constraintName};`;
+    return sql;
+}
+
+
+// function generateModifyPrimaryKeySQL(inputData, opts = {}) {
+//     const dbName = inputData[dbConf.dbName];
+//     const tableName = inputData[dbConf.tableName];
+//     const fieldName = inputData[dbConf.fieldName];
+//
+//     const sql =
+//         `ALTER TABLE ${dbName}.${tableName}
+//             MODIFY PRIMARY KEY (${fieldName});`;
+//
+//     return sql;
+// }
 
 
 
@@ -220,5 +267,8 @@ export default {
     generateRenameTableSQL,
     generateAddIndexSQL,
     generateDropIndexSQL,
-    generateRebuildIndexSQL
+    generateRebuildIndexSQL,
+    generateAddPrimaryKeySQL,
+    generateDropPrimaryKeySQL,
+    // generateModifyPrimaryKeySQL
 }
