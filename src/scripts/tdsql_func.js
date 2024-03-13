@@ -1,51 +1,25 @@
 import dbConf from "../types/dbConf.js";
 
 /**
- * Generate a mysqldb SQL for add new column into the existing table.
+ * Generate a TDSql SQL for add new column into the existing table.
  * @param inputData
  * @param opts
  * @returns {string}
  */
 const generateAddColumnSQL = (inputData, opts = {}) => {
-        const dbName = inputData[dbConf.dbName];
-        const tableName = inputData[dbConf.tableName];
-        const fieldName = inputData[dbConf.fieldName];
-        const fieldLength = inputData[dbConf.fieldLength];
-        const fieldType = inputData[dbConf.fieldType];
+    const dbName = inputData[dbConf.dbName];
+    const tableName = inputData[dbConf.tableName];
+    const fieldName = inputData[dbConf.fieldName];
+    const fieldLength = inputData[dbConf.fieldLength];
+    const fieldType = inputData[dbConf.fieldType];
 
-        ///TODO 加字段前先检查字段是否存在, 例如
-    // SELECT
-    //     IF(count(*) = 1, 'Exist','Not Exist') AS result
-    // FROM
-    //     information_schema.columns
-    // WHERE
-    //     table_schema = 'classicmodels'
-    //         AND table_name = 'vendors'
+    ///TODO 加字段前先检查字段是否存在
 
 
-
-        const sql =
-            `ALTER TABLE ${dbName}.${tableName} 
+    const sql =
+        `ALTER TABLE ${dbName}.${tableName} 
     ADD COLUMN ${fieldName} ${getType(fieldType, fieldLength, 0)};`;
-      //adding-column can have many options, such as default value, not null, comment, index, unique, primary key, auto increment, unsigned, zerofill, charset, collation, check, reference, expression, function, constraint
-    /*
-    the pattern is: ALTER TABLE table_name ADD [COLUMN] column_name column_definition [FIRST|AFTER existing_column];
-     */
-
-    // 1. with a Default Value
-    // ALTER TABLE table_name ADD COLUMN new_column_name data_type DEFAULT default_value;
-    // 2. Adding a Column with a Specific Position
-    // ALTER TABLE table_name ADD COLUMN new_column_name data_type FIRST;
-    // ALTER TABLE table_name ADD COLUMN new_column_name data_type AFTER existing_column;
-    // 3. Multiple Columns
-    // ALTER TABLE table_name
-    // ADD COLUMN column_name1 data_type,
-    // ADD COLUMN column_name2 data_type,
-    //4. with check
-    //ALTER TABLE table_name ADD COLUMN new_column_name data_type CHECK (condition);
-    //ALTER TABLE employees
-    // ADD salary DECIMAL(8, 2) CHECK (salary > 0);
-        return sql;
+    return sql;
 }
 
 
@@ -81,9 +55,9 @@ function generateRenameTableSQL(inputData, opts = {}) {
     const newTableName = inputData[dbConf.newTableName];
 
     const sql =
-        // `RENAME TABLE ${tableName} TO ${newTableName};`;
-    `ALTER TABLE ${dbName}.${tableName}
-    RENAME ${newTableName};`;
+
+        `ALTER TABLE ${dbName}.${tableName}
+    RENAME ${newTableName};`; //官方文档未找到相应说明
     return sql;
 }
 

@@ -154,6 +154,7 @@ function generateRebuildIndexSQL(inputData, opts = {}) {
     const tableName = inputData[dbConf.tableName];
     const indexName = inputData[dbConf.fieldIndex];
 
+    //FIXME
     const sql =
         `ALTER INDEX ${indexName}
             REBUILD ONLINE;`;

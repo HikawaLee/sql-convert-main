@@ -6,6 +6,7 @@ export default {
     oracle: 'Oracle',
     dameng: '达梦',
     tdsql: 'TD-SQL',
+    postgres: 'PostgreSQL',
     //endregion
 
 
