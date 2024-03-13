@@ -12,11 +12,11 @@
       </div>
     </div>
 
-<!--  title  -->
+    <!--  title  -->
     <div class="navbar-center">
       <a class="btn btn-ghost text-xl">SQL生成器</a>
     </div>
-<!-- 功能按鈕區 -->
+    <!-- 功能按鈕區 -->
     <div class="navbar-end">
       <button class="btn btn-ghost btn-circle" @click="resetInput">
         重置
@@ -25,16 +25,17 @@
         生成
       </button>
     </div>
-<!--  校驗提醒信息  -->
-    <div v-if="alterShow" role="alert" class="flex justify-center alert alert-error absolute -top-1/4 left-1/2 -translate-x-1/2 max-h-4 max-w-xs">
-      <span>{{alertContent}}</span>
+    <!--  校驗提醒信息  -->
+    <div v-if="alterShow" role="alert"
+         class="flex justify-center alert alert-error absolute -top-1/4 left-1/2 -translate-x-1/2 max-h-4 max-w-xs">
+      <span>{{ alertContent }}</span>
     </div>
   </div>
   <!--  主界面佈局  -->
   <div class="flex flex-col justify-center items-center">
     <div class="grid grid-cols-1 my-0 md:grid-cols-2 xl:grid-cols-3 md:gap-x-16 ">
       <div v-for="(componentState, index) in componentStates" :key="componentKey[index]">
-        <LayoutStore :state="componentState" @update-state="updateState" />
+        <LayoutStore :state="componentState" @update-state="updateState"/>
       </div>
     </div>
 
@@ -43,21 +44,21 @@
   <span v-if="loading" class="loading loading-infinity loading-lg"></span>
 
 
-  <div class="divider"></div>
-  <div>
-    <pre>
-      inputData is:
-      {{ JSON.stringify(inputData, null, 2) }}
-    </pre>
-  </div>
-  <div>
+  <!--  <div class="divider"></div>-->
+  <!--  <div>-->
+  <!--    <pre>-->
+  <!--      inputData is:-->
+  <!--      {{ JSON.stringify(inputData, null, 2) }}-->
+  <!--    </pre>-->
+  <!--  </div>-->
+  <!--  <div>-->
 
 
-    <div class="divider"></div>
-    <pre>
-      selected is: {{ selected }}
-    </pre>
-  </div>
+  <!--    <div class="divider"></div>-->
+  <!--    <pre>-->
+  <!--      selected is: {{ selected }}-->
+  <!--    </pre>-->
+  <!--  </div>-->
 
 
   <div class="m-2.5 bg-base-200 border-2 rounded-md shadow-sm">
@@ -70,7 +71,7 @@ import LayoutStore from '../components/LayoutStore.vue';
 import Output from '../components/Output.vue';
 import NamedActionMap from "../components/ActionConfig.js";
 import standardize from "../utils/Standardize.js";
-import {computed, ref,  reactive} from "vue";
+import {computed, ref, reactive} from "vue";
 import UniqueID from "../utils/UniqueID.js";
 import actionType from "../types/actionType.js";
 import dbMap from "../scripts/dbMap.js";
@@ -106,8 +107,6 @@ const componentStates = computed(() => {
 })
 
 
-
-
 const inputData = reactive({})
 activeAction.value.action.layout.forEach((state) => {
   inputData[state.label] = state.data;
@@ -133,19 +132,17 @@ const sqlList = ref([])
 const generate = (action, data) => {
 
 
-
-
   const actionName = activeAction.value.name;
 
   let shouldReturn = false;
 
   const layout = componentStates.value.reduce((acc, cur) => {
     acc[cur.id] = cur;
-    if(!data.hasOwnProperty(cur.id)) {
+    if (!data.hasOwnProperty(cur.id)) {
       alertContent.value = `请填写表单"${cur.label}"`;
       alterShow.value = true;
       setTimeout(() => {
-      alterShow.value = false;
+        alterShow.value = false;
       }, 500)
       shouldReturn = true;
     }
@@ -166,29 +163,10 @@ const generate = (action, data) => {
   // sqlList.value = buildAddColumnSql(data)
 
 
+  sqlList.value = sqlBuilder.generateSQL(data, actionName);
 
-  switch (actionName) {
-    case actionType.ADD:
-      sqlList.value = sqlBuilder.add(data);
-      // sqlList.value = dbMap.add(data);
-      break;
-    //   addColumn(action, data);
-    //   break;
-    // case actionType.MODIFY:
-    //   modifyColumn(action, data);
-    //   break;
-    // case actionType.DELETE:
-    //   deleteColumn(action, data);
-    //   break;
-    // case actionType.SELECT:
-    //   selectColumn(action, data);
-    //   break;
-    // default:
-    //   break;
-  }
+  console.log(`生成的sql是: ${JSON.stringify(sqlList.value)}`)
 
-
-  console.log(`生成的sql是: ${JSON.stringify(sqlList.value)}`);
 }
 
 
@@ -198,10 +176,6 @@ const resetInput = () => {
   }
   freshComponentKey();
 }
-
-
-
-
 
 
 </script>

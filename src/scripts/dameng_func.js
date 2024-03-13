@@ -12,19 +12,18 @@
  * 6. DM直接将varchar类型修改为text类型会报错：数据类型的变更无效
  */
 
-import KV from './getKV.js'
+import dbConf from "../types/dbConf.js";
 
 //新增字段
 function generateAddColumnSQL(inputData, opts = {}) {
-    const dbName = inputData[KV.dbName];
-    const tableName = inputData[KV.tableName];
-    const fieldName = inputData[KV.fieldName];
-    const fieldType = inputData[KV.fieldType];
-    const fieldLength = inputData[KV.fieldLength];
+    const dbName = inputData[dbConf.dbName];
+    const tableName = inputData[dbConf.tableName];
+    const fieldName = inputData[dbConf.fieldName];
+    const fieldType = inputData[dbConf.fieldType];
+    const fieldLength = inputData[dbConf.fieldLength];
 
     ///Todo: 类型解析, 默认值设置, 是否为空设置, 注释设置, 索引设置, 主键设置, 自增设置, 字符集设置, 排序规则设置, 检查设置, 外键设置, 表达式设置
     let sql = `ALTER TABLE ${dbName}.${tableName} ADD COLUMN ${fieldName} ${getType(fieldType, fieldLength)}`;
-    console.log('达梦数据库SQL：', sql);
     return sql;
 }
 

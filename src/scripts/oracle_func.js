@@ -1,4 +1,4 @@
-import KV from './getKV.js';
+import dbConf from "../types/dbConf.js";
 
 
 /**
@@ -8,12 +8,12 @@ import KV from './getKV.js';
  * @returns {string}
  */
 function generateAddColumnSQL(inputData, opts = {}) {
-    const dbName = inputData[KV.dbName];
-    const tableName = inputData[KV.tableName];
-    const fieldName = inputData[KV.fieldName];
-    const fieldType = inputData[KV.fieldType];
-    const fieldLength = inputData[KV.fieldLength];
-    const fieldPrecision = inputData[KV.fieldPrecision];
+    const dbName = inputData[dbConf.dbName];
+    const tableName = inputData[dbConf.tableName];
+    const fieldName = inputData[dbConf.fieldName];
+    const fieldType = inputData[dbConf.fieldType];
+    const fieldLength = inputData[dbConf.fieldLength];
+    const fieldPrecision = inputData[dbConf.fieldPrecision];
 
 
     ///TODO 加字段前先检查字段是否存在
@@ -61,14 +61,14 @@ function generateAddColumnSQL(inputData, opts = {}) {
  */
 function genDropColumnSQL(inputData, opts = {}) {
 
-    const dbName = inputData[KV.dbName];
-    const tableName = inputData[KV.tableName];
-    const fieldName = inputData[KV.fieldName];
+    const dbName = inputData[dbConf.dbName];
+    const tableName = inputData[dbConf.tableName];
+    const fieldName = inputData[dbConf.fieldName];
 
     //ALTER TABLE table_name DROP COLUMN column_name;Alternatively,
     // you can use Unused Columns to drop a column from a table.
     const sql = `ALTER TABLE ${dbName}.${tableName} DROP COLUMN ${fieldName}`;
-    console.log('Oracle SQL：', sql);
+
     return sql;
 }
 
@@ -90,33 +90,33 @@ function getType(type, L, P) {
     // }
 
     switch (type) {
-        case KV.STDint2_t:
+        case dbConf.STDint2_t:
             return 'NUMBER(2, 0)';
-        case KV.STDint3_t:
+        case dbConf.STDint3_t:
             return 'NUMBER(3, 0)';
-        case KV.STDint4_t:
+        case dbConf.STDint4_t:
             return 'NUMBER(4, 0)';
-        case KV.STDint6_t:
+        case dbConf.STDint6_t:
             return 'NUMBER(6, 0)';
-        case KV.STDint8_t:
+        case dbConf.STDint8_t:
             return 'NUMBER(8, 0)';
-        case KV.STDint10_t:
+        case dbConf.STDint10_t:
             return 'NUMBER(10, 0)';
-        case KV.STDdouble:
+        case dbConf.STDdouble:
             return `DECIMAL(${L},${P})`;
-        case KV.STDchar:
+        case dbConf.STDchar:
             return 'CHAR';
-        case KV.STDstr:
+        case dbConf.STDstr:
             return `VARCHAR(${L})`;
-        case KV.STDdate:
+        case dbConf.STDdate:
             return 'NUMBER(8, 0)';
-        case KV.STDtime:
+        case dbConf.STDtime:
             return 'NUMBER(6, 0)';
-        case KV.STDdatetime:
+        case dbConf.STDdatetime:
             return 'DATE';
-        case KV.STDtimestamp:
+        case dbConf.STDtimestamp:
             return `VARCHAR2(${L})`;
-        case KV.STDclob:
+        case dbConf.STDclob:
             return 'CLOB';
         default:
             throw new Error(`Unsupported type: ${type}. Please handle this case.`);
@@ -124,5 +124,6 @@ function getType(type, L, P) {
 }
 
 export default {
-    generateAddColumnSQL
+    generateAddColumnSQL,
+    genDropColumnSQL
 }

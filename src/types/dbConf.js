@@ -28,6 +28,7 @@ export default {
     //endregion
 
 
+    bigTableLabel: '是否大表',
     bigTable: '大表',
     dbType: '目标数据库',
     dbName: '数据库名',
