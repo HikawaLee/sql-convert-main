@@ -12,13 +12,14 @@ const generateAddColumnSQL = (inputData, opts = {}) => {
     const fieldName = inputData[dbConf.fieldName];
     const fieldLength = inputData[dbConf.fieldLength];
     const fieldType = inputData[dbConf.fieldType];
+    const fieldPrecision = inputData[dbConf.fieldPrecision];
 
     ///TODO 加字段前先检查字段是否存在
 
 
     const sql =
         `ALTER TABLE ${dbName}.${tableName} 
-    ADD COLUMN ${fieldName} ${getType(fieldType, fieldLength, 0)};`;
+    ADD COLUMN ${fieldName} ${getType(fieldType, fieldLength, fieldPrecision)};`;
     return sql;
 }
 
@@ -30,7 +31,7 @@ function generateDropColumnSQL(inputData, opts = {}) {
 
     const sql =
         `ALTER TABLE ${dbName}.${tableName}
-    DROP COLUMN ${fieldName}`;
+    DROP COLUMN ${fieldName};`;
     return sql;
 }
 
@@ -111,7 +112,7 @@ function generateDropPrimaryKeySQL(inputData, opts = {}) {
 
     const sql =
         `ALTER TABLE ${dbName}.${tableName}
-    DROP PRIMARY KEY`;
+    DROP PRIMARY KEY;`;
     return sql;
 }
 
@@ -127,7 +128,7 @@ function generateDropPrimaryKeySQL(inputData, opts = {}) {
  * @param {number} P 表示有效位数的精度。 P 的范围是 1 到 65
  * @return {string} 返回 MySQL 的类型
  */
-function getType(type, L, P = 0) {
+function getType(type, L = dbConf.mysqlDecimalP, P = dbConf.mysqlDecimalD) {
     // 参数校验
     // if (typeof type !== 'string' || typeof L !== 'number' || typeof P !== 'number') {
     //     throw new Error('Invalid input. Please provide valid type, L, and P values.');
@@ -149,7 +150,7 @@ function getType(type, L, P = 0) {
             return `VARCHAR(${L})`;
         case dbConf.STDdate:
         case dbConf.STDtime:
-            return 'INT'; // 注意：根据你的具体用例，这里可能需要进一步细化。
+            return 'INT';
         case dbConf.STDdatetime:
             return 'DATETIME';
         case dbConf.STDtimestamp:

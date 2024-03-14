@@ -191,26 +191,39 @@ function generateDropPrimaryKeySQL(inputData, opts = {}) {
 
     //2. ②删除主键
     //ALTER TABLE table_name DROP CONSTRAINT constraint_name;
-    const constraintName =
-        `SELECT t.* from user_cons_columns t where t.table_name  = '${tableName}' and t.position is not null;`; ///Todo: 未完成
+    // declare
+    // sql_stmt varchar2(255);
+    // cons_name varchar2(30);
+    // begin
+    // select CONSTRAINT_NAME
+    // into cons_name
+    // From  USER_CONSTRAINTS
+    // where table_name='PERSONS'
+    // AND  CONSTRAINT_TYPE='P';
+    //
+    // sql_stmt:=' ALTER TABLE PERSONS
+    // DROP CONSTRAINT '||cons_name;
+    //
+    // dbms_output.put_line(sql_stmt);
+    // execute immediate sql_stmt;
+    //
+    // end;
     const sql =
-        `ALTER TABLE ${tableName}
-            DROP CONSTRAINT ${constraintName};`;
+        `DECLARE
+            sql_stmt VARCHAR2(255);
+            cons_name VARCHAR2(30);
+        BEGIN
+            SELECT CONSTRAINT_NAME INTO cons_name
+            FROM USER_CONSTRAINTS
+            WHERE TABLE_NAME = ${dbName}.${tableName} AND CONSTRAINT_TYPE = 'P';
+
+            sql_stmt := 'ALTER TABLE ${dbName}.${tableName} DROP CONSTRAINT ' || cons_name;
+            EXECUTE IMMEDIATE sql_stmt;
+        END;`
     return sql;
 }
 
 
-// function generateModifyPrimaryKeySQL(inputData, opts = {}) {
-//     const dbName = inputData[dbConf.dbName];
-//     const tableName = inputData[dbConf.tableName];
-//     const fieldName = inputData[dbConf.fieldName];
-//
-//     const sql =
-//         `ALTER TABLE ${dbName}.${tableName}
-//             MODIFY PRIMARY KEY (${fieldName});`;
-//
-//     return sql;
-// }
 
 
 
@@ -221,7 +234,7 @@ function generateDropPrimaryKeySQL(inputData, opts = {}) {
  * @param {number} P 表示有效位数的精度。 P 的范围是 1 到 65
  * @return {string} 返回 Oracle 的类型
  */
-function getType(type, L, P) {
+function getType(type, L = dbConf.oracleDecimalP, P = dbConf.oracleDecimalS) {
     // 参数校验
     // if (typeof type !== 'string' || typeof L !== 'number' || typeof P !== 'number') {
     //     throw new Error('Invalid input. Please provide valid type, L, and P values.');

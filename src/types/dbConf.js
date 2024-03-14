@@ -29,6 +29,13 @@ export default {
     //endregion
 
 
+    //region 数据库中各类型的默认长度, 精度...
+    mysqlDecimalP: 10,
+    mysqlDecimalD: 0,
+
+    oracleDecimalP: 10,
+    oracleDecimalS: 0,
+
     bigTableLabel: '是否大表',
     bigTable: '大表',
     dbType: '目标数据库',

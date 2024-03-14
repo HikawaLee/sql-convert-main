@@ -174,6 +174,7 @@ const resetInput = () => {
   for (const key in inputData) {
     delete inputData[key]
   }
+  sqlList.value = [];
   freshComponentKey();
 }
 
