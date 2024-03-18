@@ -1,12 +1,16 @@
 <template>
 
   <template v-for="(sql, index) in props.sqlList">
-    <div class="collapse collapse-arrow bg-white rounded-md">
-      <input type="radio" name="my-accordion-2" checked="checked" />
-      <div class="collapse-title text-xl font-medium">
-        {{sql.dbType}}
+    <div class="bg-white rounded-md">
+      <div class="collapse-title text-xl font-medium flex justify-between">
+        <div class="divider divider-neutral">{{sql.dbType}}</div>
+        <div class="tooltip" :data-tip="copyTips" @mouseout="handleMouseOut">
+          <button class="my-btn hover:-translate-x-px" @click="handlerCopy(index)">
+            <svg t="1710756661984" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2837" width="24" height="24"><path d="M808.768 197.312c10.432 0 17.408 6.912 17.408 17.344l0 485.568c0 10.368-6.976 17.344-17.408 17.344l-87.296 0c-19.136 0-34.944 15.552-34.944 34.624 0 19.136 15.808 34.688 34.944 34.688l104.768 0c38.464 0 69.824-31.168 69.824-69.312l0-520.32C896 159.168 864.64 128 826.176 128l-384 0c-38.4 0-69.824 31.232-69.824 69.312l0 34.688c0 19.072 15.68 34.688 34.88 34.688 19.2 0 34.88-15.616 34.88-34.688L442.112 214.656c0-10.432 6.976-17.344 17.408-17.344L808.768 197.312z" fill="#231F20" p-id="2838"></path><path d="M128 363.968l0 469.376C128 867.84 160.32 896 199.808 896l394.944 0c39.488 0 71.872-28.16 71.872-62.656L666.624 363.968c0-34.432-32.384-62.592-71.872-62.592L199.808 301.376C160.32 301.376 128 329.536 128 363.968z" fill="#515151" p-id="2839"></path></svg>
+          </button>
+        </div>
       </div>
-      <div class="collapse-content bg-white p-0 m-0 ">
+      <div class="bg-white p-0 m-0 ">
         <mavon-editor
             v-model="markedSql[index]"
             class="content-show rounded-md"
@@ -16,40 +20,26 @@
             :subfield="false"
             previewBackground="white"
             :boxShadow="false">
-          <template slot="right-toolbar-after">
-            <button
-                type="button"
-                @click="$click('test')"
-                class="op-icon fa fa-mavon-align-left"
-                aria-hidden="true"
-                title="自定义"
-            ></button>
-          </template>
         </mavon-editor>
       </div>
+      <div class="divider divider-horizontal"/>
     </div>
   </template>
-<!--<div class="collapse collapse-arrow bg-base-200">-->
-<!--  <input type="radio" name="my-accordion-2" /> -->
-<!--  <div class="collapse-title text-xl font-medium">-->
-<!--    TDSQL-->
-<!--  </div>-->
-<!--  <div class="collapse-content" > -->
-<!--    <p>我是TDSQL</p>-->
-<!--  </div>-->
-<!--</div>-->
 </template>
 
 <script setup>
 import {ref, computed} from "vue";
 import { mavonEditor } from 'mavon-editor'
 import 'mavon-editor/dist/css/index.css'
+import useClipboard from 'vue-clipboard3'
   const props = defineProps({
     sqlList: Array,
     default: () => {
       return []
     }
   });
+
+
 
 const markedSql = computed(() => {
   return props.sqlList.map((item) => {
@@ -58,11 +48,34 @@ const markedSql = computed(() => {
     return sql
   })
 })
+const copyTips = ref('点击复制')
+const { toClipboard } = useClipboard()
+const copiedSql = computed(() => {
+})
+const handlerCopy = async (index) => {
+  try {
+    await toClipboard(props.sqlList[index].sql)
+    copyTips.value = '复制成功'
+  } catch (err) {
+    console.log(err)
+    copyTips.value = '复制失败'
+  }
+}
 
-const content = ref('')
+const handleMouseOut = () => {
+  copyTips.value = '点击复制'
+}
+
+
+
 </script>
 
 <style scoped>
+
+.my-btn {
+  @apply px-1 py-1 font-sans text-xs font-bold text-center text-gray-900 uppercase align-middle transition-all rounded-lg select-none hover:bg-gray-900/10 active:bg-gray-900/20 disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none;
+}
+
 .content-show {
   height: 100%!important;
 }

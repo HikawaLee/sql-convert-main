@@ -18,21 +18,21 @@ function generateAddColumnSQL(inputData, opts = {}) {
 
 
     const sql = `\n
-prompt ${tableName} 新增字段 ${fieldName} ......
-declare
-    v_rowcount integer;
-begin
-select count(*) into v_rowcount from user_tables where table_name = upper('${tableName}');
-if v_rowcount > 0 then
-select count(*) into v_rowcount from user_tab_columns
-where table_name = upper('${tableName}')
-  and column_name = upper('${fieldName}');
-if v_rowcount = 0 then
+    prompt ${tableName} 新增字段 ${fieldName} ......
+    declare
+        v_rowcount integer;
+    begin
+    select count(*) into v_rowcount from user_tables where table_name = upper('${tableName}');
+    if v_rowcount > 0 then
+    select count(*) into v_rowcount from user_tab_columns
+    where table_name = upper('${tableName}')
+        and column_name = upper('${fieldName}');
+    if v_rowcount = 0 then
             execute immediate 'ALTER TABLE ${tableName} ADD ${fieldName} ${getType(fieldType, fieldLength, fieldPrecision)}';
-end if;
-end if;
-end;
-/
+    end if;
+    end if;
+    end;
+    /
     `
     return sql;
 }
