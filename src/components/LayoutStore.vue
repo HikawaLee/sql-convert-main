@@ -2,9 +2,11 @@
 
 
   <div class="divider divider-horizontal"/>
+
+<!--  数据输入组件仓库， 存储各个数据输入组件-->
   <div class="flex w-full p-2.5">
 
-
+<!--    input输入框-->
     <div v-if="props.state.type === 'input'" class="form-control w-full max-w-xl">
       <label class="form-control w-full max-w-xl">
         <div class="label">
@@ -18,7 +20,7 @@
       </label>
     </div>
 
-
+<!--    select选择框, 多选一-->
     <div v-if="props.state.type === 'select'" class="form-control w-full max-w-xl">
       <label class="form-control w-full max-w-xl">
         <div class="label">
@@ -34,7 +36,7 @@
       </label>
     </div>
 
-
+<!--    check box多选框, 多选多-->
     <div v-if="props.state.type === 'checkbox'" class="form-control w-full max-w-xl dropdown dropdown-bottom dropdown-hover">
 
       <label class="form-control w-full max-w-xl">
@@ -62,7 +64,7 @@
 
     </div>
 
-
+<!--    toggle开关-->
     <div v-if="props.state.type === 'toggle'" class="form-control w-full max-w-xl">
       <label class="form-control w-full max-w-xl">
         <div class="label">
@@ -82,18 +84,12 @@
       </label>
     </div>
 
-
-
-
   </div>
 
 </template>
 
 <script setup>
-import {onMounted, ref} from 'vue'
-import UniqueID from "../utils/UniqueID.js";
-
-
+import {ref} from 'vue'
 const props = defineProps({
   state: {
     type: Object,
@@ -121,7 +117,6 @@ const props = defineProps({
   }
 })
 const emits = defineEmits(['updateState']);
-const savedConfig = ref(null);
 const singleAns = ref(null)
 const multipleAns = ref([])
 //因为toggle组件默认状态为true选中右边, 而我把右边的选项值设置为了No选项, 所以yesOrNo的值应该与逻辑值相反
@@ -180,19 +175,6 @@ if(props.state.type === 'toggle' && props.state.value.default !== '') {
   // console.log(`更新的配置: ${JSON.stringify(conf)}`);
   emits('updateState', conf);
 }
-
-
-// const handleCheckbox = (e) => {
-//   const conf = {
-//     ...props.state,
-//     data: {
-//       ...props.state.data,
-//       selected: checkboxSelected.value
-//     }
-//   }
-//   emits('updateState', conf);
-// }
-
 
 </script>
 
