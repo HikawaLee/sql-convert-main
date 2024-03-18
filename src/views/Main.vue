@@ -44,21 +44,21 @@
   <span v-if="loading" class="loading loading-infinity loading-lg"></span>
 
 
-  <!--  <div class="divider"></div>-->
-  <!--  <div>-->
-  <!--    <pre>-->
-  <!--      inputData is:-->
-  <!--      {{ JSON.stringify(inputData, null, 2) }}-->
-  <!--    </pre>-->
-  <!--  </div>-->
-  <!--  <div>-->
+<!--    <div class="divider"></div>-->
+<!--    <div>-->
+<!--      <pre>-->
+<!--        inputData is:-->
+<!--        {{ JSON.stringify(inputData, null, 2) }}-->
+<!--      </pre>-->
+<!--    </div>-->
+<!--    <div>-->
 
 
-  <!--    <div class="divider"></div>-->
-  <!--    <pre>-->
-  <!--      selected is: {{ selected }}-->
-  <!--    </pre>-->
-  <!--  </div>-->
+<!--      <div class="divider"></div>-->
+<!--      <pre>-->
+<!--        selected is: {{ selected }}-->
+<!--      </pre>-->
+<!--    </div>-->
 
 
   <div class="m-2.5 bg-base-200 border-2 rounded-md shadow-sm">
@@ -118,7 +118,6 @@ const updateState = (data) => {
   inputData[data.id] = {
     label: data.label,
     selected: data.selected
-
   }
 }
 
@@ -165,7 +164,7 @@ const generate = (action, data) => {
 
   sqlList.value = sqlBuilder.generateSQL(data, actionName);
 
-  console.log(`生成的sql是: ${JSON.stringify(sqlList.value)}`)
+  // console.log(`生成的sql是: ${JSON.stringify(sqlList.value)}`)
 
 }
 

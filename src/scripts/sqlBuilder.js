@@ -24,7 +24,7 @@ function generateSQL(inputData, actionType) {
     //获取目标数据库类型并生成SQL
     // const targetDB = infoArr.find(item => item.label === dbConf.dbType).selected;
 
-    console.log("info:", JSON.stringify(info, null, 2));
+    // console.log("info:", JSON.stringify(info, null, 2));
 
     const targetDB = info[dbConf.dbType];
     if(targetDB === [] || targetDB === undefined || targetDB === null) {
