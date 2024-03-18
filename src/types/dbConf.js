@@ -41,12 +41,14 @@ export default {
     dbType: '目标数据库',
     dbName: '数据库名',
     tableName: '表名',
+    primaryKeyName: '主键名',
 
-
+    newPrimaryKeyName: '新主键名',
     newTableName: '新表名',
     setDefault: '设置默认值',
     setNullable: '设置允许为空',
     setNewFieldType: '设置新字段类型',
+
 
     fieldName: '字段名',
     fieldType: '字段类型',

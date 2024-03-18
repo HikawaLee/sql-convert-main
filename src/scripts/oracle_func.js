@@ -16,38 +16,24 @@ function generateAddColumnSQL(inputData, opts = {}) {
     const fieldPrecision = inputData[dbConf.fieldPrecision];
 
 
-    ///TODO 加字段前先检查字段是否存在
-    //SET SERVEROUTPUT ON SIZE 1000000
-    // DECLARE
-    //   v_col_exists NUMBER
-    // BEGIN
-    //   SELECT count(*) INTO v_col_exists
-    //     FROM user_tab_cols
-    //     WHERE column_name = 'EFFECTIVE_DATE'
-    //       AND table_name = 'MEMBERS';
-    //
-    //    IF (v_col_exists = 0) THEN
-    //       EXECUTE IMMEDIATE 'ALTER TABLE members ADD effective_date DATE';
-    //    ELSE
-    //     DBMS_OUTPUT.PUT_LINE('The column effective_date already exists');
-    //   END IF;
-    // END;
-    // /
 
-    const sql =
-        `ALTER TABLE ${dbName}.${tableName}
-            ADD ${fieldName} ${getType(fieldType, fieldLength, fieldPrecision)};`;
-    //adding-column can have many options, such as default value, not null, comment, index, unique, primary key, auto increment, unsigned, zerofill, charset, collation, check, reference, expression, function, constraint
-    // 1.  with a Default Value / NOT NULL
-    // ALTER TABLE your_table ADD new_column VARCHAR2(255) DEFAULT 'default_value' / NOT NULL;
-    // 2.  adding a PRIMARY KEY column
-    //alter table emp add (EmpID varchar2(20) constraint emp_pk primary key);
-    // 3. add multiple columns
-    //ALTER TABLE customer
-    // ADD (
-    //   suburb VARCHAR2(100),
-    //   postcode VARCHAR2(20)
-    // );
+    const sql = `\n
+prompt ${tableName} 新增字段 ${fieldName} ......
+declare
+    v_rowcount integer;
+begin
+select count(*) into v_rowcount from user_tables where table_name = upper('${tableName}');
+if v_rowcount > 0 then
+select count(*) into v_rowcount from user_tab_columns
+where table_name = upper('${tableName}')
+  and column_name = upper('${fieldName}');
+if v_rowcount = 0 then
+            execute immediate 'ALTER TABLE ${tableName} ADD ${fieldName} ${getType(fieldType, fieldLength, fieldPrecision)}';
+end if;
+end if;
+end;
+/
+    `
     return sql;
 }
 
@@ -68,11 +54,23 @@ function generateDropColumnSQL(inputData, opts = {}) {
 
     //ALTER TABLE table_name DROP COLUMN column_name;Alternatively,
     // you can use Unused Columns to drop a column from a table.
-    const sql =
-        `ALTER TABLE ${dbName}.${tableName}
-            DROP (
-                  ${fieldName}
-                );`;
+    const sql = `\n
+prompt ${tableName} 删除非主键字段 ${fieldName} ......
+declare
+    v_rowcount integer;
+begin
+    select count(*) into v_rowcount from user_tables where table_name = upper('${tableName}');
+    if v_rowcount > 0 then
+        select count(*) into v_rowcount from user_tab_columns
+        where table_name = upper('${tableName}')
+          and column_name = upper('${fieldName}');
+        if v_rowcount > 0 then
+            execute immediate 'ALTER TABLE ${tableName} DROP COLUMN ${fieldName}';
+        end if;
+    end if;
+end;
+/
+    `
 
     return sql;
 }
@@ -86,15 +84,39 @@ function generateModifyColumnSQL(inputData, opts = {}) {
     const fieldLength = inputData[dbConf.fieldLength];
     const fieldPrecision = inputData[dbConf.fieldPrecision];
 
-    const sql =
-        `ALTER TABLE ${dbName}.${tableName}
-            MODIFY ${fieldName} ${getType(fieldType, fieldLength, fieldPrecision)};`;
+    const sql = `\n
+prompt ${tableName}表的非主键字段${fieldName}......
+declare
+  v_rowcount integer;
+  v_nullable char(1);
+begin
+  select count(*) into v_rowcount
+    from user_tables
+   where table_name = upper('${tableName}');
+  if v_rowcount > 0 then
+    select count(*) into v_rowcount
+      from user_tab_columns
+     where table_name = upper('${tableName}')
+       and column_name = upper('${fieldName}');
+    if v_rowcount > 0 then
+      select t.NULLABLE into v_nullable from user_tab_columns t 
+      where t.TABLE_NAME = upper('${tableName}') 
+      and t.COLUMN_NAME = upper('o${fieldName}');
+      if v_nullable <> 'Y' then
+           execute immediate 'alter table ${tableName} modify ${fieldName} ${getType(fieldType, fieldLength, fieldPrecision)} null';
+      end if;
+    end if;
+  end if;
+end;
+/
+    `
 
     return sql;
 }
 
 
 function generateRenameTableSQL(inputData, opts = {}) {
+    //Todo 未规范化
     const dbName = inputData[dbConf.dbName];
     const tableName = inputData[dbConf.tableName];
     const newTableName = inputData[dbConf.newTableName];
@@ -114,9 +136,21 @@ function generateAddIndexSQL(inputData, opts = {}) {
     const fieldName = inputData[dbConf.fieldName];
     const indexName = inputData[dbConf.fieldIndex];
 
-    const sql =
-        `CREATE INDEX ${indexName}
-            ON ${dbName}.${tableName} (${fieldName});`;
+    const sql = `
+    prompt add index to file datatable ${dbName}  ...
+    declare
+        v_rowcount number;
+    begin
+        select count(*) into v_rowcount from user_indexes where table_name = upper('${tableName}') and index_name = upper('${indexName}');
+        if v_rowcount = 0 then
+            FOR idx IN (SELECT index_name FROM user_indexes WHERE table_name = '${tableName}') LOOP
+            EXECUTE IMMEDIATE 'DROP INDEX ' || idx.index_name;
+            END LOOP;
+            execute immediate 'CREATE INDEX ${indexName} ON ${tableName}(${fieldName} ASC) ';
+        end if;
+    end;
+    /
+    `
 
     return sql;
 }
@@ -127,21 +161,11 @@ function generateDropIndexSQL(inputData, opts = {}) {
     const tableName = inputData[dbConf.tableName];
     const indexName = inputData[dbConf.fieldIndex];
 
+    ///FIXME 未找到对应模板
+
     //const sql = `DROP INDEX ${tableName}.${indexName};`;
-    const sql =
-        `        DECLARE
-            COUNT_INDEXES   INTEGER;
-        BEGIN
-            SELECT COUNT ( * )
-                INTO COUNT_INDEXES
-            FROM USER_INDEXES
-                WHERE INDEX_NAME = ${indexName};
-                
-            IF COUNT_INDEXES > 0 THEN
-                    EXECUTE IMMEDIATE 'DROP INDEX ${indexName}';
-                END IF;
-            END;
-        /`
+
+
 
 
     return sql;
@@ -181,33 +205,7 @@ function generateDropPrimaryKeySQL(inputData, opts = {}) {
     const tableName = inputData[dbConf.tableName];
     const fieldName = inputData[dbConf.fieldName];
 
-
-    //1. ①先查出来主键名（constraint_name）
-    //SELECT t.* from user_cons_columns t where t.table_name  = 'TABLE_TEST' and t.position is not null;
-    // 公式：SELECT t.* from user_cons_columns t where t.table_name  = '表名' and t.position is not null;   --表名必须大写，如：TABLE_TEST
-    // user_constraints：是表约束的视图,描述的是约束类型(constraint_type)是什么,属于哪些表(table_name),如果约束的类型为R(外键)的话,那么r_constraint_name字段存放的就是被引用主表中的主键约束名。
-    //         user_cons_columns：是表约束字段的视图,说明表中的和约束相关的列参与了哪些约束。这些约束有主键约束,外键约束,索引约束.
-    //         两者可以通过(owner,constraint_name,table_name)关联
-
-    //2. ②删除主键
-    //ALTER TABLE table_name DROP CONSTRAINT constraint_name;
-    // declare
-    // sql_stmt varchar2(255);
-    // cons_name varchar2(30);
-    // begin
-    // select CONSTRAINT_NAME
-    // into cons_name
-    // From  USER_CONSTRAINTS
-    // where table_name='PERSONS'
-    // AND  CONSTRAINT_TYPE='P';
-    //
-    // sql_stmt:=' ALTER TABLE PERSONS
-    // DROP CONSTRAINT '||cons_name;
-    //
-    // dbms_output.put_line(sql_stmt);
-    // execute immediate sql_stmt;
-    //
-    // end;
+///TODO 未规范化
     const sql =
         `DECLARE
             sql_stmt VARCHAR2(255);
@@ -221,6 +219,71 @@ function generateDropPrimaryKeySQL(inputData, opts = {}) {
             EXECUTE IMMEDIATE sql_stmt;
         END;`
     return sql;
+}
+
+
+function generateModifyPrimaryKeySQL(inputData, opts = {}) {
+    const dbName = inputData[dbConf.dbName];
+    const tableName = inputData[dbConf.tableName];
+    const fieldName = inputData[dbConf.fieldName];
+    const primaryKeyName = inputData[dbConf.primaryKeyName];
+    const newPrimaryKeyName = inputData[dbConf.newPrimaryKeyName];
+//     const sql = `\n
+// prompt ${tableName} 表修改主键 ${primaryKeyName}  为 ${newPrimaryKeyName} ......
+// DECLARE
+//     v_pk_exists   NUMBER;
+//     v_table_exists NUMBER;
+// BEGIN
+//     -- Check if the table exists
+// SELECT COUNT(*)
+// INTO v_table_exists
+// FROM USER_TABLES
+// WHERE TABLE_NAME = UPPER('${tableName}');
+// -- Exit if table doesn't exist
+// IF v_table_exists = 0 THEN
+//         RETURN;
+// END IF;
+//     -- Check if the primary key exists for the table
+// SELECT COUNT(*)
+// INTO v_pk_exists
+// FROM USER_CONSTRAINTS
+// WHERE TABLE_NAME = UPPER('${tableName}')
+//   AND CONSTRAINT_TYPE = 'P'
+//   AND CONSTRAINT_NAME = UPPER('${primaryKeyName}');
+// -- If the primary key exists, rename it by prepending 'pk_'
+// IF v_pk_exists = 1 THEN
+//         EXECUTE IMMEDIATE 'ALTER TABLE ${primaryKeyName} RENAME CONSTRAINT ${primaryKeyName} TO ${newPrimaryKeyName}';
+// END IF;
+// END;
+// /
+//     `
+
+
+    const sql = `\n
+prompt ${tableName} 重建主键
+declare
+  v_rowcount number;
+begin
+  select count(*) into v_rowcount from user_constraints where table_name = upper('${tableName}') and constraint_name = upper('${primaryKeyName}');
+  if v_rowcount > 0 then
+    select count(*) into v_rowcount from user_cons_columns t where table_name = upper('${tableName}') and t.column_name = upper('${fieldName}') and t.constraint_name = upper('${primaryKeyName}');
+   if v_rowcount = 0 then
+       execute immediate 'alter table ${tableName} drop constraint ${primaryKeyName} cascade drop index';
+   end if;
+  end if;
+
+  select count(*) into v_rowcount from user_tables where table_name = upper('${tableName}');
+  if v_rowcount >0 then
+    select count(*) into v_rowcount from user_constraints where table_name = upper('${tableName}') and constraint_name = upper('${primaryKeyName}');
+    if v_rowcount = 0 then
+       execute immediate 'ALTER TABLE ${tableName} ADD CONSTRAINT ${primaryKeyName} PRIMARY KEY(${fieldName})';
+    end if;
+  end if;
+end;
+/
+    `
+
+
 }
 
 

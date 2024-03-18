@@ -48,7 +48,7 @@ export default {
         [dbConf.dameng]: damengFunc.generateRebuildIndexSQL,
     },
     [actionType.ADDPRIMARYKEY]: {
-        [dbConf.mysql]: mysqlFunc.generatePrimaryKeySQL,
+        [dbConf.mysql]: mysqlFunc.generateAddPrimaryKeySQL,
         [dbConf.tdsql]: tdsqlFunc.generatePrimaryKeySQL,
         [dbConf.oracle]: oracleFunc.generateAddPrimaryKeySQL,
         [dbConf.dameng]: damengFunc.generateAddPrimaryKeySQL,

@@ -2,8 +2,6 @@
 
 
   <div class="divider divider-horizontal"/>
-
-<!--  <span>{{props.state.id}}</span>-->
   <div class="flex w-full p-2.5">
 
 
@@ -122,15 +120,10 @@ const props = defineProps({
     }
   }
 })
-
-
 const emits = defineEmits(['updateState']);
-
 const savedConfig = ref(null);
-
 const singleAns = ref(null)
 const multipleAns = ref([])
-
 //因为toggle组件默认状态为true选中右边, 而我把右边的选项值设置为了No选项, 所以yesOrNo的值应该与逻辑值相反
 const yesOrNo = ref(true)
 
@@ -176,7 +169,6 @@ const updateConfig = (e) => {
   // console.log(`更新的配置: ${JSON.stringify(conf)}`);
   emits('updateState', conf);
 }
-
 if(props.state.type === 'toggle' && props.state.value.default !== '') {
 
 

@@ -220,7 +220,7 @@ function generateModifyIndexSQL(inputData, opts = {}) {
 }
 
 
-function generatePrimaryKeySQL(inputData, opts = {}) {
+function generateAddPrimaryKeySQL(inputData, opts = {}) {
     const dbName = inputData[dbConf.dbName];
     const tableName = inputData[dbConf.tableName];
     const fieldName = inputData[dbConf.fieldName];
@@ -386,7 +386,7 @@ export default {
     generateAddIndexSQL,
     generateDropIndexSQL,
     generateModifyIndexSQL,
-    generatePrimaryKeySQL,
+    generateAddPrimaryKeySQL,
     generateDropPrimaryKeySQL
 
 }

@@ -10,5 +10,6 @@ export default {
     REBUILDINDEX: '重建索引',
     ADDPRIMARYKEY: '添加主键',
     DELETEPRIMARYKEY: '删除主键',
+    MODIFYPRIAMRYKEY: '修改主键',
     //endregion
 }
