@@ -1,11 +1,12 @@
 import dbConf from "../types/dbConf.js";
 
 /**
- * Generate a mysqldb SQL for add new column into the existing table.
- * @param inputData
- * @param opts
- * @returns {string}
+ * mysql生成添加字段的 SQL 语句
+ * @param inputData 父组件收集到的数据
+ * @param opts 额外配置, 暂时未用到
+ * @returns {string} 返回生成的 SQL 语句
  */
+
 const generateAddColumnSQL = (inputData, opts = {}) => {
     const dbName = inputData[dbConf.dbName];
     const tableName = inputData[dbConf.tableName];
@@ -14,9 +15,14 @@ const generateAddColumnSQL = (inputData, opts = {}) => {
     const fieldLength = inputData[dbConf.fieldLength];
     const fieldPrecision = inputData[dbConf.fieldPrecision];
     let fieldDefault = inputData[dbConf.setDefault];
-    if (fieldType === dbConf.STDchar || fieldType === dbConf.STDstr || fieldType === dbConf.STDtimestamp || fieldType === dbConf.STDclob || fieldType === dbConf.STDBlob) {
-        fieldDefault = `'${fieldDefault}'`;
+    if(fieldDefault === '') {
+        console.log('fieldDefault is empty');
+    } else {
+        if (fieldType === dbConf.STDchar || fieldType === dbConf.STDstr || fieldType === dbConf.STDtimestamp || fieldType === dbConf.STDclob || fieldType === dbConf.STDBlob) {
+            fieldDefault = `'${fieldDefault}'`;
+        }
     }
+
 
 
     const sql = `\n
@@ -371,11 +377,39 @@ function getType(type, L = dbConf.mysqlDecimalP, P = dbConf.mysqlDecimalD) {
         case dbConf.STDdatetime:
             return 'DATETIME';
         case dbConf.STDtimestamp:
-            return `VARCHAR(${L})`;
+            return `VARCHAR`;
         case dbConf.STDclob:
             return 'LONGTEXT';
         case dbConf.STDBlob:
             return 'MEDIUMBLOB';
+        default:
+            throw new Error(`Unsupported type: ${type}. Please handle this case.`);
+    }
+}
+
+const getDefault = (type, defaultValue = '') => {
+    switch (type) {
+        case dbConf.STDint2_t:
+        case dbConf.STDint3_t:
+        case dbConf.STDint4_t:
+        case dbConf.STDint6_t:
+        case dbConf.STDint8_t:
+        case dbConf.STDint10_t:
+            //TODO 进一步校验是否为数字
+            return `DEFAULT ${defaultValue}`;
+        case dbConf.STDdouble:
+            return `DEFAULT ${defaultValue}`
+        case dbConf.STDchar:
+        case dbConf.STDstr:
+            return `DEFAULT '${defaultValue}'`;
+        case dbConf.STDdate:
+        case dbConf.STDtime:
+        case dbConf.STDdatetime:
+        case dbConf.STDtimestamp:
+            return ``; //TODO
+        case dbConf.STDclob:
+        case dbConf.STDBlob:
+            return 'NULL';
         default:
             throw new Error(`Unsupported type: ${type}. Please handle this case.`);
     }

@@ -103,7 +103,7 @@ const actions = [
                     "title": dbConf.setDefault,
                     "value": {
                         "type": String,
-                        "default": "",
+                        "default": "''",
                     },
                 },
                 {
