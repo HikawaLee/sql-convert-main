@@ -1,12 +1,10 @@
 import dbConf from "../types/dbConf.js";
-
 /**
  * mysql生成添加字段的 SQL 语句
  * @param inputData 父组件收集到的数据
  * @param opts 额外配置, 暂时未用到
  * @returns {string} 返回生成的 SQL 语句
  */
-
 const generateAddColumnSQL = (inputData, opts = {}) => {
     const dbName = inputData[dbConf.dbName];
     const tableName = inputData[dbConf.tableName];
@@ -14,22 +12,16 @@ const generateAddColumnSQL = (inputData, opts = {}) => {
     const fieldName = inputData[dbConf.fieldName];
     const fieldLength = inputData[dbConf.fieldLength];
     const fieldPrecision = inputData[dbConf.fieldPrecision];
-    let fieldDefault = inputData[dbConf.setDefault];
-    if(fieldDefault === '') {
-        console.log('fieldDefault is empty');
-    } else {
-        if (fieldType === dbConf.STDchar || fieldType === dbConf.STDstr || fieldType === dbConf.STDtimestamp || fieldType === dbConf.STDclob || fieldType === dbConf.STDBlob) {
-            fieldDefault = `'${fieldDefault}'`;
-        }
-    }
-
+    console.log(`fieldDefault: ${inputData[dbConf.fieldDefault]}`)
+    const fieldDefault = handleNull(inputData[dbConf.fieldDefault])
 
 
     const sql = `\n
         SELECT '${tableName}表中新增字段${fieldName}';
         SET @hs_sql = 'select 1 from dual;';
         SELECT
-            'ALTER TABLE ${dbName}.${tableName} ADD ${fieldName} ${getType(fieldType, fieldLength, fieldPrecision)} DEFAULT ${fieldDefault} INTO @hs_sql
+            'ALTER TABLE ${dbName}.${tableName} ADD ${fieldName} ${getType(fieldType, fieldLength, fieldPrecision)} ${inputData[dbConf.fieldDefault]};'
+             INTO @hs_sql
         FROM DUAL
         WHERE
             (
@@ -41,7 +33,7 @@ const generateAddColumnSQL = (inputData, opts = {}) => {
                     table_schema = SCHEMA()
                     AND UPPER(table_name) = UPPER('${tableName}')
                     AND UPPER(column_name) = UPPER('${fieldName}')
-            ) = 0;
+            ) = 0
             AND 
             (
             SELECT 
@@ -55,11 +47,13 @@ const generateAddColumnSQL = (inputData, opts = {}) => {
         PREPARE hs_stmt FROM @hs_sql;
         EXECUTE hs_stmt;
         DEALLOCATE PREPARE hs_stmt;    
-            `;
+            \n`;
     return sql;
 
 }
-function generateDropColumnSQL(inputData, opts = {}) {
+
+
+const generateDropColumnSQL = (inputData, opts = {}) => {
     const dbName = inputData[dbConf.dbName];
     const tableName = inputData[dbConf.tableName];
     const fieldName = inputData[dbConf.fieldName];
@@ -80,7 +74,7 @@ function generateDropColumnSQL(inputData, opts = {}) {
                     table_schema = SCHEMA()
                     AND UPPER(table_name) = UPPER('${tableName}')
                     AND UPPER(column_name) = UPPER('${fieldName}')
-            ) = 0;
+            ) > 0
             AND 
             (
             SELECT 
@@ -94,7 +88,7 @@ function generateDropColumnSQL(inputData, opts = {}) {
         PREPARE hs_stmt FROM @hs_sql;
         EXECUTE hs_stmt;
         DEALLOCATE PREPARE hs_stmt;
-        `
+        \n`
     return sql;
 }
 
@@ -387,7 +381,9 @@ function getType(type, L = dbConf.mysqlDecimalP, P = dbConf.mysqlDecimalD) {
     }
 }
 
-const getDefault = (type, defaultValue = '') => {
+const getDefault = (type, defaultValue) => {
+    console.log(`type: ${type}, defaultValue: ${defaultValue}`)
+    if(defaultValue === undefined || defaultValue === ' ') return '';
     switch (type) {
         case dbConf.STDint2_t:
         case dbConf.STDint3_t:
@@ -406,7 +402,7 @@ const getDefault = (type, defaultValue = '') => {
         case dbConf.STDtime:
         case dbConf.STDdatetime:
         case dbConf.STDtimestamp:
-            return ``; //TODO
+            return `DEFAULT CURRENT_TIMESTAMP`;
         case dbConf.STDclob:
         case dbConf.STDBlob:
             return 'NULL';
@@ -414,6 +410,13 @@ const getDefault = (type, defaultValue = '') => {
             throw new Error(`Unsupported type: ${type}. Please handle this case.`);
     }
 }
+
+const handleNull = (nullValue) => {
+    if(nullValue === 'null' || nullValue === 'NULL' || nullValue === undefined || nullValue === 'undefined') {
+        return null;
+    }
+}
+
 
 export default {
     generateAddColumnSQL,
