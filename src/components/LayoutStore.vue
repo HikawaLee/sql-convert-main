@@ -93,6 +93,10 @@
 <script setup>
 import {ref} from 'vue'
 import rulesType from "@/types/rulesType.js";
+
+
+//region 父组件传入的数据输入组件的配置----一个标准的数据输入组件的配置
+// 添加了数据收集所需要的各种属性, 例如option属性保存了下拉框的选项, value属性保存输入框的默认值等
 const props = defineProps({
   state: {
     type: Object,
@@ -110,7 +114,7 @@ const props = defineProps({
           "default": "",
         },
         "options": [], // 仅radio, select, checkbox具有， 保存选项
-        "data": {   //不能为空, 保存用户提交的数据
+        "data": {   // 保存用户提交的数据
           "type": Array,
           "selected": []
         },

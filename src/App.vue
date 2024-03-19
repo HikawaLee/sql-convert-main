@@ -1,5 +1,5 @@
 <script setup>
-import Main from './views/Main.vue';
+import Main from '@/views/Main.vue';
 import logo from '@/assets/logo.gif'
 import bgPic from '@/assets/index-bg.png'
 </script>
@@ -9,7 +9,7 @@ import bgPic from '@/assets/index-bg.png'
 
 
 
-  <div class="p-2.5 w-3/4 bg-slate-100 mx-auto min-w-96 min-h-full relative">
+  <div class="p-2.5 w-3/4 bg-slate-100 mx-auto min-w-96 min-h-full relative flex-col">
     <Main/>
     <footer class="footer items-center p-4 text-neutral-content">
       <aside class="items-center grid-flow-col">

@@ -1,9 +1,10 @@
 <template>
 
-  <div class="navbar bg-slate-100 mt-2.5 relative">
+  <div class="navbar bg-slate-100 mt-2.5 mb-2.5 relative">
     <!-- 功能选择框 值域：新增字段、修改字段等  -->
     <div class="navbar-start">
       <div class="dropdown">
+<!--        输入重置按钮-->
         <select class="select select-bordered w-full max-w-xs" v-model="selected" @change="resetInput">
           <template v-for="(action, index) in NamedActionMap" :key="index">
             <option>{{ action.name }}</option>
@@ -40,13 +41,6 @@
     </div>
   </div>
 
-
-<!--  <div>-->
-<!--    <pre>-->
-<!--      {{JSON.stringify(inputData, null, 2)}}-->
-<!--    </pre>-->
-<!--  </div>-->
-
   <div v-if="loading" class="flex justify-center">
     <span class="loading loading-infinity loading-lg"></span>
   </div>
@@ -58,17 +52,18 @@
 </template>
 
 <script setup>
-import LayoutStore from '../components/LayoutStore.vue';
-import Output from '../components/Output.vue';
-import NamedActionMap from "../conf/ActionConfig.js";
-import standardize from "../utils/Standardize.js";
+import LayoutStore from '@/components/LayoutStore.vue';
+import Output from '@/components/Output.vue';
+import NamedActionMap from "@/conf/ActionConfig.js";
+import standardize from "@/utils/Standardize.js";
 import {computed, ref, reactive} from "vue";
-import UniqueID from "../utils/UniqueID.js";
-import actionType from "../types/actionType.js";
-import sqlBuilder from "../scripts/sqlBuilder.js";
+import UniqueID from "@/utils/UniqueID.js";
+import actionType from "@/types/actionType.js";
+import sqlBuilder from "@/scripts/sqlBuilder.js";
 
 const defaultAction = NamedActionMap.find((item) => item.name === actionType.ADD) || NamedActionMap[0];
-const selected = ref(defaultAction.name)
+
+const selected = ref(defaultAction.name) //当前选中的功能，用于切换功能
 const activeAction = computed(() => {
   return NamedActionMap.find((item) => item.name === selected.value) || defaultAction;
 })
