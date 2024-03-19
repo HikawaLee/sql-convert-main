@@ -93,6 +93,7 @@
 <script setup>
 import {ref} from 'vue'
 import rulesType from "@/types/rulesType.js";
+import InputType from "@/types/inputType.js";
 
 
 //region 父组件传入的数据输入组件的配置----一个标准的数据输入组件的配置
@@ -187,9 +188,20 @@ const updateConfig = (e) => {
 }
 
 //初始化toggle组件的默认值
-if(props.state.type === 'toggle' && props.state.value.default !== '') {
-
-
+if(props.state.type === InputType.TOGGLE && props.state.value.default !== '') {
+  const conf = {
+    id: props.state.id,
+    label: props.state.label,
+    selected: props.state.value.default
+  }
+  emits('updateState', conf);
+}
+//初始化其他组件的默认值
+if(props.state.type !== InputType.TOGGLE && props.state.value.default !== undefined) {
+  if(props.state.type === InputType.CHECKBOX) {
+    multipleAns.value = props.state.value.default;
+  }
+  else singleAns.value = props.state.value.default;
   const conf = {
     id: props.state.id,
     label: props.state.label,
@@ -200,22 +212,20 @@ if(props.state.type === 'toggle' && props.state.value.default !== '') {
 
 
 
+
+
 const warningShow = ref(false)
 const warningText = ref('')
 //根据rules的配置校验用户输入的数据是否为数字和最值限制
 const verifyNumber = (rules, value) => {
   const numericRegex = /^[0-9]+$/; // TODO 应该把正则表达式放到rules中
-  console.log(value)
   // 检查输入值是否为数字
   if (numericRegex.test(value)) {
-    // 输入值是数字，继续检查最大值和最小值
+    // 输入值是数字，继续检查最小值
     const numericValue = parseInt(value, 10); // 将输入值转换为整数
     const min = rules[rulesType.min];
-    const max = rules[rulesType.max];
-    console.log(`min: ${min}, max: ${max}, numericValue: ${numericValue}`)
-    if (numericValue >= min  && numericValue <= max) {
+    if (numericValue >= min) {
       warningShow.value = false
-
     } else {
       warningText.value = "输入值不在有效范围内。";
       handleWarning()

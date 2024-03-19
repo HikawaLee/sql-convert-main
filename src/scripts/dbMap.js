@@ -4,6 +4,7 @@ import damengFunc from "./dameng_func.js";
 import oracleFunc from "./oracle_func.js";
 import dbConf from "../types/dbConf.js";
 import actionType from "../types/actionType.js";
+//SQL模板函数池, 用于根据数据库类型和操作类型生成对应的SQL, 例如: dbMap[actionType.ADD][dbConf.mysql](info)
 export default {
     [actionType.ADD]:{
         [dbConf.mysql]: mysqlFunc.generateAddColumnSQL,

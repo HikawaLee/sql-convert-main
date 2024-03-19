@@ -1,3 +1,4 @@
+// 校验枚举, 直接在配置文件中使用减少硬编码
 export default {
     //region 规则类型
     //region 通用规则

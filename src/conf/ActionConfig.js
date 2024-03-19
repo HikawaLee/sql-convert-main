@@ -12,70 +12,32 @@ const actions = [
                     "type": inputType.INPUT,
                     "title": dbConf.dbName,
                     "required": {
-                        "message": "请选择要迁移的数据库, 例如: test, 注意: 请勿输入中文",
+                        "message": "请选择要修改数据库的数据库名, 注意: 执行时若报权限错误, 请先申请对应的数据库操作权限或者切换到对应身份!",
                     },
                     "value": {
                         "type": String,
-                        "default": "",
+                        "default": "test_db",
                     },
                     "desc": "数据库名称, 注意: 请勿输入中文",
+                    "placeholder": "数据库名不能含有空格",
                     "rules": {
-                        [rulesType.dataType]: rulesType.alphaRegex,
-                    }, //校验规则, 待定
+                        [rulesType.dataType]: rulesType.alphaRegex, //FIXME 组件引用获取后似乎变成了字符串
+                    },
                 },
                 {
                     "type": inputType.INPUT,
                     "title": dbConf.tableName,
                     "required": {
-                        "message": "请填入表名, 例如: test, 注意: 请勿输入中文",
+                        "message": "请填入要修改表的表名, 例如: test, 注意: 请勿输入中文",
                     },
                     "value": {
                         "type": String,
-                        "default": "",
+                        "default": "test_user",
                     },
-                    "rules": {},
-                },
-                {
-                    "type": inputType.INPUT,
-                    "title": dbConf.fieldName,
-                    "required": {
-                        "message": "请填入字段名, 例如: test",
-                    },
-                    "value": {
-                        "type": String,
-                        "default": "t_id",
-                    },
-                    "rules": {},
-                },
-                {
-                    "type": inputType.INPUT,
-                    "title": dbConf.fieldLength,
-                    "value": {
-                        "type": Number,
-                        "default": 10,
-                    },
-                    "desc": "请输入字段长度, 例如: 10",
+                    "desc": "数据库名称, 注意: 请勿输入中文",
+                    "placeholder": "表名不能含有空格",
                     "rules": {
-                        [rulesType.dataType]: rulesType.numberRegex,
-                        [rulesType.max]: 255,
-                        [rulesType.min]: 1,
-                    }
-
-                },
-                {
-                    "type": inputType.INPUT,
-                    "title": dbConf.setDefault,
-                    "value": {
-                        "type": String,
-                        "default": "",
-                    },
-                },
-                {
-                  type: inputType.INPUT,
-                  title: dbConf.fieldPrecision,
-                    value: {
-                        type: String,
-                        default: "",
+                        [rulesType.dataType]: rulesType.alphaRegex
                     },
                 },
                 {
@@ -87,7 +49,7 @@ const actions = [
                     "placeholder": "",
                     "value": {
                         "type": String,
-                        "default": "String(Java兼容)",
+                        "default": dbConf.STDstr,
                     },
                     "options": [
                         dbConf.STDint2_t,
@@ -108,11 +70,61 @@ const actions = [
                     ],
                 },
                 {
+                    "type": inputType.INPUT,
+                    "title": dbConf.fieldName,
+                    "required": {
+                        "message": "请填入字段名, 例如: test",
+                    },
+                    "value": {
+                        "type": String,
+                        "default": "t_id",
+                    },
+                    "desc": "字段名称不能含有空格",
+                    "rules": {
+                        [rulesType.dataType]: rulesType.alphaRegex,
+                    },
+                },
+                {
+                    "type": inputType.INPUT,
+                    "title": dbConf.fieldLength,
+                    "value": {
+                        "type": Number,
+                        "default": 16, ////TODO 数据库的各种类型的长度限制该如何统一管理?
+                    },
+                    "desc": "请输入字段长度, 例如: 10",
+                    "rules": {
+                        [rulesType.dataType]: rulesType.numberRegex,
+                        [rulesType.min]: 1,
+                    }
+
+                },
+                {
+                    "type": inputType.INPUT,
+                    "title": dbConf.setDefault,
+                    "value": {
+                        "type": String,
+                        "default": "",
+                    },
+                },
+                {
+                  type: inputType.INPUT,
+                  title: dbConf.fieldPrecision,
+                    value: {
+                        type: Number,
+                        default: 0,
+                    },
+                    "rules": {
+                        [rulesType.dataType]: rulesType.numberRegex,
+                        [rulesType.min]: 0,
+                    }
+                },
+
+                {
                     "type": inputType.CHECKBOX,
                     "title": dbConf.dbType,
                     "value": {
                         "type": String,
-                        "default": "达梦",
+                        "default": [dbConf.mysql, dbConf.oracle, dbConf.dameng, dbConf.tdsql],
                     },
                     "options":
                         [

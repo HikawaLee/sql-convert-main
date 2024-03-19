@@ -9,9 +9,9 @@ import dbConf from "../types/dbConf.js";
 const generateAddColumnSQL = (inputData, opts = {}) => {
     const dbName = inputData[dbConf.dbName];
     const tableName = inputData[dbConf.tableName];
+    const fieldType = inputData[dbConf.fieldType];
     const fieldName = inputData[dbConf.fieldName];
     const fieldLength = inputData[dbConf.fieldLength];
-    const fieldType = inputData[dbConf.fieldType];
     const fieldPrecision = inputData[dbConf.fieldPrecision];
     let fieldDefault = inputData[dbConf.setDefault];
     if (fieldType === dbConf.STDchar || fieldType === dbConf.STDstr || fieldType === dbConf.STDtimestamp || fieldType === dbConf.STDclob || fieldType === dbConf.STDBlob) {
@@ -357,6 +357,9 @@ function getType(type, L = dbConf.mysqlDecimalP, P = dbConf.mysqlDecimalD) {
         case dbConf.STDint10_t:
             return 'INT';
         case dbConf.STDdouble:
+            if(L > 65 || L < 1 || P < 0 || P > 30 || P > L) {
+                throw new Error('Invalid input. Please provide valid type, L, and P values.');
+            }
             return `DECIMAL(${L},${P})`;
         case dbConf.STDchar:
             return 'CHAR';
