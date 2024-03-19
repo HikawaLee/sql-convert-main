@@ -1,6 +1,7 @@
 import inputType from '../types/inputType.js'
 import actionType from "../types/actionType.js";
 import dbConf from "../types/dbConf.js";
+import rulesType from "@/types/rulesType.js";
 // 布局配置对象, 用于生成表单, 每个对象对应一个操作, 每个操作包含一个或多个输入框, 下拉框, 复选框等, 用于生成表单
 const actions = [
     {
@@ -12,14 +13,15 @@ const actions = [
                     "title": dbConf.dbName,
                     "required": {
                         "message": "请选择要迁移的数据库, 例如: test, 注意: 请勿输入中文",
-                        "trigger": "blur",
                     },
                     "value": {
                         "type": String,
                         "default": "",
                     },
-                    "desc": "请选择要迁移的数据库, 例如: test, 注意: 请勿输入中文",
-                    "rules": [], //校验规则, 待定
+                    "desc": "数据库名称, 注意: 请勿输入中文",
+                    "rules": {
+                        [rulesType.dataType]: rulesType.alphaRegex,
+                    }, //校验规则, 待定
                 },
                 {
                     "type": inputType.INPUT,
@@ -31,7 +33,7 @@ const actions = [
                         "type": String,
                         "default": "",
                     },
-                    "rules": [],
+                    "rules": {},
                 },
                 {
                     "type": inputType.INPUT,
@@ -43,14 +45,21 @@ const actions = [
                         "type": String,
                         "default": "t_id",
                     },
+                    "rules": {},
                 },
                 {
                     "type": inputType.INPUT,
                     "title": dbConf.fieldLength,
                     "value": {
-                        "type": String,
-                        "default": "",
+                        "type": Number,
+                        "default": 10,
                     },
+                    "desc": "请输入字段长度, 例如: 10",
+                    "rules": {
+                        [rulesType.dataType]: rulesType.numberRegex,
+                        [rulesType.max]: 255,
+                        [rulesType.min]: 1,
+                    }
 
                 },
                 {
@@ -122,28 +131,6 @@ const actions = [
                     },
                     "options": ["是", "否"],
                 },
-                // {
-                //     "type": "radio",
-                //     "title": "大小表切换",
-                //     "value": {
-                //         "type": String,
-                //         "default": "小表",
-                //     },
-                //     "options": ["大表", "小表"],
-                // },
-                // {
-                //     "type": "radio",
-                //     "title": "是否大表",
-                //     "value": {
-                //         "type": String,
-                //         "default": "否",
-                //     },
-                //     "options": ["是", "否"],
-                // },
-                // {
-                //     "type": "textarea",
-                //     "title": "目标SQL输出",
-                // }
             ],
     },
 
@@ -164,7 +151,7 @@ const actions = [
                     "default": "",
                 },
                 "desc": "请选择要迁移的数据库, 例如: test, 注意: 请勿输入中文",
-                "rules": [], //校验规则, 待定
+                "rules": {}, //校验规则, 待定
             },
             {
                 "type": inputType.INPUT,
@@ -176,7 +163,7 @@ const actions = [
                     "type": String,
                     "default": "",
                 },
-                "rules": [],
+                "rules": {},
             },
             {
                 "type": inputType.INPUT,
@@ -242,28 +229,7 @@ const actions = [
                         dbConf.tdsql,
                     ],
             },
-            // {
-            //     "type": "radio",
-            //     "title": "大小表切换",
-            //     "value": {
-            //         "type": String,
-            //         "default": "小表",
-            //     },
-            //     "options": ["大表", "小表"],
-            // },
-            // {
-            //     "type": "radio",
-            //     "title": "是否大表",
-            //     "value": {
-            //         "type": String,
-            //         "default": "否",
-            //     },
-            //     "options": ["是", "否"],
-            // },
-            // {
-            //     "type": "textarea",
-            //     "title": "目标SQL输出",
-            // }
+
         ],
     },
 
@@ -282,7 +248,7 @@ const actions = [
                     "default": "",
                 },
                 "desc": "请选择要迁移的数据库, 例如: test, 注意: 请勿输入中文",
-                "rules": [], //校验规则, 待定
+                "rules": {}, //校验规则, 待定
             },
             {
                 "type": inputType.INPUT,
@@ -294,7 +260,7 @@ const actions = [
                     "type": String,
                     "default": "",
                 },
-                "rules": [],
+                "rules": {},
             },
             {
                 "type": inputType.INPUT,
@@ -418,7 +384,7 @@ const actions = [
                     "default": "",
                 },
                 "desc": "请选择要迁移的数据库, 例如: test, 注意: 请勿输入中文",
-                "rules": [], //校验规则, 待定
+                "rules": {}, //校验规则, 待定
             },
             {
                 "type": inputType.INPUT,
@@ -430,7 +396,7 @@ const actions = [
                     "type": String,
                     "default": "",
                 },
-                "rules": [],
+                "rules": {},
             },
             {
                 "type": inputType.INPUT,
@@ -442,7 +408,7 @@ const actions = [
                     "type": String,
                     "default": "",
                 },
-                "rules": [],
+                "rules": {},
             },
             {
                 "type": inputType.CHECKBOX,
@@ -486,7 +452,7 @@ const actions = [
                     "default": "",
                 },
                 "desc": "请选择要迁移的数据库, 例如: test, 注意: 请勿输入中文",
-                "rules": [], //校验规则, 待定
+                "rules": {}, //校验规则, 待定
             },
             {
                 "type": inputType.INPUT,
@@ -498,7 +464,7 @@ const actions = [
                     "type": String,
                     "default": "",
                 },
-                "rules": [],
+                "rules": {},
             },
             {
                 "type": inputType.INPUT,
@@ -510,7 +476,7 @@ const actions = [
                     "type": String,
                     "default": "",
                 },
-                "rules": [],
+                "rules": {},
             },
             {
                 "type": inputType.INPUT,
@@ -522,7 +488,7 @@ const actions = [
                     "type": String,
                     "default": "",
                 },
-                "rules": [],
+                "rules": {},
             },
             {
                 "type": inputType.CHECKBOX,
@@ -567,7 +533,7 @@ const actions = [
                     "default": "",
                 },
                 "desc": "请选择要迁移的数据库, 例如: test, 注意: 请勿输入中文",
-                "rules": [], //校验规则, 待定
+                "rules": {}, //校验规则, 待定
             },
             {
                 "type": inputType.INPUT,
@@ -579,7 +545,7 @@ const actions = [
                     "type": String,
                     "default": "",
                 },
-                "rules": [],
+                "rules": {},
             },
             {
                 "type": inputType.INPUT,
@@ -591,7 +557,7 @@ const actions = [
                     "type": String,
                     "default": "",
                 },
-                "rules": [],
+                "rules": {},
             },
             {
                 "type": inputType.CHECKBOX,
@@ -635,7 +601,7 @@ const actions = [
                     "default": "",
                 },
                 "desc": "请选择要迁移的数据库, 例如: test, 注意: 请勿输入中文",
-                "rules": [], //校验规则, 待定
+                "rules": {}, //校验规则, 待定
             },
             {
                 "type": inputType.INPUT,
@@ -647,7 +613,7 @@ const actions = [
                     "type": String,
                     "default": "",
                 },
-                "rules": [],
+                "rules": {},
             },
             {
                 "type": inputType.INPUT,
@@ -659,7 +625,7 @@ const actions = [
                     "type": String,
                     "default": "",
                 },
-                "rules": [],
+                "rules": {},
             },
             {
                 "type": inputType.CHECKBOX,
@@ -703,7 +669,7 @@ const actions = [
                     "default": "",
                 },
                 "desc": "请选择要迁移的数据库, 例如: test, 注意: 请勿输入中文",
-                "rules": [], //校验规则, 待定
+                "rules": {}, //校验规则, 待定
             },
             {
                 "type": inputType.INPUT,
@@ -715,7 +681,7 @@ const actions = [
                     "type": String,
                     "default": "",
                 },
-                "rules": [],
+                "rules": {},
             },
             {
                 "type": inputType.INPUT,
@@ -727,7 +693,7 @@ const actions = [
                     "type": String,
                     "default": "",
                 },
-                "rules": [],
+                "rules": {},
             },
             {
                 "type": inputType.CHECKBOX,
@@ -772,7 +738,7 @@ const actions = [
                     "default": "",
                 },
                 "desc": "请选择要迁移的数据库, 例如: test, 注意: 请勿输入中文",
-                "rules": [], //校验规则, 待定
+                "rules": {}, //校验规则, 待定
             },
             {
                 "type": inputType.INPUT,
@@ -784,7 +750,7 @@ const actions = [
                     "type": String,
                     "default": "",
                 },
-                "rules": [],
+                "rules": {},
             },
             {
                 "type": inputType.CHECKBOX,
@@ -828,7 +794,7 @@ const actions = [
                     "default": "",
                 },
                 "desc": "请选择要迁移的数据库, 例如: test, 注意: 请勿输入中文",
-                "rules": [], //校验规则, 待定
+                "rules": {}, //校验规则, 待定
             },
             {
                 "type": inputType.INPUT,
@@ -840,7 +806,7 @@ const actions = [
                     "type": String,
                     "default": "",
                 },
-                "rules": [],
+                "rules": {},
             },
             {
                 "type": inputType.INPUT,
@@ -923,28 +889,6 @@ const actions = [
                 },
                 "options": ["是", "否"],
             },
-            // {
-            //     "type": "radio",
-            //     "title": "大小表切换",
-            //     "value": {
-            //         "type": String,
-            //         "default": "小表",
-            //     },
-            //     "options": ["大表", "小表"],
-            // },
-            // {
-            //     "type": "radio",
-            //     "title": "是否大表",
-            //     "value": {
-            //         "type": String,
-            //         "default": "否",
-            //     },
-            //     "options": ["是", "否"],
-            // },
-            // {
-            //     "type": "textarea",
-            //     "title": "目标SQL输出",
-            // }
         ],
     },
 

@@ -1,7 +1,6 @@
 <template>
-
   <template v-for="(sql, index) in props.sqlList">
-    <div class="bg-white rounded-md">
+    <div class="bg-white rounded-md ">
       <div class="collapse-title text-xl font-medium flex justify-between">
         <div class="divider divider-neutral">{{sql.dbType}}</div>
         <div class="tooltip" :data-tip="copyTips" @mouseout="handleMouseOut">
@@ -21,8 +20,9 @@
             previewBackground="white"
             :boxShadow="false">
         </mavon-editor>
+
       </div>
-      <div class="divider divider-horizontal"/>
+      <hr class="h-[2px] border-t-0 outline-dotted outline-0.5 outline-slate-100 dark:bg-white/10" />
     </div>
   </template>
 </template>

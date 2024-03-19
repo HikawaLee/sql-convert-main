@@ -1,7 +1,7 @@
 <template>
 
   <div class="navbar bg-slate-100 mt-2.5 relative">
-    <!-- 功能選擇框 值域：新增字段、修改字段等  -->
+    <!-- 功能选择框 值域：新增字段、修改字段等  -->
     <div class="navbar-start">
       <div class="dropdown">
         <select class="select select-bordered w-full max-w-xs" v-model="selected" @change="resetInput">
@@ -16,47 +16,55 @@
     <div class="navbar-center">
       <a class="btn btn-ghost text-xl">SQL生成器</a>
     </div>
-    <!-- 功能按鈕區 -->
+    <!-- 功能按钮区 -->
     <div class="navbar-end">
       <button class="btn btn-ghost btn-circle" @click="resetInput">
         重置
       </button>
-      <button class="btn btn-ghost btn-circle" @click="generate(componentStates, inputData)">
+      <button class="btn btn-ghost btn-circle" @click="generate(inputData)">
         生成
       </button>
     </div>
-    <!--  校驗提醒信息  -->
+    <!--  校验提醒信息  -->
     <div v-if="alterShow" role="alert"
          class="flex justify-center alert alert-error absolute -top-1/4 left-1/2 -translate-x-1/2 max-h-4 max-w-xs">
       <span>{{ alertContent }}</span>
     </div>
   </div>
-  <!--  主界面佈局  -->
+  <!--  主界面布局  -->
   <div class="flex flex-col justify-center items-center">
     <div class="grid grid-cols-1 my-0 md:grid-cols-2 xl:grid-cols-3 md:gap-x-16 ">
       <div v-for="(componentState, index) in componentStates" :key="componentKey[index]">
         <LayoutStore :state="componentState" @update-state="updateState"/>
       </div>
     </div>
-
-
   </div>
-  <span v-if="loading" class="loading loading-infinity loading-lg"></span>
 
-  <div class="m-2.5 bg-base-200 border-2 rounded-md shadow-sm">
+
+<!--  <div>-->
+<!--    <pre>-->
+<!--      {{JSON.stringify(inputData, null, 2)}}-->
+<!--    </pre>-->
+<!--  </div>-->
+
+  <div v-if="loading" class="flex justify-center">
+    <span class="loading loading-infinity loading-lg"></span>
+  </div>
+  <div v-else class="m-2.5 bg-base-200 border-2 rounded-md shadow-sm">
     <Output :sql-list="sqlList"/>
   </div>
+
+
 </template>
 
 <script setup>
 import LayoutStore from '../components/LayoutStore.vue';
 import Output from '../components/Output.vue';
-import NamedActionMap from "../components/ActionConfig.js";
+import NamedActionMap from "../conf/ActionConfig.js";
 import standardize from "../utils/Standardize.js";
 import {computed, ref, reactive} from "vue";
 import UniqueID from "../utils/UniqueID.js";
 import actionType from "../types/actionType.js";
-import dbMap from "../scripts/dbMap.js";
 import sqlBuilder from "../scripts/sqlBuilder.js";
 
 const defaultAction = NamedActionMap.find((item) => item.name === actionType.ADD) || NamedActionMap[0];
@@ -110,7 +118,7 @@ const alertContent = ref('')
 const alterShow = ref(false);
 
 const sqlList = ref([])
-const generate = (action, data) => {
+const generate = (data) => {
 
 
   const actionName = activeAction.value.name;
@@ -134,19 +142,17 @@ const generate = (action, data) => {
     return;
   }
 
-  // console.log(`actionName: ${actionName}\n, layout: ${JSON.stringify(layout, null, 2)}\n, data: ${JSON.stringify(data, null, 2)}`)
 
   loading.value = true;
   setTimeout(() => {
     loading.value = false;
-  }, 500)
+  }, 1000)
 
   // sqlList.value = buildAddColumnSql(data)
 
 
   sqlList.value = sqlBuilder.generateSQL(data, actionName);
 
-  // console.log(`生成的sql是: ${JSON.stringify(sqlList.value)}`)
 
 }
 
@@ -158,6 +164,7 @@ const resetInput = () => {
   sqlList.value = [];
   freshComponentKey();
 }
+
 
 
 </script>
