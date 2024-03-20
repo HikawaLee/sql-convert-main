@@ -28,6 +28,8 @@ function generateSQL(inputData, actionType) {
             info[inputData[idObj].label] = inputData[idObj].selected;
         }
     }
+
+    ///region 旧的提取info对象的方法, 已废弃
     // 使用 Object.keys() 获取对象的键
     // const keysArray = Object.keys(inputData).filter(key => key !== undefined
     //     && key !== null && key !== '' && key !== 'undefined' && key !== 'null')
@@ -43,6 +45,8 @@ function generateSQL(inputData, actionType) {
     // const targetDB = infoArr.find(item => item.label === dbConf.dbType).selected;
 
     // console.log("info:", JSON.stringify(info, null, 2));
+    ///endregion
+
 
     //首先根据数据库类型获取对应的SQL模板
     const targetDB = info[dbConf.dbType];

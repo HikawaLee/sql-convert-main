@@ -40,6 +40,22 @@ const actions = [
                         [rulesType.dataType]: rulesType.alphaRegex
                     },
                 },
+
+                {
+                    "type": inputType.INPUT,
+                    "title": dbConf.fieldName,
+                    "required": {
+                        "message": "请填入字段名, 例如: test",
+                    },
+                    "value": {
+                        "type": String,
+                        "default": "t_id",
+                    },
+                    "desc": "字段名称不能含有空格",
+                    "rules": {
+                        [rulesType.dataType]: rulesType.alphaRegex,
+                    },
+                },
                 {
                     "type": inputType.SELECT,
                     "title": dbConf.fieldType,
@@ -71,21 +87,6 @@ const actions = [
                 },
                 {
                     "type": inputType.INPUT,
-                    "title": dbConf.fieldName,
-                    "required": {
-                        "message": "请填入字段名, 例如: test",
-                    },
-                    "value": {
-                        "type": String,
-                        "default": "t_id",
-                    },
-                    "desc": "字段名称不能含有空格",
-                    "rules": {
-                        [rulesType.dataType]: rulesType.alphaRegex,
-                    },
-                },
-                {
-                    "type": inputType.INPUT,
                     "title": dbConf.fieldLength,
                     "value": {
                         "type": Number,
@@ -99,14 +100,6 @@ const actions = [
 
                 },
                 {
-                    "type": inputType.INPUT,
-                    "title": dbConf.setDefault,
-                    "value": {
-                        "type": String,
-                        "default": "''",
-                    },
-                },
-                {
                   type: inputType.INPUT,
                   title: dbConf.fieldPrecision,
                     value: {
@@ -118,7 +111,14 @@ const actions = [
                         [rulesType.min]: 0,
                     }
                 },
-
+                {
+                    "type": inputType.INPUT,
+                    "title": dbConf.setDefault,
+                    "value": {
+                        "type": String,
+                        "default": "",
+                    },
+                },
                 {
                     "type": inputType.CHECKBOX,
                     "title": dbConf.dbType,
@@ -201,6 +201,9 @@ const actions = [
             {
                 "type": inputType.CHECKBOX,
                 "title": dbConf.dbType,
+                // "required": {
+                //     "message": "请选择数据库类型",
+                // },
                 "value": {
                     "type": String,
                     "default": [dbConf.mysql, dbConf.oracle, dbConf.dameng, dbConf.tdsql],
@@ -233,27 +236,33 @@ const actions = [
                 "type": inputType.INPUT,
                 "title": dbConf.dbName,
                 "required": {
-                    "message": "请选择要迁移的数据库, 例如: test, 注意: 请勿输入中文",
-                    "trigger": "blur",
+                    "message": "请选择要修改数据库的数据库名, 注意: 执行时若报权限错误, 请先申请对应的数据库操作权限或者切换到对应身份!",
                 },
                 "value": {
                     "type": String,
-                    "default": "",
+                    "default": "test_db",
                 },
-                "desc": "请选择要迁移的数据库, 例如: test, 注意: 请勿输入中文",
-                "rules": {}, //校验规则, 待定
+                "desc": "数据库名称, 注意: 请勿输入中文",
+                "placeholder": "数据库名不能含有空格",
+                "rules": {
+                    [rulesType.dataType]: rulesType.alphaRegex, //FIXME 组件引用获取后似乎变成了字符串
+                },
             },
             {
                 "type": inputType.INPUT,
                 "title": dbConf.tableName,
                 "required": {
-                    "message": "请填入表名, 例如: test, 注意: 请勿输入中文",
+                    "message": "请填入要修改表的表名, 例如: test, 注意: 请勿输入中文",
                 },
                 "value": {
                     "type": String,
-                    "default": "",
+                    "default": "test_user",
                 },
-                "rules": {},
+                "desc": "数据库名称, 注意: 请勿输入中文",
+                "placeholder": "表名不能含有空格",
+                "rules": {
+                    [rulesType.dataType]: rulesType.alphaRegex
+                },
             },
             {
                 "type": inputType.INPUT,
@@ -265,15 +274,10 @@ const actions = [
                     "type": String,
                     "default": "t_id",
                 },
-            },
-            {
-                "type": inputType.INPUT,
-                "title": dbConf.fieldLength,
-                "value": {
-                    "type": String,
-                    "default": "",
+                "desc": "字段名称不能含有空格",
+                "rules": {
+                    [rulesType.dataType]: rulesType.alphaRegex,
                 },
-
             },
             {
                 "type": inputType.SELECT,
@@ -284,7 +288,7 @@ const actions = [
                 "placeholder": "",
                 "value": {
                     "type": String,
-                    "default": "String(Java兼容)",
+                    "default": dbConf.STDstr,
                 },
                 "options": [
                     dbConf.STDint2_t,
@@ -308,12 +312,12 @@ const actions = [
                 "type": inputType.SELECT,
                 "title": dbConf.setNewFieldType,
                 "required": {
-                    "message": "请选择新的字段类型",
+                    "message": "请选择字段类型",
                 },
                 "placeholder": "",
                 "value": {
                     "type": String,
-                    "default": "String(Java兼容)",
+                    "default": dbConf.STDstr,
                 },
                 "options": [
                     dbConf.STDint2_t,
@@ -333,13 +337,38 @@ const actions = [
                     dbConf.STDBlob,
                 ],
             },
+            {
+                "type": inputType.INPUT,
+                "title": dbConf.fieldLength,
+                "value": {
+                    "type": Number,
+                    "default": 16, ////TODO 数据库的各种类型的长度限制该如何统一管理?
+                },
+                "desc": "请输入字段长度, 例如: 10",
+                "rules": {
+                    [rulesType.dataType]: rulesType.numberRegex,
+                    [rulesType.min]: 1,
+                }
 
+            },
+            {
+                type: inputType.INPUT,
+                title: dbConf.fieldPrecision,
+                value: {
+                    type: Number,
+                    default: 0,
+                },
+                "rules": {
+                    [rulesType.dataType]: rulesType.numberRegex,
+                    [rulesType.min]: 0,
+                }
+            },
             {
                 "type": inputType.CHECKBOX,
                 "title": dbConf.dbType,
                 "value": {
                     "type": String,
-                    "default": "达梦",
+                    "default": [dbConf.mysql, dbConf.oracle, dbConf.dameng, dbConf.tdsql],
                 },
                 "options":
                     [
@@ -352,6 +381,15 @@ const actions = [
             {
                 "type": inputType.TOGGLE,
                 "title": dbConf.setNullable,
+                "value": {
+                    "type": String,
+                    "default": "不允许为空",
+                },
+                "options": ["是", "否"],
+            },
+            {
+                "type": inputType.TOGGLE,
+                "title": dbConf.bigTableLabel,
                 "value": {
                     "type": String,
                     "default": "否",
@@ -369,27 +407,33 @@ const actions = [
                 "type": inputType.INPUT,
                 "title": dbConf.dbName,
                 "required": {
-                    "message": "请选择要迁移的数据库, 例如: test, 注意: 请勿输入中文",
-                    "trigger": "blur",
+                    "message": "请选择要修改数据库的数据库名, 注意: 执行时若报权限错误, 请先申请对应的数据库操作权限或者切换到对应身份!",
                 },
                 "value": {
                     "type": String,
-                    "default": "",
+                    "default": "test_db",
                 },
-                "desc": "请选择要迁移的数据库, 例如: test, 注意: 请勿输入中文",
-                "rules": {}, //校验规则, 待定
+                "desc": "数据库名称, 注意: 请勿输入中文",
+                "placeholder": "数据库名不能含有空格",
+                "rules": {
+                    [rulesType.dataType]: rulesType.alphaRegex, //FIXME 组件引用获取后似乎变成了字符串
+                },
             },
             {
                 "type": inputType.INPUT,
                 "title": dbConf.tableName,
                 "required": {
-                    "message": "请填入表名, 例如: test, 注意: 请勿输入中文",
+                    "message": "请填入要修改表的表名, 例如: test, 注意: 请勿输入中文",
                 },
                 "value": {
                     "type": String,
-                    "default": "",
+                    "default": "test_user",
                 },
-                "rules": {},
+                "desc": "数据库名称, 注意: 请勿输入中文",
+                "placeholder": "表名不能含有空格",
+                "rules": {
+                    [rulesType.dataType]: rulesType.alphaRegex
+                },
             },
             {
                 "type": inputType.INPUT,
@@ -403,12 +447,28 @@ const actions = [
                 },
                 "rules": {},
             },
+            ///region 旧的输入框, 不小心实现了一件全选和全不选的功能
+            // {
+            //     "type": inputType.CHECKBOX,
+            //     "title": dbConf.dbType,
+            //     "value": {
+            //         "type": String,
+            //         "default": "达梦",
+            //     },
+            //     "options":
+            //         [
+            //             dbConf.dameng,
+            //             dbConf.mysql,
+            //             dbConf.oracle,
+            //             dbConf.tdsql,
+            //         ],
+            // },
             {
                 "type": inputType.CHECKBOX,
                 "title": dbConf.dbType,
                 "value": {
                     "type": String,
-                    "default": "达梦",
+                    "default": [dbConf.mysql, dbConf.oracle, dbConf.dameng, dbConf.tdsql],
                 },
                 "options":
                     [
@@ -437,39 +497,48 @@ const actions = [
                 "type": inputType.INPUT,
                 "title": dbConf.dbName,
                 "required": {
-                    "message": "请选择要迁移的数据库, 例如: test, 注意: 请勿输入中文",
-                    "trigger": "blur",
+                    "message": "请选择要修改数据库的数据库名, 注意: 执行时若报权限错误, 请先申请对应的数据库操作权限或者切换到对应身份!",
                 },
                 "value": {
                     "type": String,
-                    "default": "",
+                    "default": "test_db",
                 },
-                "desc": "请选择要迁移的数据库, 例如: test, 注意: 请勿输入中文",
-                "rules": {}, //校验规则, 待定
+                "desc": "数据库名称, 注意: 请勿输入中文",
+                "placeholder": "数据库名不能含有空格",
+                "rules": {
+                    [rulesType.dataType]: rulesType.alphaRegex, //FIXME 组件引用获取后似乎变成了字符串
+                },
             },
             {
                 "type": inputType.INPUT,
                 "title": dbConf.tableName,
                 "required": {
-                    "message": "请填入表名, 例如: test, 注意: 请勿输入中文",
+                    "message": "请填入要修改表的表名, 例如: test, 注意: 请勿输入中文",
                 },
                 "value": {
                     "type": String,
-                    "default": "",
+                    "default": "test_user",
                 },
-                "rules": {},
+                "desc": "数据库名称, 注意: 请勿输入中文",
+                "placeholder": "表名不能含有空格",
+                "rules": {
+                    [rulesType.dataType]: rulesType.alphaRegex
+                },
             },
             {
                 "type": inputType.INPUT,
                 "title": dbConf.fieldName,
                 "required": {
-                    "message": "请填入索引字段, 例如: test, 注意: 请勿输入中文",
+                    "message": "请填入字段名, 例如: test",
                 },
                 "value": {
                     "type": String,
-                    "default": "",
+                    "default": "t_id",
                 },
-                "rules": {},
+                "desc": "字段名称不能含有空格",
+                "rules": {
+                    [rulesType.dataType]: rulesType.alphaRegex,
+                },
             },
             {
                 "type": inputType.INPUT,
@@ -479,7 +548,7 @@ const actions = [
                 },
                 "value": {
                     "type": String,
-                    "default": "",
+                    "default": "idx_test",
                 },
                 "rules": {},
             },
@@ -488,7 +557,7 @@ const actions = [
                 "title": dbConf.dbType,
                 "value": {
                     "type": String,
-                    "default": "达梦",
+                    "default": [dbConf.mysql, dbConf.oracle, dbConf.dameng, dbConf.tdsql],
                 },
                 "options":
                     [
@@ -497,15 +566,6 @@ const actions = [
                         dbConf.oracle,
                         dbConf.tdsql,
                     ],
-            },
-            {
-                "type": inputType.TOGGLE,
-                "title": dbConf.bigTableLabel,
-                "value": {
-                    "type": String,
-                    "default": "否",
-                },
-                "options": ["是", "否"],
             },
         ],
     },
@@ -518,37 +578,43 @@ const actions = [
                 "type": inputType.INPUT,
                 "title": dbConf.dbName,
                 "required": {
-                    "message": "请选择要迁移的数据库, 例如: test, 注意: 请勿输入中文",
-                    "trigger": "blur",
+                    "message": "请选择要修改数据库的数据库名, 注意: 执行时若报权限错误, 请先申请对应的数据库操作权限或者切换到对应身份!",
                 },
                 "value": {
                     "type": String,
-                    "default": "",
+                    "default": "test_db",
                 },
-                "desc": "请选择要迁移的数据库, 例如: test, 注意: 请勿输入中文",
-                "rules": {}, //校验规则, 待定
+                "desc": "数据库名称, 注意: 请勿输入中文",
+                "placeholder": "数据库名不能含有空格",
+                "rules": {
+                    [rulesType.dataType]: rulesType.alphaRegex, //FIXME 组件引用获取后似乎变成了字符串
+                },
             },
             {
                 "type": inputType.INPUT,
                 "title": dbConf.tableName,
                 "required": {
-                    "message": "请填入表名, 例如: test, 注意: 请勿输入中文",
+                    "message": "请填入要修改表的表名, 例如: test, 注意: 请勿输入中文",
                 },
                 "value": {
                     "type": String,
-                    "default": "",
+                    "default": "test_user",
                 },
-                "rules": {},
+                "desc": "数据库名称, 注意: 请勿输入中文",
+                "placeholder": "表名不能含有空格",
+                "rules": {
+                    [rulesType.dataType]: rulesType.alphaRegex
+                },
             },
             {
                 "type": inputType.INPUT,
                 "title": dbConf.fieldIndex,
                 "required": {
-                    "message": "请填入表名, 例如: test, 注意: 请勿输入中文",
+                    "message": "请填入索引名, 例如: test, 注意: 请勿输入中文",
                 },
                 "value": {
                     "type": String,
-                    "default": "",
+                    "default": "idx_test",
                 },
                 "rules": {},
             },
@@ -557,7 +623,7 @@ const actions = [
                 "title": dbConf.dbType,
                 "value": {
                     "type": String,
-                    "default": "达梦",
+                    "default": [dbConf.mysql, dbConf.oracle, dbConf.dameng, dbConf.tdsql],
                 },
                 "options":
                     [
@@ -566,15 +632,6 @@ const actions = [
                         dbConf.oracle,
                         dbConf.tdsql,
                     ],
-            },
-            {
-                "type": inputType.TOGGLE,
-                "title": dbConf.bigTableLabel,
-                "value": {
-                    "type": String,
-                    "default": "否",
-                },
-                "options": ["是", "否"],
             },
         ],
     },
@@ -586,37 +643,43 @@ const actions = [
                 "type": inputType.INPUT,
                 "title": dbConf.dbName,
                 "required": {
-                    "message": "请选择要迁移的数据库, 例如: test, 注意: 请勿输入中文",
-                    "trigger": "blur",
+                    "message": "请选择要修改数据库的数据库名, 注意: 执行时若报权限错误, 请先申请对应的数据库操作权限或者切换到对应身份!",
                 },
                 "value": {
                     "type": String,
-                    "default": "",
+                    "default": "test_db",
                 },
-                "desc": "请选择要迁移的数据库, 例如: test, 注意: 请勿输入中文",
-                "rules": {}, //校验规则, 待定
+                "desc": "数据库名称, 注意: 请勿输入中文",
+                "placeholder": "数据库名不能含有空格",
+                "rules": {
+                    [rulesType.dataType]: rulesType.alphaRegex, //FIXME 组件引用获取后似乎变成了字符串
+                },
             },
             {
                 "type": inputType.INPUT,
                 "title": dbConf.tableName,
                 "required": {
-                    "message": "请填入表名, 例如: test, 注意: 请勿输入中文",
+                    "message": "请填入要修改表的表名, 例如: test, 注意: 请勿输入中文",
                 },
                 "value": {
                     "type": String,
-                    "default": "",
+                    "default": "test_user",
                 },
-                "rules": {},
+                "desc": "数据库名称, 注意: 请勿输入中文",
+                "placeholder": "表名不能含有空格",
+                "rules": {
+                    [rulesType.dataType]: rulesType.alphaRegex
+                },
             },
             {
                 "type": inputType.INPUT,
                 "title": dbConf.fieldIndex,
                 "required": {
-                    "message": "请填入表名, 例如: test, 注意: 请勿输入中文",
+                    "message": "请填入索引名, 例如: test, 注意: 请勿输入中文",
                 },
                 "value": {
                     "type": String,
-                    "default": "",
+                    "default": "idx_test",
                 },
                 "rules": {},
             },
@@ -625,7 +688,7 @@ const actions = [
                 "title": dbConf.dbType,
                 "value": {
                     "type": String,
-                    "default": "达梦",
+                    "default": [dbConf.mysql, dbConf.oracle, dbConf.dameng, dbConf.tdsql],
                 },
                 "options":
                     [
@@ -634,15 +697,6 @@ const actions = [
                         dbConf.oracle,
                         dbConf.tdsql,
                     ],
-            },
-            {
-                "type": inputType.TOGGLE,
-                "title": dbConf.bigTableLabel,
-                "value": {
-                    "type": String,
-                    "default": "否",
-                },
-                "options": ["是", "否"],
             },
         ],
     },
@@ -654,46 +708,56 @@ const actions = [
                 "type": inputType.INPUT,
                 "title": dbConf.dbName,
                 "required": {
-                    "message": "请选择要迁移的数据库, 例如: test, 注意: 请勿输入中文",
-                    "trigger": "blur",
+                    "message": "请选择要修改数据库的数据库名, 注意: 执行时若报权限错误, 请先申请对应的数据库操作权限或者切换到对应身份!",
                 },
                 "value": {
                     "type": String,
-                    "default": "",
+                    "default": "test_db",
                 },
-                "desc": "请选择要迁移的数据库, 例如: test, 注意: 请勿输入中文",
-                "rules": {}, //校验规则, 待定
+                "desc": "数据库名称, 注意: 请勿输入中文",
+                "placeholder": "数据库名不能含有空格",
+                "rules": {
+                    [rulesType.dataType]: rulesType.alphaRegex, //FIXME 组件引用获取后似乎变成了字符串
+                },
             },
             {
                 "type": inputType.INPUT,
                 "title": dbConf.tableName,
                 "required": {
-                    "message": "请填入表名, 例如: test, 注意: 请勿输入中文",
+                    "message": "请填入要修改表的表名, 例如: test, 注意: 请勿输入中文",
                 },
                 "value": {
                     "type": String,
-                    "default": "",
+                    "default": "test_user",
                 },
-                "rules": {},
+                "desc": "数据库名称, 注意: 请勿输入中文",
+                "placeholder": "表名不能含有空格",
+                "rules": {
+                    [rulesType.dataType]: rulesType.alphaRegex
+                },
             },
+
             {
                 "type": inputType.INPUT,
                 "title": dbConf.fieldName,
                 "required": {
-                    "message": "请填入表名, 例如: test, 注意: 请勿输入中文",
+                    "message": "请填入字段名, 例如: test",
                 },
                 "value": {
                     "type": String,
-                    "default": "",
+                    "default": "t_id",
                 },
-                "rules": {},
+                "desc": "字段名称不能含有空格",
+                "rules": {
+                    [rulesType.dataType]: rulesType.alphaRegex,
+                },
             },
             {
                 "type": inputType.CHECKBOX,
                 "title": dbConf.dbType,
                 "value": {
                     "type": String,
-                    "default": "达梦",
+                    "default": [dbConf.mysql, dbConf.oracle, dbConf.dameng, dbConf.tdsql],
                 },
                 "options":
                     [
@@ -703,15 +767,7 @@ const actions = [
                         dbConf.tdsql,
                     ],
             },
-            {
-                "type": inputType.TOGGLE,
-                "title": dbConf.bigTableLabel,
-                "value": {
-                    "type": String,
-                    "default": "否",
-                },
-                "options": ["是", "否"],
-            },
+
         ],
 
 
@@ -723,34 +779,56 @@ const actions = [
                 "type": inputType.INPUT,
                 "title": dbConf.dbName,
                 "required": {
-                    "message": "请选择要迁移的数据库, 例如: test, 注意: 请勿输入中文",
-                    "trigger": "blur",
+                    "message": "请选择要修改数据库的数据库名, 注意: 执行时若报权限错误, 请先申请对应的数据库操作权限或者切换到对应身份!",
                 },
                 "value": {
                     "type": String,
-                    "default": "",
+                    "default": "test_db",
                 },
-                "desc": "请选择要迁移的数据库, 例如: test, 注意: 请勿输入中文",
-                "rules": {}, //校验规则, 待定
+                "desc": "数据库名称, 注意: 请勿输入中文",
+                "placeholder": "数据库名不能含有空格",
+                "rules": {
+                    [rulesType.dataType]: rulesType.alphaRegex, //FIXME 组件引用获取后似乎变成了字符串
+                },
             },
             {
                 "type": inputType.INPUT,
                 "title": dbConf.tableName,
                 "required": {
-                    "message": "请填入表名, 例如: test, 注意: 请勿输入中文",
+                    "message": "请填入要修改表的表名, 例如: test, 注意: 请勿输入中文",
                 },
                 "value": {
                     "type": String,
-                    "default": "",
+                    "default": "test_user",
                 },
-                "rules": {},
+                "desc": "数据库名称, 注意: 请勿输入中文",
+                "placeholder": "表名不能含有空格",
+                "rules": {
+                    [rulesType.dataType]: rulesType.alphaRegex
+                },
+            },
+
+            {
+                "type": inputType.INPUT,
+                "title": dbConf.fieldName,
+                "required": {
+                    "message": "请填入字段名, 例如: test",
+                },
+                "value": {
+                    "type": String,
+                    "default": "t_id",
+                },
+                "desc": "字段名称不能含有空格",
+                "rules": {
+                    [rulesType.dataType]: rulesType.alphaRegex,
+                },
             },
             {
                 "type": inputType.CHECKBOX,
                 "title": dbConf.dbType,
                 "value": {
                     "type": String,
-                    "default": "达梦",
+                    "default": [dbConf.mysql, dbConf.oracle, dbConf.dameng, dbConf.tdsql],
                 },
                 "options":
                     [
@@ -760,46 +838,42 @@ const actions = [
                         dbConf.tdsql,
                     ],
             },
-            {
-                "type": inputType.TOGGLE,
-                "title": dbConf.bigTableLabel,
-                "value": {
-                    "type": String,
-                    "default": "否",
-                },
-                "options": ["是", "否"],
-            },
         ],
     },
     {
-        //新增字段
         "desc": actionType.MODIFYPRIAMRYKEY,
         "layout": [
             {
                 "type": inputType.INPUT,
                 "title": dbConf.dbName,
                 "required": {
-                    "message": "请选择要迁移的数据库, 例如: test, 注意: 请勿输入中文",
-                    "trigger": "blur",
+                    "message": "请选择要修改数据库的数据库名, 注意: 执行时若报权限错误, 请先申请对应的数据库操作权限或者切换到对应身份!",
                 },
                 "value": {
                     "type": String,
-                    "default": "",
+                    "default": "test_db",
                 },
-                "desc": "请选择要迁移的数据库, 例如: test, 注意: 请勿输入中文",
-                "rules": {}, //校验规则, 待定
+                "desc": "数据库名称, 注意: 请勿输入中文",
+                "placeholder": "数据库名不能含有空格",
+                "rules": {
+                    [rulesType.dataType]: rulesType.alphaRegex, //FIXME 组件引用获取后似乎变成了字符串
+                },
             },
             {
                 "type": inputType.INPUT,
                 "title": dbConf.tableName,
                 "required": {
-                    "message": "请填入表名, 例如: test, 注意: 请勿输入中文",
+                    "message": "请填入要修改表的表名, 例如: test, 注意: 请勿输入中文",
                 },
                 "value": {
                     "type": String,
-                    "default": "",
+                    "default": "test_user",
                 },
-                "rules": {},
+                "desc": "数据库名称, 注意: 请勿输入中文",
+                "placeholder": "表名不能含有空格",
+                "rules": {
+                    [rulesType.dataType]: rulesType.alphaRegex
+                },
             },
             {
                 "type": inputType.INPUT,
@@ -811,59 +885,33 @@ const actions = [
                     "type": String,
                     "default": "t_id",
                 },
+                "desc": "字段名称不能含有空格",
+                "rules": {
+                    [rulesType.dataType]: rulesType.alphaRegex,
+                },
             },
-
             {
                 "type": inputType.INPUT,
-                "title": dbConf.primaryKeyName,
-                "value": {
-                    "type": String,
-                    "default": "",
-                },
-            },
-            {
-                type: inputType.INPUT,
-                title: dbConf.newPrimaryKeyName,
-                value: {
-                    type: String,
-                    default: "",
-                },
-            },
-            {
-                "type": inputType.SELECT,
-                "title": dbConf.fieldType,
+                "title": dbConf.newPrimaryKeyName,
                 "required": {
-                    "message": "请选择字段类型",
+                    "message": "请填入主键名, 例如: pk_userId",
                 },
-                "placeholder": "",
                 "value": {
                     "type": String,
-                    "default": "String(Java兼容)",
+                    "default": "pk_userId",
                 },
-                "options": [
-                    dbConf.STDint2_t,
-                    dbConf.STDint3_t,
-                    dbConf.STDint4_t,
-                    dbConf.STDint6_t,
-                    dbConf.STDint8_t,
-                    dbConf.STDint10_t,
-                    dbConf.STDdouble,
-                    dbConf.STDchar,
-                    dbConf.STDstr,
-                    dbConf.STDdate,
-                    dbConf.STDtime,
-                    dbConf.STDdatetime,
-                    dbConf.STDtimestamp,
-                    dbConf.STDclob,
-                    dbConf.STDBlob,
-                ],
+                "desc": "字段名称不能含有空格",
+                "rules": {
+                    [rulesType.dataType]: rulesType.alphaRegex,
+                },
             },
+
             {
                 "type": inputType.CHECKBOX,
                 "title": dbConf.dbType,
                 "value": {
                     "type": String,
-                    "default": "达梦",
+                    "default": [dbConf.mysql, dbConf.oracle, dbConf.dameng, dbConf.tdsql],
                 },
                 "options":
                     [
@@ -872,15 +920,6 @@ const actions = [
                         dbConf.oracle,
                         dbConf.tdsql,
                     ],
-            },
-            {
-                "type": inputType.TOGGLE,
-                "title": dbConf.bigTableLabel,
-                "value": {
-                    "type": String,
-                    "default": "否",
-                },
-                "options": ["是", "否"],
             },
         ],
     },

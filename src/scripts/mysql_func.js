@@ -3,7 +3,7 @@ import dbConf from "../types/dbConf.js";
  * mysql生成添加字段的 SQL 语句
  * @param inputData 父组件收集到的数据
  * @param opts 额外配置, 暂时未用到
- * @returns {string} 返回生成的 SQL 语句
+ * @returns {string} 返回 添加字段SQL 语句
  */
 const generateAddColumnSQL = (inputData, opts = {}) => {
     const dbName = inputData[dbConf.dbName];
@@ -12,15 +12,13 @@ const generateAddColumnSQL = (inputData, opts = {}) => {
     const fieldName = inputData[dbConf.fieldName];
     const fieldLength = inputData[dbConf.fieldLength];
     const fieldPrecision = inputData[dbConf.fieldPrecision];
-    console.log(`fieldDefault: ${inputData[dbConf.fieldDefault]}`)
-    const fieldDefault = handleNull(inputData[dbConf.fieldDefault])
-
-
-    const sql = `\n
+    const fieldDefault = inputData[dbConf.setDefault];
+    if(fieldDefault === undefined || fieldDefault === 'undefined' || fieldDefault === '' || fieldDefault === null) {
+      return `\n
         SELECT '${tableName}表中新增字段${fieldName}';
         SET @hs_sql = 'select 1 from dual;';
         SELECT
-            'ALTER TABLE ${dbName}.${tableName} ADD ${fieldName} ${getType(fieldType, fieldLength, fieldPrecision)} ${inputData[dbConf.fieldDefault]};'
+            'ALTER TABLE ${dbName}.${tableName} ADD ${fieldName} ${getType(fieldType, fieldLength, fieldPrecision)};'
              INTO @hs_sql
         FROM DUAL
         WHERE
@@ -48,11 +46,49 @@ const generateAddColumnSQL = (inputData, opts = {}) => {
         EXECUTE hs_stmt;
         DEALLOCATE PREPARE hs_stmt;    
             \n`;
-    return sql;
-
+    } else {
+        const sql = `\n
+        SELECT '${tableName}表中新增字段${fieldName}';
+        SET @hs_sql = 'select 1 from dual;';
+        SELECT
+            'ALTER TABLE ${dbName}.${tableName} ADD ${fieldName} ${getType(fieldType, fieldLength, fieldPrecision)} ${getDefault(fieldType, fieldDefault)};'
+             INTO @hs_sql
+        FROM DUAL
+        WHERE
+            (
+            SELECT
+                count(1)
+                FROM
+                    information_schema.columns
+                WHERE
+                    table_schema = SCHEMA()
+                    AND UPPER(table_name) = UPPER('${tableName}')
+                    AND UPPER(column_name) = UPPER('${fieldName}')
+            ) = 0
+            AND 
+            (
+            SELECT 
+                count(1) 
+                FROM 
+                    information_schema.TABLES 
+                WHERE 
+                    TABLE_SCHEMA = SCHEMA()
+                    AND UPPER(TABLE_NAME) = UPPER('${tableName}')
+            ) > 0;
+        PREPARE hs_stmt FROM @hs_sql;
+        EXECUTE hs_stmt;
+        DEALLOCATE PREPARE hs_stmt;    
+            \n`;
+        return sql;
+    }
 }
 
-
+/**
+ * mysql生成删除字段的 SQL 语句
+ * @param inputData 父组件收集到的数据
+ * @param opts 额外配置, 暂时未用到
+ * @returns {string} 返回删除字段的SQL 语句
+ */
 const generateDropColumnSQL = (inputData, opts = {}) => {
     const dbName = inputData[dbConf.dbName];
     const tableName = inputData[dbConf.tableName];
@@ -92,13 +128,18 @@ const generateDropColumnSQL = (inputData, opts = {}) => {
     return sql;
 }
 
-
+/**
+ * mysql生成修改字段的 SQL 语句
+ * @param inputData 父组件收集到的数据
+ * @param opts 额外配置, 暂时未用到
+ * @returns {string} 返回修改字段的SQL 语句
+ */
 function generateModifyColumnSQL(inputData, opts = {}) {
     const dbName = inputData[dbConf.dbName];
     const tableName = inputData[dbConf.tableName];
     const fieldName = inputData[dbConf.fieldName];
+    const fieldType = inputData[dbConf.fieldType];
     const fieldNewType = inputData[dbConf.setNewFieldType];
-    const filedType = inputData[dbConf.fieldType];
     const fieldNullable = inputData[dbConf.setNullable];
     const fieldLength = inputData[dbConf.fieldLength];
     const fieldPrecision = inputData[dbConf.fieldPrecision];
@@ -119,7 +160,7 @@ function generateModifyColumnSQL(inputData, opts = {}) {
                     table_schema = SCHEMA()
                     AND UPPER(table_name) = UPPER('${tableName}')
                     AND UPPER(column_name) = UPPER('${fieldName}')
-            ) > 0;
+            ) > 0
             AND 
             (
             SELECT 
@@ -133,8 +174,9 @@ function generateModifyColumnSQL(inputData, opts = {}) {
         PREPARE hs_stmt FROM @hs_sql;
         EXECUTE hs_stmt;
         DEALLOCATE PREPARE hs_stmt;
-        `
+        \n`
     } else {
+        //FIXME 需要判断新字段类型长度和精度是否能够兼容原来的字段类型
         return `\n
         SET @hs_sql = 'select 1 from dual;';
         SELECT
@@ -150,21 +192,29 @@ function generateModifyColumnSQL(inputData, opts = {}) {
                     table_schema = database()
                     AND LOWER(table_name) = LOWER('${tableName}')
                     AND LOWER(column_name) = LOWER('${fieldName}')
-                    AND character_maximum_length = ${fieldLength}//FIXME 需要判断字段类型是否支持长度
+                    AND character_maximum_length = ${fieldLength}
             ) = 1;
         PREPARE hs_stmt FROM @hs_sql;
         EXECUTE hs_stmt;
         DEALLOCATE PREPARE hs_stmt;
-        `
+        \n`
     }
 }
 
+
+/**
+ *     //Todo 未规范化
+ * mysql生成重命名表的 SQL 语句
+ * @param inputData 父组件收集到的数据
+ * @param opts 额外配置, 暂时未用到
+ * @returns {string} 返回重命名表的SQL 语句
+ */
 function generateRenameTableSQL(inputData, opts = {}) {
     const dbName = inputData[dbConf.dbName];
     const tableName = inputData[dbConf.tableName];
     const newTableName = inputData[dbConf.newTableName];
 
-    //Todo 未规范化
+
     const sql =
         // `RENAME TABLE ${tableName} TO ${newTableName};`;
     `ALTER TABLE ${dbName}.${tableName}
@@ -173,6 +223,12 @@ function generateRenameTableSQL(inputData, opts = {}) {
 }
 
 
+/**
+ * mysql生成添加索引的 SQL 语句
+ * @param inputData 父组件收集到的数据
+ * @param opts 额外配置, 暂时未用到
+ * @returns {string}
+ */
 function generateAddIndexSQL(inputData, opts = {}) {
     const dbName = inputData[dbConf.dbName];
     const tableName = inputData[dbConf.tableName];
@@ -190,36 +246,55 @@ function generateAddIndexSQL(inputData, opts = {}) {
         SELECT
             count(1)
             FROM
-                information_schema.statistics a, (SELECT database() as dbsql from dual) c
-                WHERE a.INDEX_SCHEMA = c.dbsql
+                information_schema.statistics a, (SELECT database() as dbtest from dual) c
+                WHERE a.INDEX_SCHEMA = c.dbtest
                 AND LOWER(a.\`TABLE_NAME\`) = LOWER('${tableName}')
-                AND LOWER(a.\`index_name\`) = LOWER('${fieldName}')
+                AND LOWER(a.\`index_name\`) = LOWER('${indexName}')
         ) = 0;
     PREPARE hs_stmt FROM @hs_sql;
     EXECUTE hs_stmt;
     DEALLOCATE PREPARE hs_stmt;  
-        `;
+        \n`;
     return sql;
 }
 
-
+/**
+ *   //Todo 未规范化
+ * mysql生成删除索引的 SQL 语句
+ * @param inputData 父组件收集到的数据
+ * @param opts 额外配置, 暂时未用到
+ * @returns {string} 返回删除索引的SQL 语句
+ */
 function generateDropIndexSQL(inputData, opts = {}) {
     const dbName = inputData[dbConf.dbName];
     const tableName = inputData[dbConf.tableName];
     const indexName = inputData[dbConf.fieldIndex];
-    //Todo 未规范化
-    const sql =
-        `ALTER TABLE ${dbName}.${tableName}
-    DROP INDEX ${indexName};`;
+
+    const sql = `
+        ALTER TABLE ${dbName}.${tableName}
+    DROP INDEX ${indexName};
+    `;
     return sql;
 }
 
-
+/**
+ *  //Todo 未实现
+ *  //修改索引---包括修改索引名称、设置索引的查询计划可见性、改变索引有效性、重建索引...
+ * @param inputData
+ * @param opts
+ * @returns {string}
+ */
 function generateModifyIndexSQL(inputData, opts = {}) {
-    //FIXME
+
+    return '';
 }
 
-
+/**
+ * mysql生成添加主键的 SQL 语句
+ * @param inputData 父组件收集到的数据
+ * @param opts 额外配置, 暂时未用到
+ * @returns {string} 返回添加主键的SQL 语句
+ */
 function generateAddPrimaryKeySQL(inputData, opts = {}) {
     const dbName = inputData[dbConf.dbName];
     const tableName = inputData[dbConf.tableName];
@@ -252,11 +327,17 @@ function generateAddPrimaryKeySQL(inputData, opts = {}) {
         PREPARE hs_stmt FROM @hs_sql;
         EXECUTE hs_stmt;
         DEALLOCATE PREPARE hs_stmt;
-    `;
+    \n`;
     return sql;
 }
 
 
+/**
+ * mysql生成删除主键的 SQL 语句
+ * @param inputData 父组件收集到的数据
+ * @param opts 额外配置, 暂时未用到
+ * @returns {string} 返回删除主键的SQL 语句
+ */
 function generateDropPrimaryKeySQL(inputData, opts = {}) {
     const dbName = inputData[dbConf.dbName];
     const tableName = inputData[dbConf.tableName];
@@ -290,16 +371,21 @@ function generateDropPrimaryKeySQL(inputData, opts = {}) {
         PREPARE hs_stmt FROM @hs_sql;
         EXECUTE hs_stmt;
         DEALLOCATE PREPARE hs_stmt;
-    `
+    \n`
     return sql;
 }
 
+/**
+ * mysql生成修改主键的 SQL 语句
+ * @param inputData 父组件收集到的数据
+ * @param opts 额外配置, 暂时未用到
+ * @returns {string} 返回修改主键的SQL 语句
+ */
 function generateModifyPrimaryKeySQL(inputData, opts = {}) {
     const dbName = inputData[dbConf.dbName];
     const tableName = inputData[dbConf.tableName];
     const fieldName = inputData[dbConf.fieldName];
-
-    //Todo 只支持按照单个字段修改主键
+    //Todo 只支持按照单个字段修改主键, 后续需要支持多字段
     const sql = `\n
     SELECT '修改数据库${dbName}的${tableName}表的主键为字段${fieldName}';
     SET @hs_sql = 'select 1 from dual;';
@@ -329,10 +415,9 @@ function generateModifyPrimaryKeySQL(inputData, opts = {}) {
         PREPARE hs_stmt FROM @hs_sql;
         EXECUTE hs_stmt;
         DEALLOCATE PREPARE hs_stmt;
-    `
+    \n`
+    return sql;
 }
-
-
 
 
 /**
@@ -381,9 +466,18 @@ function getType(type, L = dbConf.mysqlDecimalP, P = dbConf.mysqlDecimalD) {
     }
 }
 
+/**
+ * 获取默认值
+ * @param type 字段类型
+ * @param defaultValue 默认值
+ * @returns {string} 返回默认值
+ */
 const getDefault = (type, defaultValue) => {
-    console.log(`type: ${type}, defaultValue: ${defaultValue}`)
-    if(defaultValue === undefined || defaultValue === ' ') return '';
+    if(defaultValue === undefined || defaultValue === 'undefined'
+        || defaultValue === '' || defaultValue === null
+        || defaultValue === 'null' || defaultValue === 'NULL') { //FIXME 条件判断不严谨
+        return 'DEFAULT NULL';
+    }
     switch (type) {
         case dbConf.STDint2_t:
         case dbConf.STDint3_t:
@@ -391,10 +485,9 @@ const getDefault = (type, defaultValue) => {
         case dbConf.STDint6_t:
         case dbConf.STDint8_t:
         case dbConf.STDint10_t:
-            //TODO 进一步校验是否为数字
-            return `DEFAULT ${defaultValue}`;
         case dbConf.STDdouble:
-            return `DEFAULT ${defaultValue}`
+            if(isNaN(defaultValue)) return '';
+            else return `DEFAULT ${defaultValue}`;
         case dbConf.STDchar:
         case dbConf.STDstr:
             return `DEFAULT '${defaultValue}'`;
@@ -405,17 +498,12 @@ const getDefault = (type, defaultValue) => {
             return `DEFAULT CURRENT_TIMESTAMP`;
         case dbConf.STDclob:
         case dbConf.STDBlob:
-            return 'NULL';
+            return 'DEFAULT NULL';
         default:
             throw new Error(`Unsupported type: ${type}. Please handle this case.`);
     }
 }
 
-const handleNull = (nullValue) => {
-    if(nullValue === 'null' || nullValue === 'NULL' || nullValue === undefined || nullValue === 'undefined') {
-        return null;
-    }
-}
 
 
 export default {
@@ -427,6 +515,7 @@ export default {
     generateDropIndexSQL,
     generateModifyIndexSQL,
     generateAddPrimaryKeySQL,
-    generateDropPrimaryKeySQL
+    generateDropPrimaryKeySQL,
+    generateModifyPrimaryKeySQL,
 
 }

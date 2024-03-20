@@ -173,5 +173,6 @@ export default  {
     generateDropIndexSQL,
     generateModifyIndexSQL,
     generatePrimaryKeySQL,
-    generateDropPrimaryKeySQL
+    generateDropPrimaryKeySQL,
+
 }

@@ -47,6 +47,7 @@ export default {
     newTableName: '新表名',
     setDefault: '设置默认值',
     setNullable: '设置允许为空',
+    nullable: '允许为空',
     setNewFieldType: '设置新字段类型',
 
 
