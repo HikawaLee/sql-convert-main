@@ -59,5 +59,9 @@ export default {
         [dbConf.tdsql]: tdsqlFunc.generateDropPrimaryKeySQL,
         [dbConf.oracle]: oracleFunc.generateDropPrimaryKeySQL,
         [dbConf.dameng]: damengFunc.generateDropPrimaryKeySQL,
-    }
+    },
+    [actionType.MODIFYPRIAMRYKEY]: {
+        [dbConf.mysql]: mysqlFunc.generateModifyPrimaryKeySQL,
+        [dbConf.oracle]: oracleFunc.generateModifyPrimaryKeySQL,
+    },
 }

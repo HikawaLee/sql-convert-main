@@ -22,9 +22,10 @@ function generateAddColumnSQL(inputData, opts = {}) {
     const fieldLength = inputData[dbConf.fieldLength];
     const fieldPrecision = inputData[dbConf.fieldPrecision];
 
-    const sql =
-        `ALTER TABLE ${dbName}.${tableName}
-        ADD ${fieldName} ${getType(fieldType, fieldLength, fieldPrecision)};`;
+    const sql = `
+        ALTER TABLE ${dbName}.${tableName}
+            ADD ${fieldName} ${getType(fieldType, fieldLength, fieldPrecision)};
+        `;
     return sql;
 }
 
@@ -34,10 +35,11 @@ function generateDropColumnSQL(inputData, opts = {}) {
     const dbName = inputData[dbConf.dbName];
     const tableName = inputData[dbConf.tableName];
     const fieldName = inputData[dbConf.fieldName];
-
-    const sql =
-        `ALTER TABLE ${dbName}.${tableName}
-        DROP ${fieldName};`; //FIXME 达梦数据库不支持一次删除多个字段, 并且如果待删除字段引用了其他字段, 则需要添加CASCADE关键字
+    //FIXME 达梦数据库不支持一次删除多个字段, 并且如果待删除字段引用了其他字段, 则需要添加CASCADE关键字
+    const sql =  `
+        ALTER TABLE ${dbName}.${tableName}
+            DROP ${fieldName};
+        `;
     return sql;
 }
 
@@ -51,9 +53,10 @@ function generateModifyColumnSQL(inputData, opts = {}) {
     const fieldLength = inputData[dbConf.fieldLength];
     const fieldPrecision = inputData[dbConf.fieldPrecision];
 
-    const sql =
-        `ALTER TABLE ${dbName}.${tableName}
-        MODIFY ${fieldName} ${getType(fieldType, fieldLength, fieldPrecision)};`;
+    const sql = `
+        ALTER TABLE ${dbName}.${tableName}
+            MODIFY ${fieldName} ${getType(fieldType, fieldLength, fieldPrecision)};
+        `;
     return sql;
 }
 
@@ -64,9 +67,10 @@ function generateRenameTableSQL(inputData, opts = {}) {
     const tableName = inputData[dbConf.tableName];
     const newTableName = inputData[dbConf.newTableName];
 
-    const sql =
-        `ALTER TABLE ${dbName}.${tableName}
-        RENAME TO ${newTableName};`;
+    const sql = `
+        ALTER TABLE ${dbName}.${tableName}
+            RENAME TO ${newTableName};
+        `;
     return sql;
 }
 
@@ -78,9 +82,10 @@ function generateAddIndexSQL(inputData, opts = {}) {
     const fieldName = inputData[dbConf.fieldName];
     const indexName = inputData[dbConf.fieldIndex];
 
-    const sql =
-        `CREATE INDEX ${indexName}
-        ON ${dbName}.${tableName} (${fieldName});`;
+    const sql = `
+        CREATE INDEX ${indexName}
+            ON ${dbName}.${tableName} (${fieldName});
+        `;
     return sql;
 }
 
@@ -91,8 +96,9 @@ function generateDropIndexSQL(inputData, opts = {}) {
     const tableName = inputData[dbConf.tableName];
     const indexName = inputData[dbConf.fieldIndex];
 
-    const sql =
-        `DROP INDEX ${indexName} IF EXISTS;`;
+    const sql = `
+        DROP INDEX ${indexName} IF EXISTS;
+        `;
     return sql;
 }
 
@@ -111,8 +117,9 @@ const dbName = inputData[dbConf.dbName];
     const tableName = inputData[dbConf.tableName];
     const indexName = inputData[dbConf.fieldIndex];
 
-    const sql =
-        `ALTER INDEX ${indexName} REBUILD EXCLUSIVE;`;
+    const sql = `
+        ALTER INDEX ${indexName} REBUILD EXCLUSIVE;
+        `;
     return sql;
 }
 
@@ -124,9 +131,10 @@ function generatePrimaryKeySQL(inputData, opts = {}) {
     const tableName = inputData[dbConf.tableName];
     const fieldName = inputData[dbConf.fieldName];
 
-    const sql =
-        `ALTER TABLE ${dbName}.${tableName}
-        ADD PRIMARY KEY (${fieldName});`;
+    const sql = `
+        ALTER TABLE ${dbName}.${tableName}
+            ADD PRIMARY KEY (${fieldName});
+        `;
     return sql;
 }
 

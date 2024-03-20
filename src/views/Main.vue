@@ -168,6 +168,7 @@ const generate = (data) => {
     acc[cur.id] = cur;
     if (!data.hasOwnProperty(cur.id)) {
       alertContent.value = `请填写表单"${cur.label}"`;
+      console.log("请填写表单", cur.label);
       alterShow.value = true;
       setTimeout(() => {
         alterShow.value = false;
