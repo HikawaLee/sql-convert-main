@@ -11,6 +11,7 @@
   "dependencies": {
     "mavon-editor": "^3.0.1",
     "nanoid": "^5.0.6",
+    "vite-plugin-singlefile": "^2.0.1",
     "vue": "^3.4.19",
     "vue-clipboard3": "^2.0.0"
   },
@@ -19,6 +20,7 @@
     "autoprefixer": "^10.4.18",
     "daisyui": "^4.7.2",
     "postcss": "^8.4.35",
+    "rollup-plugin-visualizer": "^5.12.0",
     "tailwindcss": "^3.4.1",
     "unplugin-auto-import": "^0.17.5",
     "vite": "^5.1.5"
