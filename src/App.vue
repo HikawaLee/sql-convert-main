@@ -1,7 +1,6 @@
 <script setup>
-import Main from '@/views/Main.vue';
-import logo from '@/assets/logo.gif'
-import bgPic from '@/assets/index-bg.png'
+import Main from './views/Main.vue';
+import logo from './assets/logo.gif'
 </script>
 
 <template>

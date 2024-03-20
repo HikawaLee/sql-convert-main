@@ -1,5 +1,5 @@
 import dbConf from "../types/dbConf.js";
-import dbMap from "./dbMap.js";
+import dbMap from "../adapter/dbMap.js";
 
 function generateSQL(inputData, actionType) {
     // 遍历 inputData整理出我们需要的信息收集到info对象中, 以便后续生成SQL, info对象的结构为{label: [selected]}

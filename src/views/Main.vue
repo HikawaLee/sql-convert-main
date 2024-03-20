@@ -4,7 +4,7 @@
     <!-- 功能选择框 值域：新增字段、修改字段等  -->
     <div class="navbar-start">
       <div class="dropdown">
-<!--        输入重置按钮-->
+<!--        功能选择按钮-->
         <select class="select select-bordered w-full max-w-xs" v-model="selected" @change="resetInput">
           <template v-for="(action, index) in NamedActionMap" :key="index">
             <option>{{ action.name }}</option>
@@ -68,19 +68,19 @@ import standardize from "@/utils/Standardize.js";
 import {computed, ref, reactive} from "vue";
 import UniqueID from "@/utils/UniqueID.js";
 import sqlBuilder from "@/scripts/sqlBuilder.js";
-//region 名称-功能映射表, 存储了功能的名称和对应的功能
-//例如 新增字段-->{name: '新增字段', action: {layout: [{label: '字段名', type: 'text', data: ''}, {label: '字段类型', type: 'text', data: ''}]}}
+// region 名称-功能映射表, 存储了功能的名称和对应的功能
+// 例如 新增字段-->{name: '新增字段', action: {layout: [{label: '字段名', type: 'text', data: ''}, {label: '字段类型', type: 'text', data: ''}]}}
 import NamedActionMap from "@/conf/ActionConfig.js";
-//endregion
+// endregion
 
-//当前选中的功能的名称，用于切换功能
-//region 根据当前选中的功能的名称，获取对应的功能配置
+// 当前选中的功能的名称，用于切换功能
+// region 根据当前选中的功能的名称，获取对应的功能配置
 const selected = ref(NamedActionMap[0].name)
 const activeAction = computed(() => {
   return NamedActionMap.find((item) => item.name === selected.value)
 })
 
-//region 组件刷新相关
+// region 组件刷新相关
 const componentCnt = computed(() => {
   return activeAction.value.action.layout.length;
 })

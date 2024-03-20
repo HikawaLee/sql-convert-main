@@ -16,7 +16,7 @@ const actions = [
                     },
                     "value": {
                         "type": String,
-                        "default": "C##DBTRADE",
+                        "default": "dbtrade",
                     },
                     "desc": "数据库名称, 注意: 请勿输入中文",
                     "placeholder": "数据库名不能含有空格",
