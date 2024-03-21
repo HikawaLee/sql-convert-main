@@ -50,6 +50,9 @@ export default {
     nullable: '允许为空',
     setNewFieldType: '设置新字段类型',
 
+    //演示用
+    deleteTableLabel: '删除表表名',
+
 
     fieldName: '字段名',
     fieldType: '字段类型',

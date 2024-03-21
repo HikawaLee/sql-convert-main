@@ -930,6 +930,60 @@ const actions = [
             },
         ],
     },
+    {
+        //演示用
+        "desc": actionType.DELETETABLE,
+        "layout": [
+            {
+                "type": inputType.INPUT,
+                "title": dbConf.dbName,
+                "required": {
+                    "message": "请选择要修改数据库的数据库名, 注意: 执行时若报权限错误, 请先申请对应的数据库操作权限或者切换到对应身份!",
+                },
+                "value": {
+                    "type": String,
+                    "default": "C##DBTRADE",
+                },
+                "desc": "数据库名称, 注意: 请勿输入中文",
+                "placeholder": "数据库名不能含有空格",
+                "rules": {
+                    [rulesType.dataType]: rulesType.alphaRegex, //FIXME 组件引用获取后似乎变成了字符串
+                },
+            },
+            {
+                "type": inputType.INPUT,
+                "title": dbConf.deleteTableLabel,
+                "required": {
+                    "message": "请填入要删除表的表名, 例如: test, 注意: 请勿输入中文",
+                },
+                "value": {
+                    "type": String,
+                    "default": "test_user",
+                },
+                "desc": "数据库名称, 注意: 请勿输入中文",
+                "placeholder": "表名不能含有空格",
+                "rules": {
+                    [rulesType.dataType]: rulesType.alphaRegex
+                },
+            },
+            {
+                "type": inputType.CHECKBOX,
+                "title": dbConf.dbType,
+                "value": {
+                    "type": String,
+                    "default": [dbConf.mysql, dbConf.oracle,  dbConf.postgres],
+                },
+                "options":
+                    [
+                        dbConf.dameng,
+                        dbConf.mysql,
+                        dbConf.oracle,
+                        dbConf.tdsql,
+                        dbConf.postgres
+                    ],
+            },
+        ],
+    }
 ]
 
 

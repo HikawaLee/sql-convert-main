@@ -12,4 +12,7 @@ export default {
     DELETEPRIMARYKEY: '删除主键',
     MODIFYPRIAMRYKEY: '修改主键',
     //endregion
+
+    //演示用
+    DELETETABLE: '删除表',
 }

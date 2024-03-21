@@ -4,6 +4,10 @@ import damengFunc from "../scripts/dameng_func.js";
 import oracleFunc from "../scripts/oracle_func.js";
 import dbConf from "../types/dbConf.js";
 import actionType from "../types/actionType.js";
+//演示用
+import postgresFunc from "../scripts/postgres_func.js";
+
+
 // SQL模板函数池, 用于根据数据库类型和操作类型生成对应的SQL, 
 // 例如: dbMap[字段新增][mysql数据库]: mysql数据库语句生成函数 
 export default {
@@ -64,4 +68,10 @@ export default {
         [dbConf.mysql]: mysqlFunc.generateModifyPrimaryKeySQL,
         [dbConf.oracle]: oracleFunc.generateModifyPrimaryKeySQL,
     },
+
+    //演示用
+    [actionType.DELETETABLE]: {
+        [dbConf.postgres]: postgresFunc.generateDropTableSQL,
+    }
+
 }
