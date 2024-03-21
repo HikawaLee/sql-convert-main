@@ -45,7 +45,6 @@ export default {
         [dbConf.dameng]: damengFunc.generateDropIndexSQL,
     },
     [actionType.REBUILDINDEX]: {
-        //TODO
         [dbConf.oracle]: oracleFunc.generateRebuildIndexSQL,
         [dbConf.dameng]: damengFunc.generateRebuildIndexSQL,
     },
