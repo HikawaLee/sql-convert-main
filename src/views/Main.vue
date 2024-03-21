@@ -55,7 +55,7 @@
 
 
   <!--  sql输出组件  -->
-  <div v-else class="m-2.5 bg-base-200 border-2 rounded-md shadow-sm">
+  <div v-else-if="loading === false && sqlList.length !== 0" class="m-2.5 bg-base-200 border-2 rounded-md shadow-sm">
     <Output :sql-list="sqlList"/>
   </div>
 
@@ -155,7 +155,7 @@ const sqlList = ref([])
  * @param data inputData对象, 即子组件收集到数据库传递给父组件后, 父组件再将数据复制到inputData对象中
  */
 const generate = (data) => {
-
+  sqlList.value = []
   //获取当前选中的功能的名称
   const actionName = activeAction.value.name;
   //region 校验用户输入的数据是否为空
@@ -201,6 +201,10 @@ const resetInput = () => {
   freshComponentKey();
 }
 
+/**
+ * 清除inputData对象中的脏数据
+ * @param id 脏数据的对象的id, 即组件的id
+ */
 const clearDirtyData = (id) => {
     for(const key in inputData) {
       if(key === id) {
