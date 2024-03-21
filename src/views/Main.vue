@@ -36,14 +36,15 @@
   <div class="flex flex-col justify-center items-center">
     <div class="grid grid-cols-1 my-0 md:grid-cols-2 xl:grid-cols-3 md:gap-x-16 ">
       <div v-for="(componentState, index) in componentStates" :key="componentKey[index]">
-        <LayoutStore :state="componentState" @update-state="updateState"/>
+        <LayoutStore :state="componentState" @update-state="updateState" @clear-dirtyData="clearDirtyData"/>
       </div>
     </div>
   </div>
 
+
 <!--  <div>-->
 <!--    <pre>-->
-<!--      {{JSON.stringify(inputData, null, 2)}}-->
+<!--      Debug使用: {{JSON.stringify(inputData, null, 2)}}-->
 <!--    </pre>-->
 <!--  </div>-->
 
@@ -114,10 +115,6 @@ const componentStates = computed(() => {
 const inputData = reactive({})
 
 
-// activeAction.value.action.layout.forEach((state) => {
-//   inputData[state.label] = state.data;
-// })
-
 /**
  * 组件状态更新函数, 用于收集子组件的数据, 并将其保存到inputData对象中, 由父组件传递给子组件触发使用
  * 收集后的inputData对象格式类似于
@@ -161,14 +158,12 @@ const generate = (data) => {
 
   //获取当前选中的功能的名称
   const actionName = activeAction.value.name;
-
   //region 校验用户输入的数据是否为空
   let shouldReturn = false;
   const layout = componentStates.value.reduce((acc, cur) => {
     acc[cur.id] = cur;
     if (!data.hasOwnProperty(cur.id)) {
       alertContent.value = `请填写表单"${cur.label}"`;
-      console.log("请填写表单", cur.label);
       alterShow.value = true;
       setTimeout(() => {
         alterShow.value = false;
@@ -206,7 +201,14 @@ const resetInput = () => {
   freshComponentKey();
 }
 
-
+const clearDirtyData = (id) => {
+    for(const key in inputData) {
+      if(key === id) {
+        console.log(`成功匹配: ${key}`)
+        delete inputData[key]
+      }
+    }
+}
 
 </script>
 

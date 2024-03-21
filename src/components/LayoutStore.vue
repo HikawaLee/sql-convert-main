@@ -13,7 +13,7 @@
           <span class="label-text">{{ props.state.label }}</span>
           <span v-if="props.state.required" class="text-red-500">*</span>
         </div>
-        <input class="input input-bordered" v-model.trim="singleAns" @change="updateConfig" :placeholder="props.state.placeholder"/>
+        <input class="input input-bordered" v-model.trim="singleAns" @change="updateConfig" :placeholder="props.state.placeholder" @focusout="updateConfig"/>
         <div class="label">
           <span v-if="warningShow" class="label-text-alt text-red-400">{{warningText}}</span>
           <span v-else class="label-text-alt">{{ props.state.desc }}</span>
@@ -124,7 +124,7 @@ const props = defineProps({
     }
   }
 })
-const emits = defineEmits(['updateState']);
+const emits = defineEmits(['updateState', 'clearDirtyData']);
 
 //存储用户输入为单个值
 const singleAns = ref(null)
@@ -161,6 +161,11 @@ const updateConfig = (e) => {
   //checkbox组件收集的数据单独处理为数组
   if(props.state.type === 'checkbox') {
     data = multipleAns.value;
+    if(data.length === 0) {
+      console.log(`该多选框未选择任何选项, 子组件请求父组件删除该组件上次收集的数据, ${props.state.id}`)
+      emits('clearDirtyData', props.state.id);
+      return;
+    }
   }
   //toggle组件收集的数据从布尔型选项中获取选项值
   else if(props.state.type === 'toggle') {
@@ -174,6 +179,8 @@ const updateConfig = (e) => {
   else {
     data = handleInput(e);
     if(data === '') {
+      console.log(`该输入框输入内容空, 子组件请求父组件删除该组件上次收集的数据, ${props.state.id}`)
+      emits('clearDirtyData', props.state.id);
       return;
     }
   }
@@ -199,6 +206,7 @@ if(props.state.type === InputType.TOGGLE && props.state.value.default !== '') {
 //初始化其他组件的默认值
 if(props.state.type !== InputType.TOGGLE && props.state.value.default !== undefined) {
   if(props.state.type === InputType.CHECKBOX) {
+
     multipleAns.value = props.state.value.default;
   }
   else singleAns.value = props.state.value.default;

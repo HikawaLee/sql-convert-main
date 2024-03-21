@@ -122,9 +122,12 @@ const actions = [
                 {
                     "type": inputType.CHECKBOX,
                     "title": dbConf.dbType,
+                    "required": {
+                        "message": "请选择要生成SQL的数据库类型",
+                    },
                     "value": {
                         "type": String,
-                        "default": [dbConf.mysql, dbConf.oracle, dbConf.dameng, dbConf.tdsql],
+                        //没有默认值就不要填写default
                     },
                     "options":
                         [
@@ -443,7 +446,6 @@ const actions = [
                 },
                 "value": {
                     "type": String,
-                    "default": "",
                 },
                 "rules": {},
             },
