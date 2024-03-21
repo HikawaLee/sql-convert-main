@@ -162,7 +162,7 @@ const generate = (data) => {
   let shouldReturn = false;
   const layout = componentStates.value.reduce((acc, cur) => {
     acc[cur.id] = cur;
-    if (!data.hasOwnProperty(cur.id)) {
+    if (!data.hasOwnProperty(cur.id) && cur.required !== undefined) {
       alertContent.value = `请填写表单"${cur.label}"`;
       alterShow.value = true;
       setTimeout(() => {
