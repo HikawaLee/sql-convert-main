@@ -4,16 +4,16 @@
   <div class="divider divider-horizontal"/>
 
 <!--  数据输入组件仓库， 存储各个数据输入组件-->
-  <div class="flex w-full p-2.5">
+<!--  <div class="flex w-full p-2.5">-->
 
 <!--    input输入框-->
-    <div v-if="props.state.type === 'input'" class="form-control w-full max-w-xl">
+    <div v-if="props.state.type === InputType.INPUT" class="form-control w-full max-w-xl">
       <label class="form-control w-full max-w-xl">
         <div class="label">
           <span class="label-text">{{ props.state.label }}</span>
           <span v-if="props.state.required" class="text-red-500">*</span>
         </div>
-        <input class="input input-bordered" v-model.trim="singleAns" @change="updateConfig" :placeholder="props.state.placeholder" @focusout="updateConfig"/>
+        <input class="input input-bordered" v-model.trim="singleAns" @change="updateConfig" :placeholder="props.state.placeholder"/>
         <div class="label">
           <span v-if="warningShow" class="label-text-alt text-red-400">{{warningText}}</span>
           <span v-else class="label-text-alt">{{ props.state.desc }}</span>
@@ -23,7 +23,7 @@
     </div>
 
 <!--    select选择框, 多选一-->
-    <div v-if="props.state.type === 'select'" class="form-control w-full max-w-xl">
+    <div v-if="props.state.type === InputType.SELECT" class="form-control w-full max-w-xl">
       <label class="form-control w-full max-w-xl">
         <div class="label">
           <span class="label-text">{{ props.state.label }}</span>
@@ -39,7 +39,7 @@
     </div>
 
 <!--    check box多选框, 多选多-->
-    <div v-if="props.state.type === 'checkbox'" class="form-control w-full max-w-xl dropdown dropdown-bottom dropdown-hover">
+    <div v-if="props.state.type === InputType.CHECKBOX" class="form-control w-full max-w-xl dropdown dropdown-bottom dropdown-hover">
 
       <label class="form-control w-full max-w-xl">
         <div class="label " TABINDEX="0" >
@@ -67,7 +67,7 @@
     </div>
 
 <!--    toggle开关-->
-    <div v-if="props.state.type === 'toggle'" class="form-control w-full max-w-xl">
+    <div v-if="props.state.type === InputType.TOGGLE" class="form-control w-full max-w-xl">
       <label class="form-control w-full max-w-xl">
         <div class="label">
           <span class="label-text">{{ props.state.label }}</span>
@@ -86,7 +86,7 @@
       </label>
     </div>
 
-  </div>
+<!--  </div>-->
 
 </template>
 

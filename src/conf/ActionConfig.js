@@ -148,9 +148,6 @@ const actions = [
                 },
             ],
     },
-
-
-
     {
         "desc": actionType.DELETE,
         "layout": [
@@ -231,7 +228,6 @@ const actions = [
 
         ],
     },
-
     {
         "desc": actionType.MODIFY,
         "layout": [
@@ -402,7 +398,6 @@ const actions = [
 
         ],
     },
-
     {
         "desc": actionType.RENAMETABLE,
         "layout": [
@@ -491,7 +486,6 @@ const actions = [
             },
         ],
     },
-
     {
         "desc": actionType.ADDINDEX,
         "layout": [
@@ -571,8 +565,6 @@ const actions = [
             },
         ],
     },
-
-
     {
         "desc": actionType.DELETEINDEX,
         "layout": [
@@ -637,7 +629,6 @@ const actions = [
             },
         ],
     },
-
     {
         "desc": actionType.REBUILDINDEX,
         "layout": [
@@ -702,7 +693,6 @@ const actions = [
             },
         ],
     },
-
     {
         "desc": actionType.ADDPRIMARYKEY,
         "layout": [
@@ -925,7 +915,21 @@ const actions = [
             },
         ],
     },
+    {
+        "desc": "debug",
+        "layout": [
+            {
+                "type": inputType.INPUT,
+                "title": dbConf.dbName,
 
+                "value": {
+                    "type": String,
+                    "default": "C##DBTRADE",
+                },
+                "desc": "数据库名称, 注意: 请勿输入中文",
+            },
+        ],
+    },
 ]
 
 

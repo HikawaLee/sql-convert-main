@@ -47,6 +47,7 @@ function generateSQL(inputData, actionType) {
     // console.log("info:", JSON.stringify(info, null, 2));
     ///endregion
 
+    console.log('info:', JSON.stringify(info, null, 2));
 
     //首先根据数据库类型获取对应的SQL模板
     const targetDB = info[dbConf.dbType];

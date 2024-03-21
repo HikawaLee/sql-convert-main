@@ -36,7 +36,7 @@
   <div class="flex flex-col justify-center items-center">
     <div class="grid grid-cols-1 my-0 md:grid-cols-2 xl:grid-cols-3 md:gap-x-16 ">
       <div v-for="(componentState, index) in componentStates" :key="componentKey[index]">
-        <LayoutStore :state="componentState" @update-state="updateState" @clear-dirtyData="clearDirtyData"/>
+        <ComponentStore :state="componentState" @update-state="updateState" @clear-dirtyData="clearDirtyData"/>
       </div>
     </div>
   </div>
@@ -44,9 +44,13 @@
 
 <!--  <div>-->
 <!--    <pre>-->
-<!--      Debug使用: {{JSON.stringify(inputData, null, 2)}}-->
+<!--Debug使用:-->
+<!--      {{JSON.stringify(componentStates, null, 2)}}-->
 <!--    </pre>-->
 <!--  </div>-->
+
+
+
 
   <!--  loading组件  -->
   <div v-if="loading" class="flex justify-center">
@@ -63,7 +67,7 @@
 </template>
 
 <script setup>
-import LayoutStore from '@/components/LayoutStore.vue';
+import ComponentStore from '@/components/ComponentStore.vue';
 import Output from '@/components/Output.vue';
 import standardize from "@/utils/Standardize.js";
 import {computed, ref, reactive} from "vue";
