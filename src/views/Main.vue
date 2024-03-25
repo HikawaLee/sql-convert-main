@@ -171,7 +171,7 @@ const generate = (data) => {
       alterShow.value = true;
       setTimeout(() => {
         alterShow.value = false;
-      }, 500)
+      }, 10000)
       shouldReturn = true;
     }
     return acc;

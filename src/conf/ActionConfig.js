@@ -137,15 +137,6 @@ const actions = [
                             dbConf.tdsql,
                         ],
                 },
-                {
-                    "type": inputType.TOGGLE,
-                    "title": dbConf.bigTableLabel,
-                    "value": {
-                        "type": String,
-                        "default": "否",
-                    },
-                    "options": ["是", "否"],
-                },
             ],
     },
     {
@@ -912,21 +903,6 @@ const actions = [
                         dbConf.oracle,
                         dbConf.tdsql,
                     ],
-            },
-        ],
-    },
-    {
-        "desc": "debug",
-        "layout": [
-            {
-                "type": inputType.INPUT,
-                "title": dbConf.dbName,
-
-                "value": {
-                    "type": String,
-                    "default": "C##DBTRADE",
-                },
-                "desc": "数据库名称, 注意: 请勿输入中文",
             },
         ],
     },

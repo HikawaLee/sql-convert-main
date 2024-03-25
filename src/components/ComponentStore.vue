@@ -46,7 +46,7 @@
           <span class="label-text">{{ props.state.label }}</span>
           <span v-if="props.state.required" class="text-red-500">*</span>
         </div>
-        <input class="input input-bordered" v-model="multipleAns" disabled :placeholder="''" @change="updateConfig"/>
+        <input class="input input-bordered relative flex" v-model="multipleAns" readonly :placeholder="''" @change="updateConfig">
         <div class="label">
           <span class="label-text-alt">{{ props.state.desc }}</span>
         </div>
@@ -236,11 +236,11 @@ const verifyNumber = (rules, value) => {
       warningShow.value = false
     } else {
       warningText.value = "输入值不在有效范围内。";
-      handleWarning()
+      warningShow.value = true;
     }
   } else {
     warningText.value = "输入值不是有效的数字。";
-    handleWarning()
+    warningShow.value = true;
   }
   return true;
 }
@@ -253,20 +253,11 @@ const verifyString = (rules, str) => {
     warningShow.value = false
   } else {
     warningText.value = "输入的字符串包含汉字或空格。";
-    handleWarning()
+    warningShow.value = true
   }
 }
 
 
-
-// 用于控制警告信息的显示
-const handleWarning = () => {
-  warningShow.value = true
-  setTimeout(() => {
-    warningShow.value = false
-    singleAns.value = null
-  }, 1500)
-}
 
 
 </script>
