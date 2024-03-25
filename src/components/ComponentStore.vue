@@ -227,6 +227,8 @@ const warningText = ref('')
 //根据rules的配置校验用户输入的数据是否为数字和最值限制
 const verifyNumber = (rules, value) => {
   const numericRegex = /^[0-9]+$/; // TODO 应该把正则表达式放到rules中
+  console.log(`rules: ===${JSON.stringify(numericRegex.test(value), null, 2)}===`)
+  console.log(`rules: ===${JSON.stringify(rulesType.numberRegex.test(value), null, 2)}===`)
   // 检查输入值是否为数字
   if (numericRegex.test(value)) {
     // 输入值是数字，继续检查最小值
