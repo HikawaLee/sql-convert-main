@@ -359,13 +359,12 @@ function generateModifyPrimaryKeySQL(inputData, opts = {}) {
         ) > 0
         AND (
             SELECT count(1) 
-            FROM information_schema.statistics a
+            FROM information_schema.columns a
             WHERE
-                a.INDEX_SCHEMA = SCHEMA()
-                AND a.INDEX_NAME = 'PRIMARY'
-                AND UPPER(COLUMN_NAME) in (UPPER('${fieldName}'))
-                AND LOWER(a.\`TABLE_NAME\`) = LOWER('${tableName}')
-            ) <> 1;
+                COLUMN_KEY = 'PRI'
+                AND UPPER(COLUMN_NAME) = UPPER('${fieldName}')
+                AND LOWER(table_name) = LOWER('${tableName}')
+            ) = 0;
         PREPARE hs_stmt FROM @hs_sql;
         EXECUTE hs_stmt;
         DEALLOCATE PREPARE hs_stmt;

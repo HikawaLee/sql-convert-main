@@ -249,26 +249,35 @@ function generateModifyPrimaryKeySQL(inputData, opts = {}) {
 
 
     const sql = `\n
-        prompt ${tableName} 重建主键
-        declare
-            v_rowcount number;
-        begin
-            select count(*) into v_rowcount from user_constraints where table_name = upper('${tableName}') and constraint_name = upper('${primaryKeyName}');
-            if v_rowcount > 0 then
-                select count(*) into v_rowcount from user_cons_columns t where table_name = upper('${tableName}') and t.column_name = upper('${fieldName}') and t.constraint_name = upper('${primaryKeyName}');
-            if v_rowcount = 0 then
-                execute immediate 'alter table ${tableName} drop constraint ${primaryKeyName} cascade drop index';
-            end if;
-        end if;
-            select count(*) into v_rowcount from user_tables where table_name = upper('${tableName}');
-        if v_rowcount >0 then
-            select count(*) into v_rowcount from user_constraints where table_name = upper('${tableName}') and constraint_name = upper('${primaryKeyName}');
-        if v_rowcount = 0 then
-            execute immediate 'ALTER TABLE ${tableName} ADD CONSTRAINT ${primaryKeyName} PRIMARY KEY(${fieldName})';
-            end if;
-        end if;
-    end;
-    \n`
+        prompt ${dbName} 表修改主键 ${primaryKeyName} 为 ${newPrimaryKeyName}
+        DECLARE
+            v_pk_exists   NUMBER;
+            v_table_exists NUMBER;
+        BEGIN
+            -- Check if the table exists
+        SELECT COUNT(*)
+        INTO v_table_exists
+        FROM USER_TABLES
+        WHERE TABLE_NAME = UPPER('${tableName}');
+        -- Exit if table doesn't exist
+        IF v_table_exists = 0 THEN
+                RETURN;
+        END IF;
+            -- Check if the primary key exists for the table
+        SELECT COUNT(*)
+        INTO v_pk_exists
+        FROM USER_CONSTRAINTS
+        WHERE TABLE_NAME = UPPER('${tableName}')
+            AND CONSTRAINT_TYPE = 'P'
+            AND CONSTRAINT_NAME = UPPER('${primaryKeyName}');
+        -- If the primary key exists, rename it by prepending 'pk_'
+        IF v_pk_exists = 1 THEN
+                EXECUTE IMMEDIATE 'ALTER TABLE ${tableName} RENAME CONSTRAINT ${primaryKeyName} TO ${newPrimaryKeyName}';
+        END IF;
+        END;
+        /
+        \n
+        `
     return sql;
 
 

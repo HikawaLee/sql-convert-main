@@ -553,13 +553,28 @@ const actions = [
             },
             {
                 [tableConfKeys.COMPONENT_TYPE]: inputType.INPUT,
-                [tableConfKeys.TITLE]: dbConf.newPrimaryKeyName,
+                [tableConfKeys.TITLE]: dbConf.primaryKeyName,
                 [tableConfKeys.REQUIRED]: {
-                    [tableConfKeys.REQUIRED_MSG]: "请填入主键名, 例如: pk_userId",
+                    [tableConfKeys.REQUIRED_MSG]: "请填入原来的主键名, 例如: pk_id",
                 },
                 [tableConfKeys.VALUE]: {
                     [tableConfKeys.COMPONENT_TYPE]: String,
-                    [tableConfKeys.DEFAULT]: "pk_userId",
+                    [tableConfKeys.DEFAULT]: "pk_id",
+                },
+                [tableConfKeys.DESC]: "字段名称不能含有空格",
+                [tableConfKeys.RULES]: {
+                    [rulesType.dataType]: rulesType.alphaRegex,
+                },
+            },
+            {
+                [tableConfKeys.COMPONENT_TYPE]: inputType.INPUT,
+                [tableConfKeys.TITLE]: dbConf.newPrimaryKeyName,
+                [tableConfKeys.REQUIRED]: {
+                    [tableConfKeys.REQUIRED_MSG]: "请填入新的主键名, 例如: pk_id_2024",
+                },
+                [tableConfKeys.VALUE]: {
+                    [tableConfKeys.COMPONENT_TYPE]: String,
+                    [tableConfKeys.DEFAULT]: "pk_id_2024",
                 },
                 [tableConfKeys.DESC]: "字段名称不能含有空格",
                 [tableConfKeys.RULES]: {
