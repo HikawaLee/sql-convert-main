@@ -186,7 +186,7 @@ function generateDropPrimaryKeySQL(inputData, opts = {}) {
     const dbName = inputData[dbConf.dbName];
     const tableName = inputData[dbConf.tableName];
     const fieldName = inputData[dbConf.fieldName];
-
+    const primaryKeyName = inputData[dbConf.primaryKeyName];
 
     const sql = `
         DECLARE
@@ -195,9 +195,9 @@ function generateDropPrimaryKeySQL(inputData, opts = {}) {
         BEGIN
             SELECT CONSTRAINT_NAME INTO cons_name
             FROM USER_CONSTRAINTS
-            WHERE TABLE_NAME = ${dbName}.${tableName} AND CONSTRAINT_TYPE = 'P';
+            WHERE TABLE_NAME = UPPER('${tableName}') AND CONSTRAINT_TYPE = 'P';
 
-            sql_stmt := 'ALTER TABLE ${dbName}.${tableName} DROP CONSTRAINT ' || cons_name;
+            sql_stmt := 'ALTER TABLE ${tableName} DROP CONSTRAINT ' || cons_name;
             EXECUTE IMMEDIATE sql_stmt;
         END;
         /
