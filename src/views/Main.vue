@@ -159,7 +159,11 @@ const sqlList = ref([])
  * @param data inputData对象, 即子组件收集到数据库传递给父组件后, 父组件再将数据复制到inputData对象中
  */
 const generate = (data) => {
-  sqlList.value = []
+  //清空sqlList数组
+  sqlList.value = [];
+  alterShow.value = false;
+
+
   //获取当前选中的功能的名称
   const actionName = activeAction.value.name;
   //region 校验用户输入的数据是否为空

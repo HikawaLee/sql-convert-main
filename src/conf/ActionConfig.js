@@ -1,73 +1,75 @@
-import inputType from '../types/inputType.js'
-import actionType from "../types/actionType.js";
-import dbConf from "../types/dbConf.js";
+import inputType from '@/types/inputType.js'
+import actionType from "@/types/actionType.js";
+import dbConf from "@/types/dbConf.js";
 import rulesType from "@/types/rulesType.js";
+import tableConfKeys from "@/types/tableConfKeys.js";
+import generateDbMetaConf from "@/conf/generateDbMetaConf.js";
 // 布局配置对象, 用于生成表单, 每个对象对应一个操作, 每个操作包含一个或多个输入框, 下拉框, 复选框等, 用于生成表单
 const actions = [
     {
             //新增字段
-            "desc": actionType.ADD,
-            "layout": [
+            [tableConfKeys.DESC]: actionType.ADD,
+            [tableConfKeys.LAYOUT]: [
                 {
-                    "type": inputType.INPUT,
-                    "title": dbConf.dbName,
-                    "required": {
-                        "message": "请选择要修改数据库的数据库名, 注意: 执行时若报权限错误, 请先申请对应的数据库操作权限或者切换到对应身份!",
+                    [tableConfKeys.COMPONENT_TYPE]: inputType.INPUT,
+                    [tableConfKeys.TITLE]: dbConf.dbName,
+                    [tableConfKeys.REQUIRED]: {
+                        [tableConfKeys.REQUIRED_MSG]: "请选择要修改数据库的数据库名, 注意: 执行时若报权限错误, 请先申请对应的数据库操作权限或者切换到对应身份!",
                     },
-                    "value": {
-                        "type": String,
-                        "default": "dbtrade",
+                    [tableConfKeys.VALUE]: {
+                        [tableConfKeys.VALUETYPE]: String,
+                        [tableConfKeys.DEFAULT]: "dbtrade",
                     },
-                    "desc": "数据库名称, 注意: 请勿输入中文",
-                    "placeholder": "数据库名不能含有空格",
-                    "rules": {
+                    [tableConfKeys.DESC]: "数据库名称, 注意: 请勿输入中文",
+                    [tableConfKeys.PLACEHOLDER]: "数据库名不能含有空格",
+                    [tableConfKeys.RULES]: {
                         [rulesType.dataType]: rulesType.alphaRegex, //FIXME 组件引用获取后似乎变成了字符串
                     },
                 },
                 {
-                    "type": inputType.INPUT,
-                    "title": dbConf.tableName,
-                    "required": {
-                        "message": "请填入要修改表的表名, 例如: test, 注意: 请勿输入中文",
+                    [tableConfKeys.COMPONENT_TYPE]: inputType.INPUT,
+                    [tableConfKeys.TITLE]: dbConf.tableName,
+                    [tableConfKeys.REQUIRED]: {
+                        [tableConfKeys.REQUIRED_MSG]: "请填入要修改表的表名, 例如: test, 注意: 请勿输入中文",
                     },
-                    "value": {
-                        "type": String,
-                        "default": "test_user",
+                    [tableConfKeys.VALUE]: {
+                        [tableConfKeys.COMPONENT_TYPE]: String,
+                        [tableConfKeys.DEFAULT]: "test_user",
                     },
-                    "desc": "数据库名称, 注意: 请勿输入中文",
-                    "placeholder": "表名不能含有空格",
-                    "rules": {
+                    [tableConfKeys.DESC]: "数据库名称, 注意: 请勿输入中文",
+                    [tableConfKeys.PLACEHOLDER]: "表名不能含有空格",
+                    [tableConfKeys.RULES]: {
                         [rulesType.dataType]: rulesType.alphaRegex
                     },
                 },
 
                 {
-                    "type": inputType.INPUT,
-                    "title": dbConf.fieldName,
-                    "required": {
-                        "message": "请填入字段名, 例如: test",
+                    [tableConfKeys.COMPONENT_TYPE]: inputType.INPUT,
+                    [tableConfKeys.TITLE]: dbConf.fieldName,
+                    [tableConfKeys.REQUIRED]: {
+                        [tableConfKeys.REQUIRED_MSG]: "请填入字段名, 例如: test",
                     },
-                    "value": {
-                        "type": String,
-                        "default": "t_id",
+                    [tableConfKeys.VALUE]: {
+                        [tableConfKeys.COMPONENT_TYPE]: String,
+                        [tableConfKeys.DEFAULT]: "t_id",
                     },
-                    "desc": "字段名称不能含有空格",
-                    "rules": {
+                    [tableConfKeys.DESC]: "字段名称不能含有空格",
+                    [tableConfKeys.RULES]: {
                         [rulesType.dataType]: rulesType.alphaRegex,
                     },
                 },
                 {
-                    "type": inputType.SELECT,
-                    "title": dbConf.fieldType,
-                    "required": {
-                        "message": "请选择字段类型",
+                    [tableConfKeys.COMPONENT_TYPE]: inputType.SELECT,
+                    [tableConfKeys.TITLE]: dbConf.fieldType,
+                    [tableConfKeys.REQUIRED]: {
+                        [tableConfKeys.REQUIRED_MSG]: "请选择字段类型",
                     },
-                    "placeholder": "",
-                    "value": {
-                        "type": String,
-                        "default": dbConf.STDstr,
+                    [tableConfKeys.PLACEHOLDER]: "",
+                    [tableConfKeys.VALUE]: {
+                        [tableConfKeys.COMPONENT_TYPE]: String,
+                        [tableConfKeys.DEFAULT]: dbConf.STDstr,
                     },
-                    "options": [
+                    [tableConfKeys.OPTIONS]: [
                         dbConf.STDint2_t,
                         dbConf.STDint3_t,
                         dbConf.STDint4_t,
@@ -86,14 +88,14 @@ const actions = [
                     ],
                 },
                 {
-                    "type": inputType.INPUT,
-                    "title": dbConf.fieldLength,
-                    "value": {
-                        "type": Number,
-                        "default": 16, ////TODO 数据库的各种类型的长度限制该如何统一管理?
+                    [tableConfKeys.COMPONENT_TYPE]: inputType.INPUT,
+                    [tableConfKeys.TITLE]: dbConf.fieldLength,
+                    [tableConfKeys.VALUE]: {
+                        [tableConfKeys.COMPONENT_TYPE]: Number,
+                        [tableConfKeys.DEFAULT]: 16, ////TODO 数据库的各种类型的长度限制该如何统一管理?
                     },
-                    "desc": "请输入字段长度, 例如: 10",
-                    "rules": {
+                    [tableConfKeys.DESC]: "请输入字段长度, 例如: 10",
+                    [tableConfKeys.RULES]: {
                         [rulesType.dataType]: rulesType.numberRegex,
                         [rulesType.min]: 1,
                     }
@@ -106,181 +108,137 @@ const actions = [
                         type: Number,
                         default: 0,
                     },
-                    "rules": {
+                    [tableConfKeys.RULES]: {
                         [rulesType.dataType]: rulesType.numberRegex,
                         [rulesType.min]: 0,
                     }
                 },
                 {
-                    "type": inputType.INPUT,
-                    "title": dbConf.setDefault,
-                    "value": {
-                        "type": String,
-                        "default": "",
+                    [tableConfKeys.COMPONENT_TYPE]: inputType.INPUT,
+                    [tableConfKeys.TITLE]: dbConf.setDefault,
+                    [tableConfKeys.VALUE]: {
+                        [tableConfKeys.COMPONENT_TYPE]: String,
+                        [tableConfKeys.DEFAULT]: "",
                     },
                 },
-                {
-                    "type": inputType.CHECKBOX,
-                    "title": dbConf.dbType,
-                    "required": {
-                        "message": "请选择要生成SQL的数据库类型",
-                    },
-                    "value": {
-                        "type": String,
-                        //没有默认值就不要填写default
-                    },
-                    "options":
-                        [
-                            dbConf.dameng,
-                            dbConf.mysql,
-                            dbConf.oracle,
-                            dbConf.tdsql,
-                        ],
-                },
+                generateDbMetaConf([])
             ],
     },
     {
-        "desc": actionType.DELETE,
-        "layout": [
+        [tableConfKeys.DESC]: actionType.DELETE,
+        [tableConfKeys.LAYOUT]: [
             {
-                "type": inputType.INPUT,
-                "title": dbConf.dbName,
-                "required": {
-                    "message": "请选择要修改数据库的数据库名, 注意: 执行时若报权限错误, 请先申请对应的数据库操作权限或者切换到对应身份!",
+                [tableConfKeys.COMPONENT_TYPE]: inputType.INPUT,
+                [tableConfKeys.TITLE]: dbConf.dbName,
+                [tableConfKeys.REQUIRED]: {
+                    [tableConfKeys.REQUIRED_MSG]: "请选择要修改数据库的数据库名, 注意: 执行时若报权限错误, 请先申请对应的数据库操作权限或者切换到对应身份!",
                 },
-                "value": {
-                    "type": String,
-                    "default": "C##DBTRADE",
+                [tableConfKeys.VALUE]: {
+                    [tableConfKeys.COMPONENT_TYPE]: String,
+                    [tableConfKeys.DEFAULT]: "C##DBTRADE",
                 },
-                "desc": "数据库名称, 注意: 请勿输入中文",
-                "placeholder": "数据库名不能含有空格",
-                "rules": {
+                [tableConfKeys.DESC]: "数据库名称, 注意: 请勿输入中文",
+                [tableConfKeys.PLACEHOLDER]: "数据库名不能含有空格",
+                [tableConfKeys.RULES]: {
                     [rulesType.dataType]: rulesType.alphaRegex, //FIXME 组件引用获取后似乎变成了字符串
                 },
             },
             {
-                "type": inputType.INPUT,
-                "title": dbConf.tableName,
-                "required": {
-                    "message": "请填入要修改表的表名, 例如: test, 注意: 请勿输入中文",
+                [tableConfKeys.COMPONENT_TYPE]: inputType.INPUT,
+                [tableConfKeys.TITLE]: dbConf.tableName,
+                [tableConfKeys.REQUIRED]: {
+                    [tableConfKeys.REQUIRED_MSG]: "请填入要修改表的表名, 例如: test, 注意: 请勿输入中文",
                 },
-                "value": {
-                    "type": String,
-                    "default": "test_user",
+                [tableConfKeys.VALUE]: {
+                    [tableConfKeys.COMPONENT_TYPE]: String,
+                    [tableConfKeys.DEFAULT]: "test_user",
                 },
-                "desc": "数据库名称, 注意: 请勿输入中文",
-                "placeholder": "表名不能含有空格",
-                "rules": {
+                [tableConfKeys.DESC]: "数据库名称, 注意: 请勿输入中文",
+                [tableConfKeys.PLACEHOLDER]: "表名不能含有空格",
+                [tableConfKeys.RULES]: {
                     [rulesType.dataType]: rulesType.alphaRegex
                 },
             },
             {
-                "type": inputType.INPUT,
-                "title": dbConf.fieldName,
-                "required": {
-                    "message": "请填入字段名, 例如: test",
+                [tableConfKeys.COMPONENT_TYPE]: inputType.INPUT,
+                [tableConfKeys.TITLE]: dbConf.fieldName,
+                [tableConfKeys.REQUIRED]: {
+                    [tableConfKeys.REQUIRED_MSG]: "请填入字段名, 例如: test",
                 },
-                "value": {
-                    "type": String,
-                    "default": "t_id",
+                [tableConfKeys.VALUE]: {
+                    [tableConfKeys.COMPONENT_TYPE]: String,
+                    [tableConfKeys.DEFAULT]: "t_id",
                 },
-                "desc": "字段名称不能含有空格",
-                "rules": {
+                [tableConfKeys.DESC]: "字段名称不能含有空格",
+                [tableConfKeys.RULES]: {
                     [rulesType.dataType]: rulesType.alphaRegex,
                 },
             },
-            {
-                "type": inputType.CHECKBOX,
-                "title": dbConf.dbType,
-                // "required": {
-                //     "message": "请选择数据库类型",
-                // },
-                "value": {
-                    "type": String,
-                    "default": [dbConf.mysql, dbConf.oracle, dbConf.dameng, dbConf.tdsql],
-                },
-                "options":
-                    [
-                        dbConf.dameng,
-                        dbConf.mysql,
-                        dbConf.oracle,
-                        dbConf.tdsql,
-                    ],
-            },
-            {
-                "type": inputType.TOGGLE,
-                "title": dbConf.bigTableLabel,
-                "value": {
-                    "type": String,
-                    "default": "否",
-                },
-                "options": ["是", "否"],
-            },
-
+            generateDbMetaConf(),
         ],
     },
     {
-        "desc": actionType.MODIFY,
-        "layout": [
+        [tableConfKeys.DESC]: actionType.MODIFY,
+        [tableConfKeys.LAYOUT]: [
             {
-                "type": inputType.INPUT,
-                "title": dbConf.dbName,
-                "required": {
-                    "message": "请选择要修改数据库的数据库名, 注意: 执行时若报权限错误, 请先申请对应的数据库操作权限或者切换到对应身份!",
+                [tableConfKeys.COMPONENT_TYPE]: inputType.INPUT,
+                [tableConfKeys.TITLE]: dbConf.dbName,
+                [tableConfKeys.REQUIRED]: {
+                    [tableConfKeys.REQUIRED_MSG]: "请选择要修改数据库的数据库名, 注意: 执行时若报权限错误, 请先申请对应的数据库操作权限或者切换到对应身份!",
                 },
-                "value": {
-                    "type": String,
-                    "default": "C##DBTRADE",
+                [tableConfKeys.VALUE]: {
+                    [tableConfKeys.COMPONENT_TYPE]: String,
+                    [tableConfKeys.DEFAULT]: "C##DBTRADE",
                 },
-                "desc": "数据库名称, 注意: 请勿输入中文",
-                "placeholder": "数据库名不能含有空格",
-                "rules": {
+                [tableConfKeys.DESC]: "数据库名称, 注意: 请勿输入中文",
+                [tableConfKeys.PLACEHOLDER]: "数据库名不能含有空格",
+                [tableConfKeys.RULES]: {
                     [rulesType.dataType]: rulesType.alphaRegex, //FIXME 组件引用获取后似乎变成了字符串
                 },
             },
             {
-                "type": inputType.INPUT,
-                "title": dbConf.tableName,
-                "required": {
-                    "message": "请填入要修改表的表名, 例如: test, 注意: 请勿输入中文",
+                [tableConfKeys.COMPONENT_TYPE]: inputType.INPUT,
+                [tableConfKeys.TITLE]: dbConf.tableName,
+                [tableConfKeys.REQUIRED]: {
+                    [tableConfKeys.REQUIRED_MSG]: "请填入要修改表的表名, 例如: test, 注意: 请勿输入中文",
                 },
-                "value": {
-                    "type": String,
-                    "default": "test_user",
+                [tableConfKeys.VALUE]: {
+                    [tableConfKeys.COMPONENT_TYPE]: String,
+                    [tableConfKeys.DEFAULT]: "test_user",
                 },
-                "desc": "数据库名称, 注意: 请勿输入中文",
-                "placeholder": "表名不能含有空格",
-                "rules": {
+                [tableConfKeys.DESC]: "数据库名称, 注意: 请勿输入中文",
+                [tableConfKeys.PLACEHOLDER]: "表名不能含有空格",
+                [tableConfKeys.RULES]: {
                     [rulesType.dataType]: rulesType.alphaRegex
                 },
             },
             {
-                "type": inputType.INPUT,
-                "title": dbConf.fieldName,
-                "required": {
-                    "message": "请填入字段名, 例如: test",
+                [tableConfKeys.COMPONENT_TYPE]: inputType.INPUT,
+                [tableConfKeys.TITLE]: dbConf.fieldName,
+                [tableConfKeys.REQUIRED]: {
+                    [tableConfKeys.REQUIRED_MSG]: "请填入字段名, 例如: test",
                 },
-                "value": {
-                    "type": String,
-                    "default": "t_id",
+                [tableConfKeys.VALUE]: {
+                    [tableConfKeys.COMPONENT_TYPE]: String,
+                    [tableConfKeys.DEFAULT]: "t_id",
                 },
-                "desc": "字段名称不能含有空格",
-                "rules": {
+                [tableConfKeys.DESC]: "字段名称不能含有空格",
+                [tableConfKeys.RULES]: {
                     [rulesType.dataType]: rulesType.alphaRegex,
                 },
             },
             {
-                "type": inputType.SELECT,
-                "title": dbConf.fieldType,
-                "required": {
-                    "message": "请选择字段类型",
+                [tableConfKeys.COMPONENT_TYPE]: inputType.SELECT,
+                [tableConfKeys.TITLE]: dbConf.fieldType,
+                [tableConfKeys.REQUIRED]: {
+                    [tableConfKeys.REQUIRED_MSG]: "请选择字段类型",
                 },
-                "placeholder": "",
-                "value": {
-                    "type": String,
-                    "default": dbConf.STDstr,
+                [tableConfKeys.PLACEHOLDER]: "",
+                [tableConfKeys.VALUE]: {
+                    [tableConfKeys.COMPONENT_TYPE]: String,
+                    [tableConfKeys.DEFAULT]: dbConf.STDstr,
                 },
-                "options": [
+                [tableConfKeys.OPTIONS]: [
                     dbConf.STDint2_t,
                     dbConf.STDint3_t,
                     dbConf.STDint4_t,
@@ -299,17 +257,17 @@ const actions = [
                 ],
             },
             {
-                "type": inputType.SELECT,
-                "title": dbConf.setNewFieldType,
-                "required": {
-                    "message": "请选择字段类型",
+                [tableConfKeys.COMPONENT_TYPE]: inputType.SELECT,
+                [tableConfKeys.TITLE]: dbConf.setNewFieldType,
+                [tableConfKeys.REQUIRED]: {
+                    [tableConfKeys.REQUIRED_MSG]: "请选择字段类型",
                 },
-                "placeholder": "",
-                "value": {
-                    "type": String,
-                    "default": dbConf.STDstr,
+                [tableConfKeys.PLACEHOLDER]: "",
+                [tableConfKeys.VALUE]: {
+                    [tableConfKeys.COMPONENT_TYPE]: String,
+                    [tableConfKeys.DEFAULT]: dbConf.STDstr,
                 },
-                "options": [
+                [tableConfKeys.OPTIONS]: [
                     dbConf.STDint2_t,
                     dbConf.STDint3_t,
                     dbConf.STDint4_t,
@@ -328,14 +286,14 @@ const actions = [
                 ],
             },
             {
-                "type": inputType.INPUT,
-                "title": dbConf.fieldLength,
-                "value": {
-                    "type": Number,
-                    "default": 16, ////TODO 数据库的各种类型的长度限制该如何统一管理?
+                [tableConfKeys.COMPONENT_TYPE]: inputType.INPUT,
+                [tableConfKeys.TITLE]: dbConf.fieldLength,
+                [tableConfKeys.VALUE]: {
+                    [tableConfKeys.COMPONENT_TYPE]: Number,
+                    [tableConfKeys.DEFAULT]: 16, ////TODO 数据库的各种类型的长度限制该如何统一管理?
                 },
-                "desc": "请输入字段长度, 例如: 10",
-                "rules": {
+                [tableConfKeys.DESC]: "请输入字段长度, 例如: 10",
+                [tableConfKeys.RULES]: {
                     [rulesType.dataType]: rulesType.numberRegex,
                     [rulesType.min]: 1,
                 }
@@ -348,562 +306,366 @@ const actions = [
                     type: Number,
                     default: 0,
                 },
-                "rules": {
+                [tableConfKeys.RULES]: {
                     [rulesType.dataType]: rulesType.numberRegex,
                     [rulesType.min]: 0,
                 }
             },
+            generateDbMetaConf(),
             {
-                "type": inputType.CHECKBOX,
-                "title": dbConf.dbType,
-                "value": {
-                    "type": String,
-                    "default": [dbConf.mysql, dbConf.oracle, dbConf.dameng, dbConf.tdsql],
+                [tableConfKeys.COMPONENT_TYPE]: inputType.TOGGLE,
+                [tableConfKeys.TITLE]: dbConf.setNullable,
+                [tableConfKeys.VALUE]: {
+                    [tableConfKeys.COMPONENT_TYPE]: String,
+                    [tableConfKeys.DEFAULT]: "不允许为空",
                 },
-                "options":
-                    [
-                        dbConf.dameng,
-                        dbConf.mysql,
-                        dbConf.oracle,
-                        dbConf.tdsql,
-                    ],
-            },
-            {
-                "type": inputType.TOGGLE,
-                "title": dbConf.setNullable,
-                "value": {
-                    "type": String,
-                    "default": "不允许为空",
-                },
-                "options": ["是", "否"],
-            },
-            {
-                "type": inputType.TOGGLE,
-                "title": dbConf.bigTableLabel,
-                "value": {
-                    "type": String,
-                    "default": "否",
-                },
-                "options": ["是", "否"],
-            },
-
-        ],
-    },
-    {
-        "desc": actionType.RENAMETABLE,
-        "layout": [
-            {
-                "type": inputType.INPUT,
-                "title": dbConf.dbName,
-                "required": {
-                    "message": "请选择要修改数据库的数据库名, 注意: 执行时若报权限错误, 请先申请对应的数据库操作权限或者切换到对应身份!",
-                },
-                "value": {
-                    "type": String,
-                    "default": "C##DBTRADE",
-                },
-                "desc": "数据库名称, 注意: 请勿输入中文",
-                "placeholder": "数据库名不能含有空格",
-                "rules": {
-                    [rulesType.dataType]: rulesType.alphaRegex, //FIXME 组件引用获取后似乎变成了字符串
-                },
-            },
-            {
-                "type": inputType.INPUT,
-                "title": dbConf.tableName,
-                "required": {
-                    "message": "请填入要修改表的表名, 例如: test, 注意: 请勿输入中文",
-                },
-                "value": {
-                    "type": String,
-                    "default": "test_user",
-                },
-                "desc": "数据库名称, 注意: 请勿输入中文",
-                "placeholder": "表名不能含有空格",
-                "rules": {
-                    [rulesType.dataType]: rulesType.alphaRegex
-                },
-            },
-            {
-                "type": inputType.INPUT,
-                "title": dbConf.newTableName,
-                "required": {
-                    "message": "请填入新表名, 例如: test, 注意: 请勿输入中文",
-                },
-                "value": {
-                    "type": String,
-                },
-                "rules": {},
-            },
-            ///region 旧的输入框, 不小心实现了一件全选和全不选的功能
-            // {
-            //     "type": inputType.CHECKBOX,
-            //     "title": dbConf.dbType,
-            //     "value": {
-            //         "type": String,
-            //         "default": "达梦",
-            //     },
-            //     "options":
-            //         [
-            //             dbConf.dameng,
-            //             dbConf.mysql,
-            //             dbConf.oracle,
-            //             dbConf.tdsql,
-            //         ],
-            // },
-            {
-                "type": inputType.CHECKBOX,
-                "title": dbConf.dbType,
-                "value": {
-                    "type": String,
-                    "default": [dbConf.mysql, dbConf.oracle, dbConf.dameng, dbConf.tdsql],
-                },
-                "options":
-                    [
-                        dbConf.dameng,
-                        dbConf.mysql,
-                        dbConf.oracle,
-                        dbConf.tdsql,
-                    ],
-            },
-            {
-                "type": inputType.TOGGLE,
-                "title": dbConf.bigTableLabel,
-                "value": {
-                    "type": String,
-                    "default": "否",
-                },
-                "options": ["是", "否"],
+                [tableConfKeys.OPTIONS]: ["是", "否"],
             },
         ],
     },
     {
-        "desc": actionType.ADDINDEX,
-        "layout": [
+        [tableConfKeys.DESC]: actionType.ADDINDEX,
+        [tableConfKeys.LAYOUT]: [
             {
-                "type": inputType.INPUT,
-                "title": dbConf.dbName,
-                "required": {
-                    "message": "请选择要修改数据库的数据库名, 注意: 执行时若报权限错误, 请先申请对应的数据库操作权限或者切换到对应身份!",
+                [tableConfKeys.COMPONENT_TYPE]: inputType.INPUT,
+                [tableConfKeys.TITLE]: dbConf.dbName,
+                [tableConfKeys.REQUIRED]: {
+                    [tableConfKeys.REQUIRED_MSG]: "请选择要修改数据库的数据库名, 注意: 执行时若报权限错误, 请先申请对应的数据库操作权限或者切换到对应身份!",
                 },
-                "value": {
-                    "type": String,
-                    "default": "C##DBTRADE",
+                [tableConfKeys.VALUE]: {
+                    [tableConfKeys.COMPONENT_TYPE]: String,
+                    [tableConfKeys.DEFAULT]: "C##DBTRADE",
                 },
-                "desc": "数据库名称, 注意: 请勿输入中文",
-                "placeholder": "数据库名不能含有空格",
-                "rules": {
+                [tableConfKeys.DESC]: "数据库名称, 注意: 请勿输入中文",
+                [tableConfKeys.PLACEHOLDER]: "数据库名不能含有空格",
+                [tableConfKeys.RULES]: {
                     [rulesType.dataType]: rulesType.alphaRegex, //FIXME 组件引用获取后似乎变成了字符串
                 },
             },
             {
-                "type": inputType.INPUT,
-                "title": dbConf.tableName,
-                "required": {
-                    "message": "请填入要修改表的表名, 例如: test, 注意: 请勿输入中文",
+                [tableConfKeys.COMPONENT_TYPE]: inputType.INPUT,
+                [tableConfKeys.TITLE]: dbConf.tableName,
+                [tableConfKeys.REQUIRED]: {
+                    [tableConfKeys.REQUIRED_MSG]: "请填入要修改表的表名, 例如: test, 注意: 请勿输入中文",
                 },
-                "value": {
-                    "type": String,
-                    "default": "test_user",
+                [tableConfKeys.VALUE]: {
+                    [tableConfKeys.COMPONENT_TYPE]: String,
+                    [tableConfKeys.DEFAULT]: "test_user",
                 },
-                "desc": "数据库名称, 注意: 请勿输入中文",
-                "placeholder": "表名不能含有空格",
-                "rules": {
+                [tableConfKeys.DESC]: "数据库名称, 注意: 请勿输入中文",
+                [tableConfKeys.PLACEHOLDER]: "表名不能含有空格",
+                [tableConfKeys.RULES]: {
                     [rulesType.dataType]: rulesType.alphaRegex
                 },
             },
             {
-                "type": inputType.INPUT,
-                "title": dbConf.fieldName,
-                "required": {
-                    "message": "请填入字段名, 例如: test",
+                [tableConfKeys.COMPONENT_TYPE]: inputType.INPUT,
+                [tableConfKeys.TITLE]: dbConf.fieldName,
+                [tableConfKeys.REQUIRED]: {
+                    [tableConfKeys.REQUIRED_MSG]: "请填入字段名, 例如: test",
                 },
-                "value": {
-                    "type": String,
-                    "default": "t_id",
+                [tableConfKeys.VALUE]: {
+                    [tableConfKeys.COMPONENT_TYPE]: String,
+                    [tableConfKeys.DEFAULT]: "t_id",
                 },
-                "desc": "字段名称不能含有空格",
-                "rules": {
+                [tableConfKeys.DESC]: "字段名称不能含有空格",
+                [tableConfKeys.RULES]: {
                     [rulesType.dataType]: rulesType.alphaRegex,
                 },
             },
             {
-                "type": inputType.INPUT,
-                "title": dbConf.fieldIndex,
-                "required": {
-                    "message": "请填入索引名, 例如: test, 注意: 请勿输入中文",
+                [tableConfKeys.COMPONENT_TYPE]: inputType.INPUT,
+                [tableConfKeys.TITLE]: dbConf.fieldIndex,
+                [tableConfKeys.REQUIRED]: {
+                    [tableConfKeys.REQUIRED_MSG]: "请填入索引名, 例如: test, 注意: 请勿输入中文",
                 },
-                "value": {
-                    "type": String,
-                    "default": "idx_test",
+                [tableConfKeys.VALUE]: {
+                    [tableConfKeys.COMPONENT_TYPE]: String,
+                    [tableConfKeys.DEFAULT]: "idx_test",
                 },
-                "rules": {},
+                [tableConfKeys.RULES]: {},
             },
-            {
-                "type": inputType.CHECKBOX,
-                "title": dbConf.dbType,
-                "value": {
-                    "type": String,
-                    "default": [dbConf.mysql, dbConf.oracle, dbConf.dameng, dbConf.tdsql],
-                },
-                "options":
-                    [
-                        dbConf.dameng,
-                        dbConf.mysql,
-                        dbConf.oracle,
-                        dbConf.tdsql,
-                    ],
-            },
+            generateDbMetaConf(),
         ],
     },
     {
-        "desc": actionType.DELETEINDEX,
-        "layout": [
+        [tableConfKeys.DESC]: actionType.DELETEINDEX,
+        [tableConfKeys.LAYOUT]: [
             {
-                "type": inputType.INPUT,
-                "title": dbConf.dbName,
-                "required": {
-                    "message": "请选择要修改数据库的数据库名, 注意: 执行时若报权限错误, 请先申请对应的数据库操作权限或者切换到对应身份!",
+                [tableConfKeys.COMPONENT_TYPE]: inputType.INPUT,
+                [tableConfKeys.TITLE]: dbConf.dbName,
+                [tableConfKeys.REQUIRED]: {
+                    [tableConfKeys.REQUIRED_MSG]: "请选择要修改数据库的数据库名, 注意: 执行时若报权限错误, 请先申请对应的数据库操作权限或者切换到对应身份!",
                 },
-                "value": {
-                    "type": String,
-                    "default": "C##DBTRADE",
+                [tableConfKeys.VALUE]: {
+                    [tableConfKeys.COMPONENT_TYPE]: String,
+                    [tableConfKeys.DEFAULT]: "C##DBTRADE",
                 },
-                "desc": "数据库名称, 注意: 请勿输入中文",
-                "placeholder": "数据库名不能含有空格",
-                "rules": {
+                [tableConfKeys.DESC]: "数据库名称, 注意: 请勿输入中文",
+                [tableConfKeys.PLACEHOLDER]: "数据库名不能含有空格",
+                [tableConfKeys.RULES]: {
                     [rulesType.dataType]: rulesType.alphaRegex, //FIXME 组件引用获取后似乎变成了字符串
                 },
             },
             {
-                "type": inputType.INPUT,
-                "title": dbConf.tableName,
-                "required": {
-                    "message": "请填入要修改表的表名, 例如: test, 注意: 请勿输入中文",
+                [tableConfKeys.COMPONENT_TYPE]: inputType.INPUT,
+                [tableConfKeys.TITLE]: dbConf.tableName,
+                [tableConfKeys.REQUIRED]: {
+                    [tableConfKeys.REQUIRED_MSG]: "请填入要修改表的表名, 例如: test, 注意: 请勿输入中文",
                 },
-                "value": {
-                    "type": String,
-                    "default": "test_user",
+                [tableConfKeys.VALUE]: {
+                    [tableConfKeys.COMPONENT_TYPE]: String,
+                    [tableConfKeys.DEFAULT]: "test_user",
                 },
-                "desc": "数据库名称, 注意: 请勿输入中文",
-                "placeholder": "表名不能含有空格",
-                "rules": {
+                [tableConfKeys.DESC]: "数据库名称, 注意: 请勿输入中文",
+                [tableConfKeys.PLACEHOLDER]: "表名不能含有空格",
+                [tableConfKeys.RULES]: {
                     [rulesType.dataType]: rulesType.alphaRegex
                 },
             },
             {
-                "type": inputType.INPUT,
-                "title": dbConf.fieldIndex,
-                "required": {
-                    "message": "请填入索引名, 例如: test, 注意: 请勿输入中文",
+                [tableConfKeys.COMPONENT_TYPE]: inputType.INPUT,
+                [tableConfKeys.TITLE]: dbConf.fieldIndex,
+                [tableConfKeys.REQUIRED]: {
+                    [tableConfKeys.REQUIRED_MSG]: "请填入索引名, 例如: test, 注意: 请勿输入中文",
                 },
-                "value": {
-                    "type": String,
-                    "default": "idx_test",
+                [tableConfKeys.VALUE]: {
+                    [tableConfKeys.COMPONENT_TYPE]: String,
+                    [tableConfKeys.DEFAULT]: "idx_test",
                 },
-                "rules": {},
+                [tableConfKeys.RULES]: {},
             },
-            {
-                "type": inputType.CHECKBOX,
-                "title": dbConf.dbType,
-                "value": {
-                    "type": String,
-                    "default": [dbConf.mysql, dbConf.oracle, dbConf.dameng, dbConf.tdsql],
-                },
-                "options":
-                    [
-                        dbConf.dameng,
-                        dbConf.mysql,
-                        dbConf.oracle,
-                        dbConf.tdsql,
-                    ],
-            },
+            generateDbMetaConf(),
         ],
     },
     {
-        "desc": actionType.REBUILDINDEX,
-        "layout": [
+        [tableConfKeys.DESC]: actionType.REBUILDINDEX,
+        [tableConfKeys.LAYOUT]: [
             {
-                "type": inputType.INPUT,
-                "title": dbConf.dbName,
-                "required": {
-                    "message": "请选择要修改数据库的数据库名, 注意: 执行时若报权限错误, 请先申请对应的数据库操作权限或者切换到对应身份!",
+                [tableConfKeys.COMPONENT_TYPE]: inputType.INPUT,
+                [tableConfKeys.TITLE]: dbConf.dbName,
+                [tableConfKeys.REQUIRED]: {
+                    [tableConfKeys.REQUIRED_MSG]: "请选择要修改数据库的数据库名, 注意: 执行时若报权限错误, 请先申请对应的数据库操作权限或者切换到对应身份!",
                 },
-                "value": {
-                    "type": String,
-                    "default": "C##DBTRADE",
+                [tableConfKeys.VALUE]: {
+                    [tableConfKeys.COMPONENT_TYPE]: String,
+                    [tableConfKeys.DEFAULT]: "C##DBTRADE",
                 },
-                "desc": "数据库名称, 注意: 请勿输入中文",
-                "placeholder": "数据库名不能含有空格",
-                "rules": {
+                [tableConfKeys.DESC]: "数据库名称, 注意: 请勿输入中文",
+                [tableConfKeys.PLACEHOLDER]: "数据库名不能含有空格",
+                [tableConfKeys.RULES]: {
                     [rulesType.dataType]: rulesType.alphaRegex, //FIXME 组件引用获取后似乎变成了字符串
                 },
             },
             {
-                "type": inputType.INPUT,
-                "title": dbConf.tableName,
-                "required": {
-                    "message": "请填入要修改表的表名, 例如: test, 注意: 请勿输入中文",
+                [tableConfKeys.COMPONENT_TYPE]: inputType.INPUT,
+                [tableConfKeys.TITLE]: dbConf.tableName,
+                [tableConfKeys.REQUIRED]: {
+                    [tableConfKeys.REQUIRED_MSG]: "请填入要修改表的表名, 例如: test, 注意: 请勿输入中文",
                 },
-                "value": {
-                    "type": String,
-                    "default": "test_user",
+                [tableConfKeys.VALUE]: {
+                    [tableConfKeys.COMPONENT_TYPE]: String,
+                    [tableConfKeys.DEFAULT]: "test_user",
                 },
-                "desc": "数据库名称, 注意: 请勿输入中文",
-                "placeholder": "表名不能含有空格",
-                "rules": {
+                [tableConfKeys.DESC]: "数据库名称, 注意: 请勿输入中文",
+                [tableConfKeys.PLACEHOLDER]: "表名不能含有空格",
+                [tableConfKeys.RULES]: {
                     [rulesType.dataType]: rulesType.alphaRegex
                 },
             },
             {
-                "type": inputType.INPUT,
-                "title": dbConf.fieldIndex,
-                "required": {
-                    "message": "请填入索引名, 例如: test, 注意: 请勿输入中文",
+                [tableConfKeys.COMPONENT_TYPE]: inputType.INPUT,
+                [tableConfKeys.TITLE]: dbConf.fieldIndex,
+                [tableConfKeys.REQUIRED]: {
+                    [tableConfKeys.REQUIRED_MSG]: "请填入索引名, 例如: test, 注意: 请勿输入中文",
                 },
-                "value": {
-                    "type": String,
-                    "default": "idx_test",
+                [tableConfKeys.VALUE]: {
+                    [tableConfKeys.COMPONENT_TYPE]: String,
+                    [tableConfKeys.DEFAULT]: "idx_test",
                 },
-                "rules": {},
+                [tableConfKeys.RULES]: {},
             },
-            {
-                "type": inputType.CHECKBOX,
-                "title": dbConf.dbType,
-                "value": {
-                    "type": String,
-                    "default": [dbConf.mysql, dbConf.oracle, dbConf.dameng, dbConf.tdsql],
-                },
-                "options":
-                    [
-                        dbConf.dameng,
-                        dbConf.mysql,
-                        dbConf.oracle,
-                        dbConf.tdsql,
-                    ],
-            },
+            generateDbMetaConf(),
         ],
     },
     {
-        "desc": actionType.ADDPRIMARYKEY,
-        "layout": [
+        [tableConfKeys.DESC]: actionType.ADDPRIMARYKEY,
+        [tableConfKeys.LAYOUT]: [
             {
-                "type": inputType.INPUT,
-                "title": dbConf.dbName,
-                "required": {
-                    "message": "请选择要修改数据库的数据库名, 注意: 执行时若报权限错误, 请先申请对应的数据库操作权限或者切换到对应身份!",
+                [tableConfKeys.COMPONENT_TYPE]: inputType.INPUT,
+                [tableConfKeys.TITLE]: dbConf.dbName,
+                [tableConfKeys.REQUIRED]: {
+                    [tableConfKeys.REQUIRED_MSG]: "请选择要修改数据库的数据库名, 注意: 执行时若报权限错误, 请先申请对应的数据库操作权限或者切换到对应身份!",
                 },
-                "value": {
-                    "type": String,
-                    "default": "C##DBTRADE",
+                [tableConfKeys.VALUE]: {
+                    [tableConfKeys.COMPONENT_TYPE]: String,
+                    [tableConfKeys.DEFAULT]: "C##DBTRADE",
                 },
-                "desc": "数据库名称, 注意: 请勿输入中文",
-                "placeholder": "数据库名不能含有空格",
-                "rules": {
+                [tableConfKeys.DESC]: "数据库名称, 注意: 请勿输入中文",
+                [tableConfKeys.PLACEHOLDER]: "数据库名不能含有空格",
+                [tableConfKeys.RULES]: {
                     [rulesType.dataType]: rulesType.alphaRegex, //FIXME 组件引用获取后似乎变成了字符串
                 },
             },
             {
-                "type": inputType.INPUT,
-                "title": dbConf.tableName,
-                "required": {
-                    "message": "请填入要修改表的表名, 例如: test, 注意: 请勿输入中文",
+                [tableConfKeys.COMPONENT_TYPE]: inputType.INPUT,
+                [tableConfKeys.TITLE]: dbConf.tableName,
+                [tableConfKeys.REQUIRED]: {
+                    [tableConfKeys.REQUIRED_MSG]: "请填入要修改表的表名, 例如: test, 注意: 请勿输入中文",
                 },
-                "value": {
-                    "type": String,
-                    "default": "test_user",
+                [tableConfKeys.VALUE]: {
+                    [tableConfKeys.COMPONENT_TYPE]: String,
+                    [tableConfKeys.DEFAULT]: "test_user",
                 },
-                "desc": "数据库名称, 注意: 请勿输入中文",
-                "placeholder": "表名不能含有空格",
-                "rules": {
+                [tableConfKeys.DESC]: "数据库名称, 注意: 请勿输入中文",
+                [tableConfKeys.PLACEHOLDER]: "表名不能含有空格",
+                [tableConfKeys.RULES]: {
                     [rulesType.dataType]: rulesType.alphaRegex
                 },
             },
 
             {
-                "type": inputType.INPUT,
-                "title": dbConf.fieldName,
-                "required": {
-                    "message": "请填入字段名, 例如: test",
+                [tableConfKeys.COMPONENT_TYPE]: inputType.INPUT,
+                [tableConfKeys.TITLE]: dbConf.fieldName,
+                [tableConfKeys.REQUIRED]: {
+                    [tableConfKeys.REQUIRED_MSG]: "请填入字段名, 例如: test",
                 },
-                "value": {
-                    "type": String,
-                    "default": "t_id",
+                [tableConfKeys.VALUE]: {
+                    [tableConfKeys.COMPONENT_TYPE]: String,
+                    [tableConfKeys.DEFAULT]: "t_id",
                 },
-                "desc": "字段名称不能含有空格",
-                "rules": {
+                [tableConfKeys.DESC]: "字段名称不能含有空格",
+                [tableConfKeys.RULES]: {
+                    [rulesType.dataType]: rulesType.alphaRegex,
+                },
+            },
+            generateDbMetaConf(),
+
+        ],
+
+
+    },
+    {
+        [tableConfKeys.DESC]: actionType.DELETEPRIMARYKEY,
+        [tableConfKeys.LAYOUT]: [
+            {
+                [tableConfKeys.COMPONENT_TYPE]: inputType.INPUT,
+                [tableConfKeys.TITLE]: dbConf.dbName,
+                [tableConfKeys.REQUIRED]: {
+                    [tableConfKeys.REQUIRED_MSG]: "请选择要修改数据库的数据库名, 注意: 执行时若报权限错误, 请先申请对应的数据库操作权限或者切换到对应身份!",
+                },
+                [tableConfKeys.VALUE]: {
+                    [tableConfKeys.COMPONENT_TYPE]: String,
+                    [tableConfKeys.DEFAULT]: "C##DBTRADE",
+                },
+                [tableConfKeys.DESC]: "数据库名称, 注意: 请勿输入中文",
+                [tableConfKeys.PLACEHOLDER]: "数据库名不能含有空格",
+                [tableConfKeys.RULES]: {
+                    [rulesType.dataType]: rulesType.alphaRegex, //FIXME 组件引用获取后似乎变成了字符串
+                },
+            },
+            {
+                [tableConfKeys.COMPONENT_TYPE]: inputType.INPUT,
+                [tableConfKeys.TITLE]: dbConf.tableName,
+                [tableConfKeys.REQUIRED]: {
+                    [tableConfKeys.REQUIRED_MSG]: "请填入要修改表的表名, 例如: test, 注意: 请勿输入中文",
+                },
+                [tableConfKeys.VALUE]: {
+                    [tableConfKeys.COMPONENT_TYPE]: String,
+                    [tableConfKeys.DEFAULT]: "test_user",
+                },
+                [tableConfKeys.DESC]: "数据库名称, 注意: 请勿输入中文",
+                [tableConfKeys.PLACEHOLDER]: "表名不能含有空格",
+                [tableConfKeys.RULES]: {
+                    [rulesType.dataType]: rulesType.alphaRegex
+                },
+            },
+
+            {
+                [tableConfKeys.COMPONENT_TYPE]: inputType.INPUT,
+                [tableConfKeys.TITLE]: dbConf.fieldName,
+                [tableConfKeys.REQUIRED]: {
+                    [tableConfKeys.REQUIRED_MSG]: "请填入字段名, 例如: test",
+                },
+                [tableConfKeys.VALUE]: {
+                    [tableConfKeys.COMPONENT_TYPE]: String,
+                    [tableConfKeys.DEFAULT]: "t_id",
+                },
+                [tableConfKeys.DESC]: "字段名称不能含有空格",
+                [tableConfKeys.RULES]: {
+                    [rulesType.dataType]: rulesType.alphaRegex,
+                },
+            },
+            generateDbMetaConf(),
+        ],
+    },
+    {
+        [tableConfKeys.DESC]: actionType.MODIFYPRIAMRYKEY,
+        [tableConfKeys.LAYOUT]: [
+            {
+                [tableConfKeys.COMPONENT_TYPE]: inputType.INPUT,
+                [tableConfKeys.TITLE]: dbConf.dbName,
+                [tableConfKeys.REQUIRED]: {
+                    [tableConfKeys.REQUIRED_MSG]: "请选择要修改数据库的数据库名, 注意: 执行时若报权限错误, 请先申请对应的数据库操作权限或者切换到对应身份!",
+                },
+                [tableConfKeys.VALUE]: {
+                    [tableConfKeys.COMPONENT_TYPE]: String,
+                    [tableConfKeys.DEFAULT]: "C##DBTRADE",
+                },
+                [tableConfKeys.DESC]: "数据库名称, 注意: 请勿输入中文",
+                [tableConfKeys.PLACEHOLDER]: "数据库名不能含有空格",
+                [tableConfKeys.RULES]: {
+                    [rulesType.dataType]: rulesType.alphaRegex, //FIXME 组件引用获取后似乎变成了字符串
+                },
+            },
+            {
+                [tableConfKeys.COMPONENT_TYPE]: inputType.INPUT,
+                [tableConfKeys.TITLE]: dbConf.tableName,
+                [tableConfKeys.REQUIRED]: {
+                    [tableConfKeys.REQUIRED_MSG]: "请填入要修改表的表名, 例如: test, 注意: 请勿输入中文",
+                },
+                [tableConfKeys.VALUE]: {
+                    [tableConfKeys.COMPONENT_TYPE]: String,
+                    [tableConfKeys.DEFAULT]: "test_user",
+                },
+                [tableConfKeys.DESC]: "数据库名称, 注意: 请勿输入中文",
+                [tableConfKeys.PLACEHOLDER]: "表名不能含有空格",
+                [tableConfKeys.RULES]: {
+                    [rulesType.dataType]: rulesType.alphaRegex
+                },
+            },
+            {
+                [tableConfKeys.COMPONENT_TYPE]: inputType.INPUT,
+                [tableConfKeys.TITLE]: dbConf.fieldName,
+                [tableConfKeys.REQUIRED]: {
+                    [tableConfKeys.REQUIRED_MSG]: "请填入字段名, 例如: test",
+                },
+                [tableConfKeys.VALUE]: {
+                    [tableConfKeys.COMPONENT_TYPE]: String,
+                    [tableConfKeys.DEFAULT]: "t_id",
+                },
+                [tableConfKeys.DESC]: "字段名称不能含有空格",
+                [tableConfKeys.RULES]: {
                     [rulesType.dataType]: rulesType.alphaRegex,
                 },
             },
             {
-                "type": inputType.CHECKBOX,
-                "title": dbConf.dbType,
-                "value": {
-                    "type": String,
-                    "default": [dbConf.mysql, dbConf.oracle, dbConf.dameng, dbConf.tdsql],
+                [tableConfKeys.COMPONENT_TYPE]: inputType.INPUT,
+                [tableConfKeys.TITLE]: dbConf.newPrimaryKeyName,
+                [tableConfKeys.REQUIRED]: {
+                    [tableConfKeys.REQUIRED_MSG]: "请填入主键名, 例如: pk_userId",
                 },
-                "options":
-                    [
-                        dbConf.dameng,
-                        dbConf.mysql,
-                        dbConf.oracle,
-                        dbConf.tdsql,
-                    ],
-            },
-
-        ],
-
-
-    },
-    {
-        "desc": actionType.DELETEPRIMARYKEY,
-        "layout": [
-            {
-                "type": inputType.INPUT,
-                "title": dbConf.dbName,
-                "required": {
-                    "message": "请选择要修改数据库的数据库名, 注意: 执行时若报权限错误, 请先申请对应的数据库操作权限或者切换到对应身份!",
+                [tableConfKeys.VALUE]: {
+                    [tableConfKeys.COMPONENT_TYPE]: String,
+                    [tableConfKeys.DEFAULT]: "pk_userId",
                 },
-                "value": {
-                    "type": String,
-                    "default": "C##DBTRADE",
-                },
-                "desc": "数据库名称, 注意: 请勿输入中文",
-                "placeholder": "数据库名不能含有空格",
-                "rules": {
-                    [rulesType.dataType]: rulesType.alphaRegex, //FIXME 组件引用获取后似乎变成了字符串
-                },
-            },
-            {
-                "type": inputType.INPUT,
-                "title": dbConf.tableName,
-                "required": {
-                    "message": "请填入要修改表的表名, 例如: test, 注意: 请勿输入中文",
-                },
-                "value": {
-                    "type": String,
-                    "default": "test_user",
-                },
-                "desc": "数据库名称, 注意: 请勿输入中文",
-                "placeholder": "表名不能含有空格",
-                "rules": {
-                    [rulesType.dataType]: rulesType.alphaRegex
-                },
-            },
-
-            {
-                "type": inputType.INPUT,
-                "title": dbConf.fieldName,
-                "required": {
-                    "message": "请填入字段名, 例如: test",
-                },
-                "value": {
-                    "type": String,
-                    "default": "t_id",
-                },
-                "desc": "字段名称不能含有空格",
-                "rules": {
-                    [rulesType.dataType]: rulesType.alphaRegex,
-                },
-            },
-            {
-                "type": inputType.CHECKBOX,
-                "title": dbConf.dbType,
-                "value": {
-                    "type": String,
-                    "default": [dbConf.mysql, dbConf.oracle, dbConf.dameng, dbConf.tdsql],
-                },
-                "options":
-                    [
-                        dbConf.dameng,
-                        dbConf.mysql,
-                        dbConf.oracle,
-                        dbConf.tdsql,
-                    ],
-            },
-        ],
-    },
-    {
-        "desc": actionType.MODIFYPRIAMRYKEY,
-        "layout": [
-            {
-                "type": inputType.INPUT,
-                "title": dbConf.dbName,
-                "required": {
-                    "message": "请选择要修改数据库的数据库名, 注意: 执行时若报权限错误, 请先申请对应的数据库操作权限或者切换到对应身份!",
-                },
-                "value": {
-                    "type": String,
-                    "default": "C##DBTRADE",
-                },
-                "desc": "数据库名称, 注意: 请勿输入中文",
-                "placeholder": "数据库名不能含有空格",
-                "rules": {
-                    [rulesType.dataType]: rulesType.alphaRegex, //FIXME 组件引用获取后似乎变成了字符串
-                },
-            },
-            {
-                "type": inputType.INPUT,
-                "title": dbConf.tableName,
-                "required": {
-                    "message": "请填入要修改表的表名, 例如: test, 注意: 请勿输入中文",
-                },
-                "value": {
-                    "type": String,
-                    "default": "test_user",
-                },
-                "desc": "数据库名称, 注意: 请勿输入中文",
-                "placeholder": "表名不能含有空格",
-                "rules": {
-                    [rulesType.dataType]: rulesType.alphaRegex
-                },
-            },
-            {
-                "type": inputType.INPUT,
-                "title": dbConf.fieldName,
-                "required": {
-                    "message": "请填入字段名, 例如: test",
-                },
-                "value": {
-                    "type": String,
-                    "default": "t_id",
-                },
-                "desc": "字段名称不能含有空格",
-                "rules": {
-                    [rulesType.dataType]: rulesType.alphaRegex,
-                },
-            },
-            {
-                "type": inputType.INPUT,
-                "title": dbConf.newPrimaryKeyName,
-                "required": {
-                    "message": "请填入主键名, 例如: pk_userId",
-                },
-                "value": {
-                    "type": String,
-                    "default": "pk_userId",
-                },
-                "desc": "字段名称不能含有空格",
-                "rules": {
+                [tableConfKeys.DESC]: "字段名称不能含有空格",
+                [tableConfKeys.RULES]: {
                     [rulesType.dataType]: rulesType.alphaRegex,
                 },
             },
 
-            {
-                "type": inputType.CHECKBOX,
-                "title": dbConf.dbType,
-                "value": {
-                    "type": String,
-                    "default": [dbConf.mysql, dbConf.oracle, dbConf.dameng, dbConf.tdsql],
-                },
-                "options":
-                    [
-                        dbConf.dameng,
-                        dbConf.mysql,
-                        dbConf.oracle,
-                        dbConf.tdsql,
-                    ],
-            },
+            generateDbMetaConf(),
         ],
     },
 ]
