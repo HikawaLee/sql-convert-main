@@ -24,12 +24,12 @@ export default {
 
 
     //region 数据类型
-    dataType: '数据类型',
+    dataType: '正则字符串',
     //endregion
 
 
     //region 数字正则
-    numberRegex: '/^[0-9]+$/',
+    numberRegex: /^[0-9]+$/,
     //endregion
 
     //region 字母正则, 不包含中文和空格

@@ -121,7 +121,7 @@ const actions = [
                         [tableConfKeys.DEFAULT]: "",
                     },
                 },
-                generateDbMetaConf([])
+                generateDbMetaConf()
             ],
     },
     {

@@ -8,6 +8,7 @@ import dbConf from "../types/dbConf.js";
  * @returns {string} 返回oracle新增字段的sql
  */
 function generateAddColumnSQL(inputData, opts = {}) {
+    console.log('oracle新增字段')
     const dbName = inputData[dbConf.dbName];
     const tableName = inputData[dbConf.tableName];
     const fieldType = inputData[dbConf.fieldType];
@@ -31,7 +32,7 @@ function generateAddColumnSQL(inputData, opts = {}) {
         end if;
         end if;
         end;
-       
+       /
         \n`
         return sql;
     }
@@ -51,7 +52,7 @@ function generateAddColumnSQL(inputData, opts = {}) {
         end if;
         end if;
         end;
-       
+       /
         \n`
         return sql;
     }
@@ -84,6 +85,7 @@ function generateDropColumnSQL(inputData, opts = {}) {
                 end if;
             end if;
         end;
+        /
     \n`
 
     return sql;
@@ -154,6 +156,7 @@ function generateModifyColumnSQL(inputData, opts = {}) {
             end if;
         end if;
     end;
+    /
     \n`
 
     return sql;
@@ -206,6 +209,7 @@ function generateAddIndexSQL(inputData, opts = {}) {
             execute immediate 'CREATE INDEX ${indexName} ON ${tableName}(${fieldName} ASC) ';
         end if;
     end;
+    /
     `
 
     return sql;
@@ -304,6 +308,7 @@ function generateDropPrimaryKeySQL(inputData, opts = {}) {
             sql_stmt := 'ALTER TABLE ${dbName}.${tableName} DROP CONSTRAINT ' || cons_name;
             EXECUTE IMMEDIATE sql_stmt;
         END;
+        /
         `
     return sql;
 }

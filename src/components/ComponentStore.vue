@@ -226,9 +226,8 @@ const warningShow = ref(false)
 const warningText = ref('')
 //根据rules的配置校验用户输入的数据是否为数字和最值限制
 const verifyNumber = (rules, value) => {
-  const numericRegex = /^[0-9]+$/; // TODO 应该把正则表达式放到rules中
-  console.log(`rules: ===${JSON.stringify(numericRegex.test(value), null, 2)}===`)
-  console.log(`rules: ===${JSON.stringify(rulesType.numberRegex.test(value), null, 2)}===`)
+  const regexStr = rules[rulesType.dataType];
+  const numericRegex = new RegExp(regexStr)
   // 检查输入值是否为数字
   if (numericRegex.test(value)) {
     // 输入值是数字，继续检查最小值
@@ -250,7 +249,7 @@ const verifyNumber = (rules, value) => {
 
 //根据rules的配置校验用户输入的数据是否符合用户自定义的规则
 const verifyString = (rules, str) => {
-  const regex = /^[^\u4e00-\u9fa5\s]+$/; // TODO 应该把正则表达式放到rules中
+  const regex = new RegExp(rules[rulesType.dataType]);
   if (regex.test(str)) {
     warningShow.value = false
   } else {
