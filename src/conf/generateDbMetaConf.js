@@ -9,7 +9,11 @@ import dbConf from "@/types/dbConf.js";
  * @param defaultDb 目标数据库的默认值
  * @returns {{}} 一个对象, 该对象用于配置多选框组件，用于选择数据库类型
  */
-const generateDbMetaConf = (defaultDb = [dbConf.mysql, dbConf.oracle, dbConf.dameng, dbConf.tdsql]) => {
+const generateDbMetaConf = (defaultDb =
+                                [dbConf.mysql, dbConf.oracle, dbConf.tdsql
+                                // ,dbConf.dameng
+                                ]
+) => {
     // 如果传入的 defaultDb 是空数组，则返回不包含 [tableConfKeys.DEFAULT]: defaultDb 的对象
     if (Array.isArray(defaultDb) && defaultDb.length === 0) {
         // 否则返回包含 [tableConfKeys.DEFAULT]: defaultDb 的对象
@@ -24,7 +28,7 @@ const generateDbMetaConf = (defaultDb = [dbConf.mysql, dbConf.oracle, dbConf.dam
 
             },
             [tableConfKeys.OPTIONS]: [
-                dbConf.dameng,
+                // dbConf.dameng,
                 dbConf.mysql,
                 dbConf.oracle,
                 dbConf.tdsql,
@@ -44,7 +48,7 @@ const generateDbMetaConf = (defaultDb = [dbConf.mysql, dbConf.oracle, dbConf.dam
             [tableConfKeys.DEFAULT]: defaultDb,
         },
         [tableConfKeys.OPTIONS]: [
-            dbConf.dameng,
+            // dbConf.dameng,
             dbConf.mysql,
             dbConf.oracle,
             dbConf.tdsql,

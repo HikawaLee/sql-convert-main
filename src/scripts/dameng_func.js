@@ -10,7 +10,6 @@
  * 5.达梦不支持默认时间设置，可以在字段上设置触发器来实现
  * 6. DM直接将varchar类型修改为text类型会报错：数据类型的变更无效
  */
-
 import dbConf from "../types/dbConf.js";
 
 //新增字段

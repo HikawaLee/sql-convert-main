@@ -1,4 +1,4 @@
-import dbConf from "@/types/dbConf.js";
+import dbConf from "../types/dbConf.js";
 /**
  * mysql生成添加字段的 SQL 语句
  * @param inputData 父组件收集到的数据
@@ -176,7 +176,6 @@ function generateModifyColumnSQL(inputData, opts = {}) {
         DEALLOCATE PREPARE hs_stmt;
         \n`
     } else {
-        //FIXME 需要判断新字段类型长度和精度是否能够兼容原来的字段类型
         return `\n
         SET @hs_sql = 'select 1 from dual;';
         SELECT
@@ -192,7 +191,7 @@ function generateModifyColumnSQL(inputData, opts = {}) {
                     table_schema = database()
                     AND LOWER(table_name) = LOWER('${tableName}')
                     AND LOWER(column_name) = LOWER('${fieldName}')
-                    AND character_maximum_length = ${fieldLength}
+                   
             ) = 1;
         PREPARE hs_stmt FROM @hs_sql;
         EXECUTE hs_stmt;
@@ -202,25 +201,6 @@ function generateModifyColumnSQL(inputData, opts = {}) {
 }
 
 
-/**
- *     //Todo 未规范化
- * mysql生成重命名表的 SQL 语句
- * @param inputData 父组件收集到的数据
- * @param opts 额外配置, 暂时未用到
- * @returns {string} 返回重命名表的SQL 语句
- */
-function generateRenameTableSQL(inputData, opts = {}) {
-    const dbName = inputData[dbConf.dbName];
-    const tableName = inputData[dbConf.tableName];
-    const newTableName = inputData[dbConf.newTableName];
-
-
-    const sql =
-        // `RENAME TABLE ${tableName} TO ${newTableName};`;
-        `ALTER TABLE ${dbName}.${tableName}
-    RENAME ${newTableName};`;
-    return sql;
-}
 
 
 /**
@@ -258,36 +238,9 @@ function generateAddIndexSQL(inputData, opts = {}) {
     return sql;
 }
 
-/**
- *   //Todo 未规范化
- * mysql生成删除索引的 SQL 语句
- * @param inputData 父组件收集到的数据
- * @param opts 额外配置, 暂时未用到
- * @returns {string} 返回删除索引的SQL 语句
- */
-function generateDropIndexSQL(inputData, opts = {}) {
-    const dbName = inputData[dbConf.dbName];
-    const tableName = inputData[dbConf.tableName];
-    const indexName = inputData[dbConf.fieldIndex];
 
-    const sql = `
-        ALTER TABLE ${dbName}.${tableName}
-    DROP INDEX ${indexName};
-    `;
-    return sql;
-}
 
-/**
- *  //Todo 未实现
- *  //修改索引---包括修改索引名称、设置索引的查询计划可见性、改变索引有效性、重建索引...
- * @param inputData
- * @param opts
- * @returns {string}
- */
-function generateModifyIndexSQL(inputData, opts = {}) {
 
-    return '';
-}
 
 /**
  * mysql生成添加主键的 SQL 语句
@@ -385,6 +338,7 @@ function generateModifyPrimaryKeySQL(inputData, opts = {}) {
     const dbName = inputData[dbConf.dbName];
     const tableName = inputData[dbConf.tableName];
     const fieldName = inputData[dbConf.fieldName];
+
     //Todo 只支持按照单个字段修改主键, 后续需要支持多字段
     const sql = `\n
     SELECT '修改数据库${dbName}的${tableName}表的主键为字段${fieldName}';
@@ -428,10 +382,13 @@ function generateModifyPrimaryKeySQL(inputData, opts = {}) {
  * @return {string} 返回 MySQL 的类型
  */
 function getType(type, L = dbConf.mysqlDecimalP, P = dbConf.mysqlDecimalD) {
+    L = parseInt(L);
+    P = parseInt(P);
     // 参数校验
-    // if (typeof type !== 'string' || typeof L !== 'number' || typeof P !== 'number') {
-    //     throw new Error('Invalid input. Please provide valid type, L, and P values.');
-    // }
+    if (typeof type !== 'string' || typeof L !== 'number' || typeof P !== 'number') {
+        console.log('类型转换出错');
+        throw new Error('类型转换出错');
+    }
 
     switch (type) {
         case dbConf.STDint2_t:
@@ -443,7 +400,10 @@ function getType(type, L = dbConf.mysqlDecimalP, P = dbConf.mysqlDecimalD) {
             return 'INT';
         case dbConf.STDdouble:
             if(L > 65 || L < 1 || P < 0 || P > 30 || P > L) {
-                throw new Error('Invalid input. Please provide valid type, L, and P values.');
+                console.log(`L's type is ${typeof L} , P's type is ${typeof P}\n`)
+                console.log(`L > 65 ? ${L > 65} , L < 1 ? ${L < 1} , P < 0 ? ${P < 0} , P > 30 ? ${P > 30} , P > L ? ${P > L}\n`)
+                console.log(`L is ${L} , P is ${P} ,Invalid input. Please provide valid type, L, and P values.`);
+                throw new Error('Invalid input in switch(type). Please provide valid type, L, and P values.');
             }
             return `DECIMAL(${L},${P})`;
         case dbConf.STDchar:
@@ -462,7 +422,7 @@ function getType(type, L = dbConf.mysqlDecimalP, P = dbConf.mysqlDecimalD) {
         case dbConf.STDBlob:
             return 'MEDIUMBLOB';
         default:
-            throw new Error(`Unsupported type: ${type}. Please handle this case.`);
+            throw new Error(`Unsupported type: ${type} in getType. Please handle this case.`);
     }
 }
 
@@ -486,21 +446,23 @@ const getDefault = (type, defaultValue) => {
         case dbConf.STDint8_t:
         case dbConf.STDint10_t:
         case dbConf.STDdouble:
+            defaultValue = parseFloat(defaultValue);
             if(isNaN(defaultValue)) return '';
             else return `DEFAULT ${defaultValue}`;
         case dbConf.STDchar:
         case dbConf.STDstr:
-            return `DEFAULT '${defaultValue}'`;
+            return `DEFAULT ''${defaultValue}''`;
         case dbConf.STDdate:
         case dbConf.STDtime:
         case dbConf.STDdatetime:
         case dbConf.STDtimestamp:
-            return `DEFAULT CURRENT_TIMESTAMP`;
+            console.warn('时间类型默认值暂不支持,因为标准字段类型为字符串,故无法使用current_timestamp等关键字,请手动添加默认值')
+            return '';
         case dbConf.STDclob:
         case dbConf.STDBlob:
             return 'DEFAULT NULL';
         default:
-            throw new Error(`Unsupported type: ${type}. Please handle this case.`);
+            throw new Error(`Unsupported type: ${type} in getDefault. Please handle this case.`);
     }
 }
 
@@ -510,10 +472,8 @@ export default {
     generateAddColumnSQL,
     generateDropColumnSQL,
     generateModifyColumnSQL,
-    generateRenameTableSQL,
+
     generateAddIndexSQL,
-    generateDropIndexSQL,
-    generateModifyIndexSQL,
     generateAddPrimaryKeySQL,
     generateDropPrimaryKeySQL,
     generateModifyPrimaryKeySQL,

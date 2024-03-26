@@ -8,7 +8,6 @@ import dbConf from "../types/dbConf.js";
  * @returns {string} 返回oracle新增字段的sql
  */
 function generateAddColumnSQL(inputData, opts = {}) {
-    console.log('oracle新增字段')
     const dbName = inputData[dbConf.dbName];
     const tableName = inputData[dbConf.tableName];
     const fieldType = inputData[dbConf.fieldType];
@@ -16,8 +15,7 @@ function generateAddColumnSQL(inputData, opts = {}) {
     const fieldLength = inputData[dbConf.fieldLength];
     const fieldPrecision = inputData[dbConf.fieldPrecision];
     const fieldDefault = inputData[dbConf.setDefault];
-    if(fieldDefault === undefined || fieldDefault === 'undefined' || fieldDefault === '' || fieldDefault === null) {
-        const sql = `\n
+    const sql = `\n
         prompt ${tableName} 新增字段 ${fieldName} ......
         declare
             v_rowcount integer;
@@ -34,28 +32,8 @@ function generateAddColumnSQL(inputData, opts = {}) {
         end;
        /
         \n`
-        return sql;
-    }
-    else {
-        const sql = `\n
-        prompt ${tableName} 新增字段 ${fieldName} ......
-        declare
-            v_rowcount integer;
-        begin
-        select count(*) into v_rowcount from user_tables where table_name = upper('${tableName}');
-        if v_rowcount > 0 then
-        select count(*) into v_rowcount from user_tab_columns
-        where table_name = upper('${tableName}')
-            and column_name = upper('${fieldName}');
-        if v_rowcount = 0 then
-            execute immediate 'ALTER TABLE ${tableName} ADD ${fieldName} ${getType(fieldType, fieldLength, fieldPrecision)}  ${getDefault(fieldType, fieldDefault)}';
-        end if;
-        end if;
-        end;
-       /
-        \n`
-        return sql;
-    }
+    return sql;
+
 }
 
 /**
@@ -162,26 +140,6 @@ function generateModifyColumnSQL(inputData, opts = {}) {
     return sql;
 }
 
-/**
- *     //Todo 未规范化
- * oracle重命名表
- * @param inputData 父组件收集的数据
- * @param opts  额外参数, 暂时未用
- * @returns {string} 返回oracle重命名表的sql
- */
-function generateRenameTableSQL(inputData, opts = {}) {
-
-    const dbName = inputData[dbConf.dbName];
-    const tableName = inputData[dbConf.tableName];
-    const newTableName = inputData[dbConf.newTableName];
-
-    const sql =
-        `RENAME ${tableName} 
-    TO ${newTableName};`;
-
-    return sql;
-
-}
 
 /**
  * oracle新增索引
@@ -215,72 +173,6 @@ function generateAddIndexSQL(inputData, opts = {}) {
     return sql;
 }
 
-/**
- *
- *     ///FIXME 未找到对应模板
- * oracle删除索引
- * @param inputData 父组件收集的数据
- * @param opts 额外参数, 暂时未用
- * @returns {*} 返回oracle删除索引的sql
- */
-
-function generateDropIndexSQL(inputData, opts = {}) {
-    const dbName = inputData[dbConf.dbName];
-    const tableName = inputData[dbConf.tableName];
-    const indexName = inputData[dbConf.fieldIndex];
-
-
-    const sql = `
-        DROP INDEX ${tableName}.${indexName};
-    `;
-
-
-    return sql;
-
-}
-
-/**
- * 重建索引
- * //FIXME 未找到对应模板
- * @param inputData 父组件收集的数据
- * @param opts 额外参数, 暂时未用
- * @returns {string} 返回oracle重建索引的sql
- */
-
-function generateRebuildIndexSQL(inputData, opts = {}) {
-    const dbName = inputData[dbConf.dbName];
-    const tableName = inputData[dbConf.tableName];
-    const indexName = inputData[dbConf.fieldIndex];
-
-
-    const sql =`
-        ALTER INDEX ${indexName}
-            REBUILD ONLINE;
-        `;
-
-    return sql;
-}
-
-/**
- *
- * 新增主键
- *  //FIXME 未找到对应模板
- * @param inputData 父组件收集的数据
- * @param opts  额外参数, 暂时未用
- * @returns {string} 返回oracle新增主键的sql
- */
-function generateAddPrimaryKeySQL(inputData, opts = {}) {
-    const dbName = inputData[dbConf.dbName];
-    const tableName = inputData[dbConf.tableName];
-    const fieldName = inputData[dbConf.fieldName];
-
-    //命名主键 ALTER TABLE table_name ADD CONSTRAINT constraint_name PRIMARY KEY (column1, column2, ... column_n);
-    const sql = `
-        ALTER TABLE ${tableName}
-            ADD PRIMARY KEY (${fieldName});
-        `;
-    return sql;
-}
 
 /**
  *
@@ -296,7 +188,7 @@ function generateDropPrimaryKeySQL(inputData, opts = {}) {
     const fieldName = inputData[dbConf.fieldName];
 
 
-    const sql =`
+    const sql = `
         DECLARE
             sql_stmt VARCHAR2(255);
             cons_name VARCHAR2(30);
@@ -391,10 +283,13 @@ function generateModifyPrimaryKeySQL(inputData, opts = {}) {
  * @return {string} 返回 Oracle 的类型
  */
 function getType(type, L = dbConf.oracleDecimalP, P = dbConf.oracleDecimalS) {
+    L = parseInt(L);
+    P = parseInt(P);
     // 参数校验
-    // if (typeof type !== 'string' || typeof L !== 'number' || typeof P !== 'number') {
-    //     throw new Error('Invalid input. Please provide valid type, L, and P values.');
-    // }
+    if (typeof type !== 'string' || typeof L !== 'number' || typeof P !== 'number') {
+        console.log('类型转换出错');
+        throw new Error('类型转换出错');
+    }
 
     switch (type) {
         case dbConf.STDint2_t:
@@ -410,8 +305,11 @@ function getType(type, L = dbConf.oracleDecimalP, P = dbConf.oracleDecimalS) {
         case dbConf.STDint10_t:
             return 'NUMBER(10, 0)';
         case dbConf.STDdouble:
-            if(L > 38 || L < 1 || P > 127 || P < -84) {
-                throw new Error(`Invalid input. Please provide valid L and P values.`);
+            if (L > 38 || L < 1 || P > 127 || P < -84) {
+                console.log(`L's type is ${typeof L} , P's type is ${typeof P}\n`)
+                console.log(`L > 38 ? ${L > 38} , L < 1 ? ${L < 1} , P < -84 ? ${P < -84} , P > 127 ? ${P > 127} , P > L ? ${P > L}\n`)
+                console.log(`L is ${L} , P is ${P} ,Invalid input. Please provide valid type, L, and P values.`);
+                throw new Error('Invalid input in switch(type). Please provide valid type, L, and P values.');
             }
             return `DECIMAL(${L},${P})`;
         case dbConf.STDchar:
@@ -435,57 +333,13 @@ function getType(type, L = dbConf.oracleDecimalP, P = dbConf.oracleDecimalS) {
 }
 
 
-
-/**
- * 获取默认值
- * @param type 字段类型
- * @param defaultValue 默认值
- * @returns {string} 返回默认值
- */
-const getDefault = (type, defaultValue) => {
-    if(defaultValue === undefined || defaultValue === 'undefined'
-        || defaultValue === '' || defaultValue === null
-        || defaultValue === 'null' || defaultValue === 'NULL') { //FIXME 条件判断不严谨
-        return 'DEFAULT NULL';
-    }
-    switch (type) {
-        case dbConf.STDint2_t:
-        case dbConf.STDint3_t:
-        case dbConf.STDint4_t:
-        case dbConf.STDint6_t:
-        case dbConf.STDint8_t:
-        case dbConf.STDint10_t:
-        case dbConf.STDdouble:
-            if(isNaN(defaultValue)) return '';
-            else return `DEFAULT ${defaultValue}`;
-        case dbConf.STDchar:
-        case dbConf.STDstr:
-            return `DEFAULT '${defaultValue}'`;
-        case dbConf.STDdate:
-        case dbConf.STDtime:
-        case dbConf.STDdatetime:
-        case dbConf.STDtimestamp:
-            return `DEFAULT SYSDATE`;
-        case dbConf.STDclob:
-        case dbConf.STDBlob:
-            return 'DEFAULT NULL';
-        default:
-            throw new Error(`Unsupported type: ${type}. Please handle this case.`);
-    }
-}
-
-
-
-
 export default {
     generateAddColumnSQL,
     generateDropColumnSQL,
     generateModifyColumnSQL,
-    generateRenameTableSQL,
+
     generateAddIndexSQL,
-    generateDropIndexSQL,
-    generateRebuildIndexSQL,
-    generateAddPrimaryKeySQL,
+
     generateDropPrimaryKeySQL,
     generateModifyPrimaryKeySQL
 }

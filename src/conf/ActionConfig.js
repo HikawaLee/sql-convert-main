@@ -135,7 +135,7 @@ const actions = [
                 },
                 [tableConfKeys.VALUE]: {
                     [tableConfKeys.COMPONENT_TYPE]: String,
-                    [tableConfKeys.DEFAULT]: "C##DBTRADE",
+                    [tableConfKeys.DEFAULT]: "dbtrade",
                 },
                 [tableConfKeys.DESC]: "数据库名称, 注意: 请勿输入中文",
                 [tableConfKeys.PLACEHOLDER]: "数据库名不能含有空格",
@@ -188,7 +188,7 @@ const actions = [
                 },
                 [tableConfKeys.VALUE]: {
                     [tableConfKeys.COMPONENT_TYPE]: String,
-                    [tableConfKeys.DEFAULT]: "C##DBTRADE",
+                    [tableConfKeys.DEFAULT]: "dbtrade",
                 },
                 [tableConfKeys.DESC]: "数据库名称, 注意: 请勿输入中文",
                 [tableConfKeys.PLACEHOLDER]: "数据库名不能含有空格",
@@ -323,6 +323,7 @@ const actions = [
             },
         ],
     },
+
     {
         [tableConfKeys.DESC]: actionType.ADDINDEX,
         [tableConfKeys.LAYOUT]: [
@@ -334,7 +335,7 @@ const actions = [
                 },
                 [tableConfKeys.VALUE]: {
                     [tableConfKeys.COMPONENT_TYPE]: String,
-                    [tableConfKeys.DEFAULT]: "C##DBTRADE",
+                    [tableConfKeys.DEFAULT]: "dbtrade",
                 },
                 [tableConfKeys.DESC]: "数据库名称, 注意: 请勿输入中文",
                 [tableConfKeys.PLACEHOLDER]: "数据库名不能含有空格",
@@ -388,106 +389,7 @@ const actions = [
             generateDbMetaConf(),
         ],
     },
-    {
-        [tableConfKeys.DESC]: actionType.DELETEINDEX,
-        [tableConfKeys.LAYOUT]: [
-            {
-                [tableConfKeys.COMPONENT_TYPE]: inputType.INPUT,
-                [tableConfKeys.TITLE]: dbConf.dbName,
-                [tableConfKeys.REQUIRED]: {
-                    [tableConfKeys.REQUIRED_MSG]: "请选择要修改数据库的数据库名, 注意: 执行时若报权限错误, 请先申请对应的数据库操作权限或者切换到对应身份!",
-                },
-                [tableConfKeys.VALUE]: {
-                    [tableConfKeys.COMPONENT_TYPE]: String,
-                    [tableConfKeys.DEFAULT]: "C##DBTRADE",
-                },
-                [tableConfKeys.DESC]: "数据库名称, 注意: 请勿输入中文",
-                [tableConfKeys.PLACEHOLDER]: "数据库名不能含有空格",
-                [tableConfKeys.RULES]: {
-                    [rulesType.dataType]: rulesType.alphaRegex, //FIXME 组件引用获取后似乎变成了字符串
-                },
-            },
-            {
-                [tableConfKeys.COMPONENT_TYPE]: inputType.INPUT,
-                [tableConfKeys.TITLE]: dbConf.tableName,
-                [tableConfKeys.REQUIRED]: {
-                    [tableConfKeys.REQUIRED_MSG]: "请填入要修改表的表名, 例如: test, 注意: 请勿输入中文",
-                },
-                [tableConfKeys.VALUE]: {
-                    [tableConfKeys.COMPONENT_TYPE]: String,
-                    [tableConfKeys.DEFAULT]: "test_user",
-                },
-                [tableConfKeys.DESC]: "数据库名称, 注意: 请勿输入中文",
-                [tableConfKeys.PLACEHOLDER]: "表名不能含有空格",
-                [tableConfKeys.RULES]: {
-                    [rulesType.dataType]: rulesType.alphaRegex
-                },
-            },
-            {
-                [tableConfKeys.COMPONENT_TYPE]: inputType.INPUT,
-                [tableConfKeys.TITLE]: dbConf.fieldIndex,
-                [tableConfKeys.REQUIRED]: {
-                    [tableConfKeys.REQUIRED_MSG]: "请填入索引名, 例如: test, 注意: 请勿输入中文",
-                },
-                [tableConfKeys.VALUE]: {
-                    [tableConfKeys.COMPONENT_TYPE]: String,
-                    [tableConfKeys.DEFAULT]: "idx_test",
-                },
-                [tableConfKeys.RULES]: {},
-            },
-            generateDbMetaConf(),
-        ],
-    },
-    {
-        [tableConfKeys.DESC]: actionType.REBUILDINDEX,
-        [tableConfKeys.LAYOUT]: [
-            {
-                [tableConfKeys.COMPONENT_TYPE]: inputType.INPUT,
-                [tableConfKeys.TITLE]: dbConf.dbName,
-                [tableConfKeys.REQUIRED]: {
-                    [tableConfKeys.REQUIRED_MSG]: "请选择要修改数据库的数据库名, 注意: 执行时若报权限错误, 请先申请对应的数据库操作权限或者切换到对应身份!",
-                },
-                [tableConfKeys.VALUE]: {
-                    [tableConfKeys.COMPONENT_TYPE]: String,
-                    [tableConfKeys.DEFAULT]: "C##DBTRADE",
-                },
-                [tableConfKeys.DESC]: "数据库名称, 注意: 请勿输入中文",
-                [tableConfKeys.PLACEHOLDER]: "数据库名不能含有空格",
-                [tableConfKeys.RULES]: {
-                    [rulesType.dataType]: rulesType.alphaRegex, //FIXME 组件引用获取后似乎变成了字符串
-                },
-            },
-            {
-                [tableConfKeys.COMPONENT_TYPE]: inputType.INPUT,
-                [tableConfKeys.TITLE]: dbConf.tableName,
-                [tableConfKeys.REQUIRED]: {
-                    [tableConfKeys.REQUIRED_MSG]: "请填入要修改表的表名, 例如: test, 注意: 请勿输入中文",
-                },
-                [tableConfKeys.VALUE]: {
-                    [tableConfKeys.COMPONENT_TYPE]: String,
-                    [tableConfKeys.DEFAULT]: "test_user",
-                },
-                [tableConfKeys.DESC]: "数据库名称, 注意: 请勿输入中文",
-                [tableConfKeys.PLACEHOLDER]: "表名不能含有空格",
-                [tableConfKeys.RULES]: {
-                    [rulesType.dataType]: rulesType.alphaRegex
-                },
-            },
-            {
-                [tableConfKeys.COMPONENT_TYPE]: inputType.INPUT,
-                [tableConfKeys.TITLE]: dbConf.fieldIndex,
-                [tableConfKeys.REQUIRED]: {
-                    [tableConfKeys.REQUIRED_MSG]: "请填入索引名, 例如: test, 注意: 请勿输入中文",
-                },
-                [tableConfKeys.VALUE]: {
-                    [tableConfKeys.COMPONENT_TYPE]: String,
-                    [tableConfKeys.DEFAULT]: "idx_test",
-                },
-                [tableConfKeys.RULES]: {},
-            },
-            generateDbMetaConf(),
-        ],
-    },
+
     {
         [tableConfKeys.DESC]: actionType.ADDPRIMARYKEY,
         [tableConfKeys.LAYOUT]: [
@@ -499,7 +401,7 @@ const actions = [
                 },
                 [tableConfKeys.VALUE]: {
                     [tableConfKeys.COMPONENT_TYPE]: String,
-                    [tableConfKeys.DEFAULT]: "C##DBTRADE",
+                    [tableConfKeys.DEFAULT]: "dbtrade",
                 },
                 [tableConfKeys.DESC]: "数据库名称, 注意: 请勿输入中文",
                 [tableConfKeys.PLACEHOLDER]: "数据库名不能含有空格",
@@ -556,7 +458,7 @@ const actions = [
                 },
                 [tableConfKeys.VALUE]: {
                     [tableConfKeys.COMPONENT_TYPE]: String,
-                    [tableConfKeys.DEFAULT]: "C##DBTRADE",
+                    [tableConfKeys.DEFAULT]: "dbtrade",
                 },
                 [tableConfKeys.DESC]: "数据库名称, 注意: 请勿输入中文",
                 [tableConfKeys.PLACEHOLDER]: "数据库名不能含有空格",
@@ -610,7 +512,7 @@ const actions = [
                 },
                 [tableConfKeys.VALUE]: {
                     [tableConfKeys.COMPONENT_TYPE]: String,
-                    [tableConfKeys.DEFAULT]: "C##DBTRADE",
+                    [tableConfKeys.DEFAULT]: "dbtrade",
                 },
                 [tableConfKeys.DESC]: "数据库名称, 注意: 请勿输入中文",
                 [tableConfKeys.PLACEHOLDER]: "数据库名不能含有空格",

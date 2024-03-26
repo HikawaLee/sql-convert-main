@@ -26,28 +26,15 @@ export default {
         [dbConf.oracle]: oracleFunc.generateModifyColumnSQL,
         [dbConf.dameng]: damengFunc.generateModifyColumnSQL,
     },
-    [actionType.RENAMETABLE]: {
-        [dbConf.mysql]: mysqlFunc.generateRenameTableSQL,
-        [dbConf.tdsql]: tdsqlFunc.generateRenameTableSQL,
-        [dbConf.oracle]: oracleFunc.generateRenameTableSQL,
-        [dbConf.dameng]: damengFunc.generateRenameTableSQL,
-    },
+
     [actionType.ADDINDEX]: {
         [dbConf.mysql]: mysqlFunc.generateAddIndexSQL,
         [dbConf.tdsql]: tdsqlFunc.generateAddIndexSQL,
         [dbConf.oracle]: oracleFunc.generateAddIndexSQL,
         [dbConf.dameng]: damengFunc.generateAddIndexSQL,
     },
-    [actionType.DELETEINDEX]: {
-        [dbConf.mysql]: mysqlFunc.generateDropIndexSQL,
-        [dbConf.tdsql]: tdsqlFunc.generateDropIndexSQL,
-        [dbConf.oracle]: oracleFunc.generateDropIndexSQL,
-        [dbConf.dameng]: damengFunc.generateDropIndexSQL,
-    },
-    [actionType.REBUILDINDEX]: {
-        [dbConf.oracle]: oracleFunc.generateRebuildIndexSQL,
-        [dbConf.dameng]: damengFunc.generateRebuildIndexSQL,
-    },
+
+
     [actionType.ADDPRIMARYKEY]: {
         [dbConf.mysql]: mysqlFunc.generateAddPrimaryKeySQL,
         [dbConf.tdsql]: tdsqlFunc.generatePrimaryKeySQL,
