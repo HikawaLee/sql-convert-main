@@ -338,36 +338,32 @@ function generateModifyPrimaryKeySQL(inputData, opts = {}) {
     const dbName = inputData[dbConf.dbName];
     const tableName = inputData[dbConf.tableName];
     const fieldName = inputData[dbConf.fieldName];
+    const fields = fieldName.split(',');
+    const upperFieldSQL = fields.map(field => `UPPER('${field}')`).join(',');
+    // const mapFieldSQL =
+    //     fields.reduce((accumulator, currentField) => {
+    //     accumulator.push(`UPPER('${currentField}')`);
+    //     return accumulator;
+    // }, []).join(',');
 
-    //Todo 只支持按照单个字段修改主键, 后续需要支持多字段
     const sql = `\n
-    SELECT '修改数据库${dbName}的${tableName}表的主键为字段${fieldName}';
-    SET @hs_sql = 'select 1 from dual;';
-    SELECT
-        'ALTER TABLE ${tableName} DROP PRIMARY KEY, ADD PRIMARY KEY (${fieldName});' INTO @hs_sql
-    FROM DUAL
-    WHERE
-        (
-        SELECT
-            count(1)
-            FROM
-                information_schema.columns a
-            WHERE
-                COLUMN_KEY = 'PRI'
-                AND table_schema = SCHEMA()
-                AND LOWER(table_name) = LOWER('${tableName}')
-        ) > 0
-        AND (
-            SELECT count(1) 
-            FROM information_schema.columns a
-            WHERE
-                COLUMN_KEY = 'PRI'
-                AND UPPER(COLUMN_NAME) = UPPER('${fieldName}')
-                AND LOWER(table_name) = LOWER('${tableName}')
-            ) = 0;
-        PREPARE hs_stmt FROM @hs_sql;
-        EXECUTE hs_stmt;
-        DEALLOCATE PREPARE hs_stmt;
+    select '修改${tableName}表主键为${fields} ...';
+    set @hs_sql = 'select 1 from dual;' ;
+        select 'ALTER TABLE ${tableName} drop PRIMARY key,add PRIMARY KEY(${fields});' into @hs_sql from dual
+    where (select count(1) from information_schema.columns  a
+        where COLUMN_KEY='PRI'
+         and table_schema = SCHEMA()
+         and lower(table_name)='${tableName}') > 0
+    and (
+        select count(1) from information_schema.statistics a
+        where a.INDEX_SCHEMA = SCHEMA() 
+            and a.INDEX_NAME = 'PRIMARY'
+            and UPPER(COLUMN_NAME) in (${upperFieldSQL})
+            and lower(a.\`TABLE_NAME\`) = lower('${tableName}')
+        ) <> ${fields.length};
+    PREPARE hs_stmt FROM @hs_sql;
+    EXECUTE hs_stmt;
+    DEALLOCATE PREPARE hs_stmt;
     \n`
     return sql;
 }
