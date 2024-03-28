@@ -348,19 +348,32 @@ function generateModifyPrimaryKeySQL(inputData, opts = {}) {
 
     const sql = `\n
     select '修改${tableName}表主键为${fields} ...';
-    set @hs_sql = 'select 1 from dual;' ;
-        select 'ALTER TABLE ${tableName} drop PRIMARY key,add PRIMARY KEY(${fields});' into @hs_sql from dual
-    where (select count(1) from information_schema.columns  a
+    select concat('check ${tableName} table primary key exists ...');
+    SET @primary_key_count = (select count(1) from information_schema.columns  a
         where COLUMN_KEY='PRI'
          and table_schema = SCHEMA()
-         and lower(table_name)='${tableName}') > 0
-    and (
-        select count(1) from information_schema.statistics a
-        where a.INDEX_SCHEMA = SCHEMA() 
+         and lower(table_name)='${tableName}'); 
+    SET @fields_count = ${fields.length};   
+    SET @modify1 = FALSE;
+    SELECT IF(@primary_key_count <> @fields_count, TRUE, FALSE) INTO @modify1
+  
+    FROM DUAL;
+    SELECT CONCAT('Debug: @modify1 value is ', @modify1);
+    SET @field_in_pri_cnt  = (select count(1) from information_schema.statistics a
+            where a.INDEX_SCHEMA = SCHEMA() 
             and a.INDEX_NAME = 'PRIMARY'
             and UPPER(COLUMN_NAME) in (${upperFieldSQL})
-            and lower(a.\`TABLE_NAME\`) = lower('${tableName}')
-        ) <> ${fields.length};
+            and lower(a.TABLE_NAME) = lower('${tableName}'));
+            
+    SET @modify2 = FALSE;
+    SELECT IF(@field_in_pri_cnt <> @fields_count, TRUE, FALSE) INTO @modify2;
+    SELECT CONCAT('Debug: @modify2 value is ', @modify2);
+    SET @modify = IF(@modify1 OR @modify2, TRUE, FALSE);
+    SELECT CONCAT('Debug: Number of primary key columns is ', @primary_key_count, ', number of new fields is ', @fields_count, ', @field_in_pri_cnt is', @field_in_pri_cnt, '. @modify value is ', @modify);
+ 
+    set @hs_sql = 'select 1 from dual;' ;
+        select 'ALTER TABLE ${tableName} drop PRIMARY key,add PRIMARY KEY(${fields});' into @hs_sql from dual
+          where @modify = TRUE;
     PREPARE hs_stmt FROM @hs_sql;
     EXECUTE hs_stmt;
     DEALLOCATE PREPARE hs_stmt;

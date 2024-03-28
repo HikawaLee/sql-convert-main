@@ -222,55 +222,31 @@ function generateModifyPrimaryKeySQL(inputData, opts = {}) {
 
 
 
-
-    // const sql = `\n
-    //     prompt ${dbName} 表修改主键键名 ${primaryKeyName} 为 ${newPrimaryKeyName}
-    //     DECLARE
-    //         v_pk_exists   NUMBER;
-    //         v_table_exists NUMBER;
-    //     BEGIN
-    //         -- Check if the table exists
-    //     SELECT COUNT(*)
-    //     INTO v_table_exists
-    //     FROM USER_TABLES
-    //     WHERE TABLE_NAME = UPPER('${tableName}');
-    //     -- Exit if table doesn't exist
-    //     IF v_table_exists = 0 THEN
-    //             RETURN;
-    //     END IF;
-    //         -- Check if the primary key exists for the table
-    //     SELECT COUNT(*)
-    //     INTO v_pk_exists
-    //     FROM USER_CONSTRAINTS
-    //     WHERE TABLE_NAME = UPPER('${tableName}')
-    //         AND CONSTRAINT_TYPE = 'P'
-    //         AND CONSTRAINT_NAME = UPPER('${primaryKeyName}');
-    //     -- If the primary key exists, rename it by prepending 'pk_'
-    //     IF v_pk_exists = 1 THEN
-    //             EXECUTE IMMEDIATE 'ALTER TABLE ${tableName} RENAME CONSTRAINT ${primaryKeyName} TO ${newPrimaryKeyName}';
-    //     END IF;
-    //     END;
-    //     /
-    //     \n
-    //     `
-
     const sql = `\n
     prompt ${tableName} 重建主键, 新的主键名为 ${newPrimaryKeyName}, 新的主键字段为${fields} ......
     declare
         v_rowcount number;
+        primary_key_name VARCHAR2(30);
     begin
+    
+        dbms_output.put_line('get primary key name...);
+        SELECT CONSTRAINT_NAME INTO primary_key_name
+            FROM USER_CONSTRAINTS
+            WHERE TABLE_NAME = UPPER('${tableName}') AND CONSTRAINT_TYPE = 'P';
+        dbms_output.put_line('Primary key name: ' || primary_key_name);
+            
         dbms_output.put_line('Checking if constraint exists...');
-        select count(*) into v_rowcount from user_constraints where table_name = upper('${tableName}') and constraint_name = upper('${primaryKeyName}');
+        select count(*) into v_rowcount from user_constraints where table_name = upper('${tableName}') and constraint_name = primary_key_name;
         dbms_output.put_line('Constraint count: ' || v_rowcount);
 
         if v_rowcount > 0 then
             dbms_output.put_line('Checking if columns exist in constraint...');
-            select count(*) into v_rowcount from user_cons_columns t where table_name = upper('${tableName}') and t.column_name in (${upperFieldsSQL}) and t.constraint_name = upper('${primaryKeyName}');
+            select count(*) into v_rowcount from user_cons_columns t where table_name = upper('${tableName}') and t.column_name in (${upperFieldsSQL}) and t.constraint_name = primary_key_name;
             dbms_output.put_line('Column count: ' || v_rowcount);
 
 
                 dbms_output.put_line('Dropping existing constraint...');
-                execute immediate 'alter table ${tableName} drop constraint ${primaryKeyName} cascade drop index';
+                execute immediate 'alter table ${tableName} drop constraint primary_key_name cascade drop index';
                 dbms_output.put_line('Constraint dropped successfully.');
      
         end if;
