@@ -229,7 +229,7 @@ function generateModifyPrimaryKeySQL(inputData, opts = {}) {
         primary_key_name VARCHAR2(30);
     begin
     
-        dbms_output.put_line('get primary key name...);
+        dbms_output.put_line('get primary key name...');
         SELECT CONSTRAINT_NAME INTO primary_key_name
             FROM USER_CONSTRAINTS
             WHERE TABLE_NAME = UPPER('${tableName}') AND CONSTRAINT_TYPE = 'P';
@@ -246,7 +246,7 @@ function generateModifyPrimaryKeySQL(inputData, opts = {}) {
 
 
                 dbms_output.put_line('Dropping existing constraint...');
-                execute immediate 'alter table ${tableName} drop constraint primary_key_name cascade drop index';
+                execute immediate 'alter table ${tableName} drop constraint ${primaryKeyName} cascade drop index';
                 dbms_output.put_line('Constraint dropped successfully.');
      
         end if;
