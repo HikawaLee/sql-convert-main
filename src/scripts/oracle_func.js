@@ -268,11 +268,11 @@ function generateModifyPrimaryKeySQL(inputData, opts = {}) {
             select count(*) into v_rowcount from user_cons_columns t where table_name = upper('${tableName}') and t.column_name in (${upperFieldsSQL}) and t.constraint_name = upper('${primaryKeyName}');
             dbms_output.put_line('Column count: ' || v_rowcount);
 
-            if v_rowcount <> ${fields.length} then
+
                 dbms_output.put_line('Dropping existing constraint...');
                 execute immediate 'alter table ${tableName} drop constraint ${primaryKeyName} cascade drop index';
                 dbms_output.put_line('Constraint dropped successfully.');
-            end if;
+     
         end if;
 
         select count(*) into v_rowcount from user_tables where table_name = upper('${tableName}');
