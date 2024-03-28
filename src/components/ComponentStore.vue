@@ -22,6 +22,9 @@
       </label>
     </div>
 
+
+
+
 <!--    select选择框, 多选一-->
     <div v-if="props.state.type === InputType.SELECT" class="form-control w-full max-w-xl">
       <label class="form-control w-full max-w-xl">

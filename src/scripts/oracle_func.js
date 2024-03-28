@@ -216,7 +216,7 @@ function generateModifyPrimaryKeySQL(inputData, opts = {}) {
     const tableName = inputData[dbConf.tableName];
     const fieldName = inputData[dbConf.fieldName];
     const fields = fieldName.split(',');
-    console.log(`fields is ${fields}`)
+    const upperFieldsSQL = fields.map(field => `UPPER('${field}')`).join(',');
     const primaryKeyName = inputData[dbConf.primaryKeyName];
     const newPrimaryKeyName = inputData[dbConf.newPrimaryKeyName];
 
@@ -255,30 +255,44 @@ function generateModifyPrimaryKeySQL(inputData, opts = {}) {
     //     `
 
     const sql = `\n
-        prompt ${tableName} 重建主键
-        declare
-            v_rowcount number;
-        begin
-            select count(*) into v_rowcount from user_constraints where table_name = upper('${tableName}') and constraint_name = upper('${primaryKeyName}');
+    prompt ${tableName} 重建主键, 新的主键名为 ${newPrimaryKeyName}, 新的主键字段为${fields} ......
+    declare
+        v_rowcount number;
+    begin
+        dbms_output.put_line('Checking if constraint exists...');
+        select count(*) into v_rowcount from user_constraints where table_name = upper('${tableName}') and constraint_name = upper('${primaryKeyName}');
+        dbms_output.put_line('Constraint count: ' || v_rowcount);
+
         if v_rowcount > 0 then
-            select count(*) into v_rowcount from user_cons_columns t where table_name = upper('${tableName}') and t.column_name = upper('${fields[0]}') and t.constraint_name = upper('${primaryKeyName}');
-        if v_rowcount = 0 then
-            execute immediate 'alter table ${tableName} drop constraint upper('${primaryKeyName}') cascade drop index';
-        end if;
+            dbms_output.put_line('Checking if columns exist in constraint...');
+            select count(*) into v_rowcount from user_cons_columns t where table_name = upper('${tableName}') and t.column_name in (${upperFieldsSQL}) and t.constraint_name = upper('${primaryKeyName}');
+            dbms_output.put_line('Column count: ' || v_rowcount);
+
+            if v_rowcount <> ${fields.length} then
+                dbms_output.put_line('Dropping existing constraint...');
+                execute immediate 'alter table ${tableName} drop constraint ${primaryKeyName} cascade drop index';
+                dbms_output.put_line('Constraint dropped successfully.');
+            end if;
         end if;
 
         select count(*) into v_rowcount from user_tables where table_name = upper('${tableName}');
-        if v_rowcount >0 then
+        dbms_output.put_line('Table count: ' || v_rowcount);
+
+        if v_rowcount > 0 then
+            dbms_output.put_line('Checking if constraint exists...');
             select count(*) into v_rowcount from user_constraints where table_name = upper('${tableName}') and constraint_name = upper('${primaryKeyName}');
-        if v_rowcount = 0 then
-            execute immediate 'ALTER TABLE ${tableName} ADD CONSTRAINT ${newPrimaryKeyName} PRIMARY KEY(${fields})';
+            dbms_output.put_line('Constraint count: ' || v_rowcount);
+
+            if v_rowcount = 0 then
+                dbms_output.put_line('Adding new constraint...');
+                execute immediate 'ALTER TABLE ${tableName} ADD CONSTRAINT ${newPrimaryKeyName} PRIMARY KEY(${fields})';
+                dbms_output.put_line('Constraint added successfully.');
+            end if;
         end if;
-        end if;
-        end;
-        /
+    end;
+    /
         \n
         `
-
 
     return sql;
 
