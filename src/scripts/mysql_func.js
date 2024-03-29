@@ -294,7 +294,6 @@ function generateAddPrimaryKeySQL(inputData, opts = {}) {
 function generateDropPrimaryKeySQL(inputData, opts = {}) {
     const dbName = inputData[dbConf.dbName];
     const tableName = inputData[dbConf.tableName];
-    const fieldName = inputData[dbConf.fieldName];
 
     const sql = `\n
     SELECT '删除数据库${dbName}的${tableName}表的主键';

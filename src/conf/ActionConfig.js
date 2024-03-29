@@ -120,6 +120,7 @@ const actions = [
                         [tableConfKeys.COMPONENT_TYPE]: String,
                         [tableConfKeys.DEFAULT]: "",
                     },
+                    [tableConfKeys.DESC]: "Oracle数据库不支持设置默认值; MySQL数据库设置数值类型默认值时,会使用parseInt()函数转换,设置NULL时,请填入null字符串,另外不支持time相关类型设置默认值;更多限制见说明文档",
                 },
                 generateDbMetaConf()
             ],
@@ -482,22 +483,6 @@ const actions = [
                     [rulesType.dataType]: rulesType.alphaRegex
                 },
             },
-
-            {
-                [tableConfKeys.COMPONENT_TYPE]: inputType.INPUT,
-                [tableConfKeys.TITLE]: dbConf.fieldName,
-                [tableConfKeys.REQUIRED]: {
-                    [tableConfKeys.REQUIRED_MSG]: "请填入字段名, 例如: test",
-                },
-                [tableConfKeys.VALUE]: {
-                    [tableConfKeys.COMPONENT_TYPE]: String,
-                    [tableConfKeys.DEFAULT]: "t_id",
-                },
-                [tableConfKeys.DESC]: "字段名称不能含有空格",
-                [tableConfKeys.RULES]: {
-                    [rulesType.dataType]: rulesType.alphaRegex,
-                },
-            },
             generateDbMetaConf(),
         ],
     },
@@ -530,7 +515,7 @@ const actions = [
                     [tableConfKeys.COMPONENT_TYPE]: String,
                     [tableConfKeys.DEFAULT]: "test_user",
                 },
-                [tableConfKeys.DESC]: "数据库名称, 注意: 请勿输入中文",
+                [tableConfKeys.DESC]: "注意: 目前约定主键名为: pk_表名,如果oracle目标表的主键名不为约定格式,将无法修改",
                 [tableConfKeys.PLACEHOLDER]: "表名不能含有空格",
                 [tableConfKeys.RULES]: {
                     [rulesType.dataType]: rulesType.alphaRegex
@@ -546,41 +531,12 @@ const actions = [
                     [tableConfKeys.COMPONENT_TYPE]: String,
                     [tableConfKeys.DEFAULT]: "t_id",
                 },
-                [tableConfKeys.DESC]: "字段名称不能含有空格",
+                [tableConfKeys.DESC]: "多个字段以逗号分隔且不加空格, 例如:  t_id,t_name;另外表中必须含有该字段且不为空值,否则会直接删除原来的主键",
                 [tableConfKeys.RULES]: {
                     [rulesType.dataType]: rulesType.alphaRegex,
                 },
             },
-            {
-                [tableConfKeys.COMPONENT_TYPE]: inputType.INPUT,
-                [tableConfKeys.TITLE]: dbConf.primaryKeyName,
-                [tableConfKeys.REQUIRED]: {
-                    [tableConfKeys.REQUIRED_MSG]: "请填入原来的主键名, 例如: pk_id",
-                },
-                [tableConfKeys.VALUE]: {
-                    [tableConfKeys.COMPONENT_TYPE]: String,
-                    [tableConfKeys.DEFAULT]: "pk_id",
-                },
-                [tableConfKeys.DESC]: "字段名称不能含有空格",
-                [tableConfKeys.RULES]: {
-                    [rulesType.dataType]: rulesType.alphaRegex,
-                },
-            },
-            {
-                [tableConfKeys.COMPONENT_TYPE]: inputType.INPUT,
-                [tableConfKeys.TITLE]: dbConf.newPrimaryKeyName,
-                [tableConfKeys.REQUIRED]: {
-                    [tableConfKeys.REQUIRED_MSG]: "请填入新的主键名, 例如: pk_id_2024",
-                },
-                [tableConfKeys.VALUE]: {
-                    [tableConfKeys.COMPONENT_TYPE]: String,
-                    [tableConfKeys.DEFAULT]: "pk_id_2024",
-                },
-                [tableConfKeys.DESC]: "字段名称不能含有空格",
-                [tableConfKeys.RULES]: {
-                    [rulesType.dataType]: rulesType.alphaRegex,
-                },
-            },
+
 
             generateDbMetaConf(),
         ],

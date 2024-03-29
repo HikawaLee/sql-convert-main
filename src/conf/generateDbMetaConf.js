@@ -10,7 +10,8 @@ import dbConf from "@/types/dbConf.js";
  * @returns {{}} 一个对象, 该对象用于配置多选框组件，用于选择数据库类型
  */
 const generateDbMetaConf = (defaultDb =
-                                [dbConf.mysql, dbConf.oracle, dbConf.tdsql
+                                [dbConf.mysql, dbConf.oracle
+                                    // , dbConf.tdsql
                                 // ,dbConf.dameng
                                 ]
 ) => {
@@ -31,7 +32,7 @@ const generateDbMetaConf = (defaultDb =
                 // dbConf.dameng,
                 dbConf.mysql,
                 dbConf.oracle,
-                dbConf.tdsql,
+                // dbConf.tdsql,
             ],
         };
     }
@@ -51,7 +52,7 @@ const generateDbMetaConf = (defaultDb =
             // dbConf.dameng,
             dbConf.mysql,
             dbConf.oracle,
-            dbConf.tdsql,
+            // dbConf.tdsql,
         ],
     };
 };

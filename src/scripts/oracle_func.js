@@ -174,6 +174,74 @@ function generateAddIndexSQL(inputData, opts = {}) {
 }
 
 
+
+// 自己写的
+/**
+ * mysql生成添加主键的 SQL 语句
+ * @param inputData 父组件收集到的数据
+ * @param opts 额外配置, 暂时未用到
+ * @returns {string} 返回添加主键的SQL 语句
+ */
+function generateAddPrimaryKeySQL(inputData, opts = {}) {
+    const dbName = inputData[dbConf.dbName];
+    const tableName = inputData[dbConf.tableName];
+    const fieldName = inputData[dbConf.fieldName];
+    const fields = fieldName.split(',');
+    const upperFieldsSQL = fields.map(field => `UPPER('${field}')`).join(',');
+    const newPrimaryKeyName = inputData[dbConf.newPrimaryKeyName];
+
+    const sql = `\n
+    prompt ${tableName} 重建主键, 新的主键名为 ${newPrimaryKeyName}, 新的主键字段为${fields} ......
+    declare
+        v_rowcount number;
+        v_pri_name VARCHAR2(255);
+    begin
+
+        begin
+            dbms_output.put_line('Getting primary key name...');
+            SELECT CONSTRAINT_NAME INTO v_pri_name
+                FROM USER_CONSTRAINTS
+                WHERE TABLE_NAME = UPPER('${tableName}') AND CONSTRAINT_TYPE = 'P';
+            exception
+                when no_data_found then
+                    dbms_output.put_line('No primary key found for table.');
+                    return;
+        end;
+        dbms_output.put_line('Primary key name: ' || v_pri_name);
+        dbms_output.put_line('Checking if constraint exists...');
+
+
+        select count(*) into v_rowcount from user_constraints where table_name = upper('${tableName}') and constraint_name = v_pri_name;
+        dbms_output.put_line('Constraint count: ' || v_rowcount);
+
+        if v_rowcount > 0 then
+            dbms_output.put_line('Column count: ' || v_rowcount);
+                dbms_output.put_line('Dropping existing constraint...');
+                execute immediate 'alter table ${tableName} drop constraint v_pri_name cascade drop index';
+                dbms_output.put_line('Constraint dropped successfully.');
+        end if;
+
+        select count(*) into v_rowcount from user_tables where table_name = upper('${tableName}');
+        dbms_output.put_line('Table count: ' || v_rowcount);
+
+        if v_rowcount > 0 then
+            dbms_output.put_line('Checking if constraint exists...');
+            select count(*) into v_rowcount from user_constraints where table_name = upper('${tableName}') and constraint_name = v_pri_name;
+            dbms_output.put_line('Constraint count: ' || v_rowcount);
+
+            if v_rowcount = 0 then
+                dbms_output.put_line('Adding new constraint...');
+                execute immediate 'ALTER TABLE ${tableName} ADD CONSTRAINT ${newPrimaryKeyName} PRIMARY KEY(${fields})';
+                dbms_output.put_line('Constraint added successfully.');
+            end if;
+        end if;
+    end;
+    /
+    \n`;
+    return '目前暂时不做支持';
+}
+
+
 /**
  *
  * 删除主键
@@ -185,9 +253,6 @@ function generateAddIndexSQL(inputData, opts = {}) {
 function generateDropPrimaryKeySQL(inputData, opts = {}) {
     const dbName = inputData[dbConf.dbName];
     const tableName = inputData[dbConf.tableName];
-    const fieldName = inputData[dbConf.fieldName];
-    const primaryKeyName = inputData[dbConf.primaryKeyName];
-
     const sql = `
         DECLARE
             sql_stmt VARCHAR2(255);
@@ -217,31 +282,26 @@ function generateModifyPrimaryKeySQL(inputData, opts = {}) {
     const fieldName = inputData[dbConf.fieldName];
     const fields = fieldName.split(',');
     const upperFieldsSQL = fields.map(field => `UPPER('${field}')`).join(',');
-    const primaryKeyName = inputData[dbConf.primaryKeyName];
-    const newPrimaryKeyName = inputData[dbConf.newPrimaryKeyName];
+    const primaryKeyName = `PK_${tableName}`;
+    // const newPrimaryKeyName = inputData[dbConf.newPrimaryKeyName];
 
 
 
     const sql = `\n
-    prompt ${tableName} 重建主键, 新的主键名为 ${newPrimaryKeyName}, 新的主键字段为${fields} ......
+    prompt ${tableName} 重建主键,  新的主键字段为${fields} ......
     declare
         v_rowcount number;
-        primary_key_name VARCHAR2(30);
+     
     begin
     
-        dbms_output.put_line('get primary key name...');
-        SELECT CONSTRAINT_NAME INTO primary_key_name
-            FROM USER_CONSTRAINTS
-            WHERE TABLE_NAME = UPPER('${tableName}') AND CONSTRAINT_TYPE = 'P';
-        dbms_output.put_line('Primary key name: ' || primary_key_name);
             
         dbms_output.put_line('Checking if constraint exists...');
-        select count(*) into v_rowcount from user_constraints where table_name = upper('${tableName}') and constraint_name = primary_key_name;
+        select count(*) into v_rowcount from user_constraints where table_name = upper('${tableName}') and constraint_name = upper('${primaryKeyName}');
         dbms_output.put_line('Constraint count: ' || v_rowcount);
 
         if v_rowcount > 0 then
             dbms_output.put_line('Checking if columns exist in constraint...');
-            select count(*) into v_rowcount from user_cons_columns t where table_name = upper('${tableName}') and t.column_name in (${upperFieldsSQL}) and t.constraint_name = primary_key_name;
+            select count(*) into v_rowcount from user_cons_columns t where table_name = upper('${tableName}') and t.column_name in (${upperFieldsSQL}) and t.constraint_name = upper('${primaryKeyName}');
             dbms_output.put_line('Column count: ' || v_rowcount);
 
 
@@ -261,7 +321,7 @@ function generateModifyPrimaryKeySQL(inputData, opts = {}) {
 
             if v_rowcount = 0 then
                 dbms_output.put_line('Adding new constraint...');
-                execute immediate 'ALTER TABLE ${tableName} ADD CONSTRAINT ${newPrimaryKeyName} PRIMARY KEY(${fields})';
+                execute immediate 'ALTER TABLE ${tableName} ADD CONSTRAINT ${primaryKeyName} PRIMARY KEY(${fields})';
                 dbms_output.put_line('Constraint added successfully.');
             end if;
         end if;
@@ -343,7 +403,7 @@ export default {
     generateModifyColumnSQL,
 
     generateAddIndexSQL,
-
+    generateAddPrimaryKeySQL,
     generateDropPrimaryKeySQL,
     generateModifyPrimaryKeySQL
 }
