@@ -13,7 +13,7 @@
           <span class="label-text">{{ props.state.label }}</span>
           <span v-if="props.state.required" class="text-red-500">*</span>
         </div>
-        <input class="input input-bordered" v-model.trim="singleAns" @change="updateConfig" :placeholder="props.state.placeholder"/>
+        <input class="input input-bordered border-0" v-model.trim="singleAns" @change="updateConfig" :placeholder="props.state.placeholder"/>
         <div class="label">
           <span v-if="warningShow" class="label-text-alt text-red-400">{{warningText}}</span>
           <span v-else class="label-text-alt">{{ props.state.desc }}</span>

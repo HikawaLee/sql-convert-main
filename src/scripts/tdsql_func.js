@@ -477,5 +477,4 @@ export default {
     generateAddPrimaryKeySQL,
     generateDropPrimaryKeySQL,
     generateModifyPrimaryKeySQL,
-
 }
