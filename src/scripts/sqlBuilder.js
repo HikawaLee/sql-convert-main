@@ -55,6 +55,9 @@ function generateSQL(inputData, actionType) {
         throw new Error('目标数据库类型不能为空');
     }
 
+
+
+    const historyTable = info[dbConf.hisTableName];
     //遍历数据库--sql模板Map获取到对应的SQL模板函数, 并执行生成SQL
     targetDB.forEach((dbName) => {
         //sqlTemplate是一个函数, 传入info对象, 返回SQL语句
@@ -62,10 +65,21 @@ function generateSQL(inputData, actionType) {
 
         if (sqlTemplate) {
             const sql = sqlTemplate(info);
-            result.push({
-                sql: sql,
-                dbType: dbName
-            });
+            if(historyTable) {
+                const historySql = sqlTemplate({...info, [dbConf.tableName]: historyTable});
+                result.push({
+                    sql,
+                    historySql,
+                    dbType: dbName,
+                });
+            } else {
+                result.push({
+                    sql: sql,
+                    dbType: dbName,
+                });
+            }
+
+
         } else {
             console.log(`${actionType} Function for ${dbName} not found in dbMap.js.`);
         }

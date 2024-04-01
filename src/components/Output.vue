@@ -51,6 +51,9 @@ import useClipboard from 'vue-clipboard3'
 const markedSql = computed(() => {
   return props.sqlList.map((item) => {
      let sql = `\n\`\`\`sql\n${item.sql}\n\`\`\`\n`
+      if(item.historySql){
+        sql += `\t历史表SQL\n\`\`\`sql\n${item.historySql}\n\`\`\`\n`
+      }
     return sql
   })
 })

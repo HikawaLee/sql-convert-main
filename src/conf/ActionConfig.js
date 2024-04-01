@@ -45,6 +45,23 @@ const actions = [
 
                 {
                     [tableConfKeys.COMPONENT_TYPE]: inputType.INPUT,
+                    [tableConfKeys.TITLE]: dbConf.hisTableName,
+                    [tableConfKeys.REQUIRED]: {
+                        [tableConfKeys.REQUIRED_MSG]: "请填入历史表的表名, 默认为表名前加his前缀, 例如: histest_user",
+                    },
+                    [tableConfKeys.VALUE]: {
+                        [tableConfKeys.COMPONENT_TYPE]: String,
+                        [tableConfKeys.DEFAULT]: "histest_user",
+                    },
+                    [tableConfKeys.DESC]: "数据表名称, 注意: 请勿输入中文",
+                    [tableConfKeys.PLACEHOLDER]: "表名不能含有空格",
+
+                    [tableConfKeys.RULES]: {
+                        [rulesType.dataType]: rulesType.alphaRegex
+                    },
+                },
+                {
+                    [tableConfKeys.COMPONENT_TYPE]: inputType.INPUT,
                     [tableConfKeys.TITLE]: dbConf.fieldName,
                     [tableConfKeys.REQUIRED]: {
                         [tableConfKeys.REQUIRED_MSG]: "请填入字段名, 例如: test",
