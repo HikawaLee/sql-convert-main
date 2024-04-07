@@ -24,6 +24,7 @@ import SearchSelect from "@/components/SearchSelect.vue";
         <a>
           <img :src=logo alt="logo" class="w-8 h-8"/>
         </a>
+
        </nav>
     </footer>
   </div>

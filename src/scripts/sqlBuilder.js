@@ -58,6 +58,10 @@ function generateSQL(inputData, actionType) {
 
 
     const historyTable = info[dbConf.hisTableName];
+    const genHistoryTable = info[dbConf.genHistoryTable];
+    if(genHistoryTable && !historyTable) {
+        throw new Error('生成历史表时, 历史表名不能为空');
+    }
     //遍历数据库--sql模板Map获取到对应的SQL模板函数, 并执行生成SQL
     targetDB.forEach((dbName) => {
         //sqlTemplate是一个函数, 传入info对象, 返回SQL语句
@@ -65,7 +69,7 @@ function generateSQL(inputData, actionType) {
 
         if (sqlTemplate) {
             const sql = sqlTemplate(info);
-            if(historyTable) {
+            if(historyTable && genHistoryTable === '是') {
                 const historySql = sqlTemplate({...info, [dbConf.tableName]: historyTable});
                 result.push({
                     sql,

@@ -42,6 +42,7 @@ export default {
     dbName: '数据库名',
     tableName: '表名',
     primaryKeyName: '主键名',
+    genHistoryTable: '生成历史表',
     hisTableName: '历史表名',
 
     newPrimaryKeyName: '新主键名',
