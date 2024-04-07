@@ -24,22 +24,41 @@
 
 
 
+  <div v-if="props.state.type === InputType.SELECT" class="form-control w-full max-w-xl [&::-webkit-calendar-picker-indicator]:opacity-0">
+    <label class="form-control w-full max-w-xl">
+      <div class="label">
+        <span class="label-text">{{ props.state.label }}</span>
+        <span v-if="props.state.required" class="text-red-500">*</span>
+      </div>
+      <input class="input input-bordered border-0"
+             list="HeadlineActArtist"
+             id="HeadlineAct"
+             v-model.trim="singleAns" @change="updateConfig" :placeholder="props.state.placeholder"/>
+      <datalist name="HeadlineAct" id="HeadlineActArtist">
+        <template v-for="(val, index) in props.state.options" :key="index">
+          <option :value=val>{{ val }}</option>
+        </template>
+      </datalist>
+
+
+    </label>
+  </div>
 
 <!--    select选择框, 多选一-->
-    <div v-if="props.state.type === InputType.SELECT" class="form-control w-full max-w-xl">
-      <label class="form-control w-full max-w-xl">
-        <div class="label">
-          <span class="label-text">{{ props.state.label }}</span>
-          <span v-if="props.state.required" class="text-red-500">*</span>
-        </div>
-        <select class="select select-bordered select-md w-full max-w-xl" v-model="singleAns" @change="updateConfig">
+<!--    <div v-if="props.state.type === InputType.SELECT" class="form-control w-full max-w-xl">-->
+<!--      <label class="form-control w-full max-w-xl">-->
+<!--        <div class="label">-->
+<!--          <span class="label-text">{{ props.state.label }}</span>-->
+<!--          <span v-if="props.state.required" class="text-red-500">*</span>-->
+<!--        </div>-->
+<!--        <select class="select select-bordered select-md w-full max-w-xl" v-model="singleAns" @change="updateConfig">-->
 
-          <template v-for="(val, index) in props.state.options" :key="index">
-            <option>{{ val }}</option>
-          </template>
-        </select>
-      </label>
-    </div>
+<!--          <template v-for="(val, index) in props.state.options" :key="index">-->
+<!--            <option>{{ val }}</option>-->
+<!--          </template>-->
+<!--        </select>-->
+<!--      </label>-->
+<!--    </div>-->
 
 <!--    check box多选框, 多选多-->
     <div v-if="props.state.type === InputType.CHECKBOX" class="form-control w-full max-w-xl dropdown dropdown-bottom dropdown-hover">

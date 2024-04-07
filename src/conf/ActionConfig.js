@@ -4,6 +4,17 @@ import dbConf from "@/types/dbConf.js";
 import rulesType from "@/types/rulesType.js";
 import tableConfKeys from "@/types/tableConfKeys.js";
 import generateDbMetaConf from "@/conf/generateDbMetaConf.js";
+
+
+
+
+import bizOptions from "@/scripts/dataType_mapping.js";
+
+
+
+
+//convert the selectionOptions.keys  into arr
+const optionsKeyArr = Object.keys(bizOptions.Options);
 // 布局配置对象, 用于生成表单, 每个对象对应一个操作, 每个操作包含一个或多个输入框, 下拉框, 复选框等, 用于生成表单
 const actions = [
     {
@@ -89,23 +100,7 @@ const actions = [
                         [tableConfKeys.COMPONENT_TYPE]: String,
                         [tableConfKeys.DEFAULT]: dbConf.STDstr,
                     },
-                    [tableConfKeys.OPTIONS]: [
-                        dbConf.STDint2_t,
-                        dbConf.STDint3_t,
-                        dbConf.STDint4_t,
-                        dbConf.STDint6_t,
-                        dbConf.STDint8_t,
-                        dbConf.STDint10_t,
-                        dbConf.STDdouble,
-                        dbConf.STDchar,
-                        dbConf.STDstr,
-                        dbConf.STDdate,
-                        dbConf.STDtime,
-                        dbConf.STDdatetime,
-                        dbConf.STDtimestamp,
-                        dbConf.STDclob,
-                        dbConf.STDBlob,
-                    ],
+                    [tableConfKeys.OPTIONS]: optionsKeyArr,
                 },
                 {
                     [tableConfKeys.COMPONENT_TYPE]: inputType.INPUT,

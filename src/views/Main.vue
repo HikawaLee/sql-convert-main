@@ -76,6 +76,7 @@ import sqlBuilder from "@/scripts/sqlBuilder.js";
 // region 名称-功能映射表, 存储了功能的名称和对应的功能
 // 例如 新增字段-->{name: '新增字段', action: {layout: [{label: '字段名', type: 'text', data: ''}, {label: '字段类型', type: 'text', data: ''}]}}
 import NamedActionMap from "@/conf/ActionConfig.js";
+import SearchSelect from "@/components/SearchSelect.vue";
 // endregion
 
 // 当前选中的功能的名称，用于切换功能
