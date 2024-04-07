@@ -5,14 +5,22 @@ import dbConf from "../types/dbConf.js";
  * @param opts 额外配置, 暂时未用到
  * @returns {string} 返回 添加字段SQL 语句
  */
+
+import bizOptions from '@/scripts/dataType_mapping.js';
 const generateAddColumnSQL = (inputData, opts = {}) => {
+
+
     const dbName = inputData[dbConf.dbName];
     const tableName = inputData[dbConf.tableName];
-    const fieldType = inputData[dbConf.fieldType];
+    let fieldType = inputData[dbConf.fieldType];
+    const bizColInfo = bizOptions[fieldType];
+    console.log('bizColInfo:', JSON.stringify(bizColInfo, null, 2));
+    const { stdType, length, precision , defaultValue} = bizColInfo;
+    fieldType = stdType;
     const fieldName = inputData[dbConf.fieldName];
-    const fieldLength = inputData[dbConf.fieldLength];
-    const fieldPrecision = inputData[dbConf.fieldPrecision];
-    const fieldDefault = inputData[dbConf.setDefault];
+    const fieldLength = length;
+    const fieldPrecision = precision;
+    const fieldDefault = defaultValue;
     if(fieldDefault === undefined || fieldDefault === 'undefined' || fieldDefault === '' || fieldDefault === null) {
       return `\n
         SELECT '${tableName}表中新增字段${fieldName}';

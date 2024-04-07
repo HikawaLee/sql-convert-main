@@ -14,7 +14,7 @@ import bizOptions from "@/scripts/dataType_mapping.js";
 
 
 //convert the selectionOptions.keys  into arr
-const optionsKeyArr = Object.keys(bizOptions.Options);
+const optionsKeyArr = Object.keys(bizOptions);
 // 布局配置对象, 用于生成表单, 每个对象对应一个操作, 每个操作包含一个或多个输入框, 下拉框, 复选框等, 用于生成表单
 const actions = [
     {
