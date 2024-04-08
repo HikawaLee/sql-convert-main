@@ -9,18 +9,19 @@ import dbConf from "../types/dbConf.js";
 import bizOptions from '@/scripts/dataType_mapping.js';
 const generateAddColumnSQL = (inputData, opts = {}) => {
 
-
     const dbName = inputData[dbConf.dbName];
     const tableName = inputData[dbConf.tableName];
-    let fieldType = inputData[dbConf.fieldType];
-    const bizColInfo = bizOptions[fieldType];
-    console.log('bizColInfo:', JSON.stringify(bizColInfo, null, 2));
-    const { stdType, length, precision , defaultValue} = bizColInfo;
-    fieldType = stdType;
     const fieldName = inputData[dbConf.fieldName];
+
+    const bizFieldType = inputData[dbConf.fieldType];
+    const { stdType, length, precision , defaultValue} = bizOptions[bizFieldType];
+
+    const fieldType = stdType;
     const fieldLength = length;
     const fieldPrecision = precision;
     const fieldDefault = defaultValue;
+
+
     if(fieldDefault === undefined || fieldDefault === 'undefined' || fieldDefault === '' || fieldDefault === null) {
       return `\n
         SELECT '${tableName}表中新增字段${fieldName}';
@@ -146,11 +147,14 @@ function generateModifyColumnSQL(inputData, opts = {}) {
     const dbName = inputData[dbConf.dbName];
     const tableName = inputData[dbConf.tableName];
     const fieldName = inputData[dbConf.fieldName];
-    const fieldType = inputData[dbConf.fieldType];
-    const fieldNewType = inputData[dbConf.setNewFieldType];
+    const newBizFieldType = inputData[dbConf.setNewFieldType];
+    const { stdType, length, precision} = bizOptions[newBizFieldType];
+
     const fieldNullable = inputData[dbConf.setNullable];
-    const fieldLength = inputData[dbConf.fieldLength];
-    const fieldPrecision = inputData[dbConf.fieldPrecision];
+
+    const fieldNewType = stdType;
+    const fieldLength = length;
+    const fieldPrecision = precision;
     if(fieldNullable === '是') {
         return `\n
         SELECT '修改${tableName}表非主键字段${fieldName}允许为空';

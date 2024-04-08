@@ -2,7 +2,7 @@
 
   <div class="navbar bg-slate-100 mt-2.5 mb-2.5 relative">
     <!-- 功能选择框 值域：新增字段、修改字段等  -->
-    <div class="navbar-start">
+    <div class="navbar-start flex space-x-6">
       <div class="dropdown">
 <!--        功能选择按钮-->
         <select class="select select-bordered w-full max-w-xs" v-model="selected" @change="resetInput">
@@ -10,6 +10,10 @@
             <option>{{ action.name }}</option>
           </template>
         </select>
+      </div>
+
+      <div class="max-w-md">
+        <TargetDB  @update-target-list="updateTargetList"/>
       </div>
     </div>
 
@@ -19,6 +23,9 @@
     </div>
     <!-- 功能按钮区 -->
     <div class="navbar-end">
+
+
+
       <button class="btn btn-ghost btn-circle" @click="resetInput">
         重置
       </button>
@@ -41,27 +48,18 @@
     </div>
   </div>
 
-
-<!--  <div>-->
-<!--    <pre>-->
-<!--Debug使用:-->
-<!--      {{JSON.stringify(componentStates, null, 2)}}-->
-<!--    </pre>-->
-<!--  </div>-->
-
-
-
-
   <!--  loading组件  -->
   <div v-if="loading" class="flex justify-center">
     <span class="loading loading-infinity loading-lg"></span>
   </div>
 
 
+
   <!--  sql输出组件  -->
   <div v-else-if="loading === false && sqlList.length !== 0" class="m-2.5 bg-base-200 border-2 rounded-md shadow-sm">
     <Output :sql-list="sqlList"/>
   </div>
+
 
 
 </template>
@@ -76,7 +74,7 @@ import sqlBuilder from "@/scripts/sqlBuilder.js";
 // region 名称-功能映射表, 存储了功能的名称和对应的功能
 // 例如 新增字段-->{name: '新增字段', action: {layout: [{label: '字段名', type: 'text', data: ''}, {label: '字段类型', type: 'text', data: ''}]}}
 import NamedActionMap from "@/conf/ActionConfig.js";
-import SearchSelect from "@/components/SearchSelect.vue";
+import TargetDB from "@/components/TargetDB.vue";
 // endregion
 
 // 当前选中的功能的名称，用于切换功能
@@ -85,6 +83,14 @@ const selected = ref(NamedActionMap[0].name)
 const activeAction = computed(() => {
   return NamedActionMap.find((item) => item.name === selected.value)
 })
+
+//存储用户选择的目标数据库.
+const targetList = ref({})
+
+const updateTargetList = (data) => {
+  targetList.value = data;
+  updateState()
+}
 
 // region 组件刷新相关
 const componentCnt = computed(() => {
@@ -95,8 +101,14 @@ const componentKey = ref([]);
 const freshComponentKey = () => {
   for (let i = 0; i < componentCnt.value; i++) {
     componentKey.value[i] = UniqueID();
+
   }
 }
+
+
+
+
+
 freshComponentKey();
 //endregion
 
@@ -139,10 +151,20 @@ const inputData = reactive({})
  *
  */
 const updateState = (data) => {
-  inputData[data.id] = {
-    label: data.label,
-    selected: data.selected
+  if(data !== undefined) {
+
+    inputData[data.id] = {
+      label: data.label,
+      selected: data.selected
+    }
+  } else{
+    console.log(`目标数据库变化触发的更新`)
   }
+  inputData[targetList.value.id] = {
+    label: targetList.value.label,
+    selected: targetList.value.selected
+  }
+  // console.log(`now, inputData is: ${JSON.stringify(inputData, null, 2)}\n and the targetList is: ${JSON.stringify(targetList.value, null, 2)}`)
 }
 
 //控制loading组件的显示

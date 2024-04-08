@@ -10,12 +10,12 @@ import bizOptions from '@/scripts/dataType_mapping.js';
 function generateAddColumnSQL(inputData, opts = {}) {
     const dbName = inputData[dbConf.dbName];
     const tableName = inputData[dbConf.tableName];
-    let fieldType = inputData[dbConf.fieldType];
-    const bizColInfo = bizOptions[fieldType];
-    console.log('bizColInfo:', JSON.stringify(bizColInfo, null, 2));
-    const { stdType, length, precision , defaultValue} = bizColInfo;
-    fieldType = stdType;
     const fieldName = inputData[dbConf.fieldName];
+
+    const bizFieldType = inputData[dbConf.fieldType];
+    const { stdType, length, precision , defaultValue} = bizOptions[bizFieldType];
+
+    const fieldType = stdType;
     const fieldLength = length;
     const fieldPrecision = precision;
     const fieldDefault = defaultValue;
@@ -84,11 +84,14 @@ function generateModifyColumnSQL(inputData, opts = {}) {
     const dbName = inputData[dbConf.dbName];
     const tableName = inputData[dbConf.tableName];
     const fieldName = inputData[dbConf.fieldName];
-    const fieldType = inputData[dbConf.fieldType];
-    const fieldNewType = inputData[dbConf.setNewFieldType];
+
+    const newBizFieldType = inputData[dbConf.setNewFieldType];
+    const { stdType, length, precision , defaultValue} = bizOptions[newBizFieldType];
     const fieldNullable = inputData[dbConf.setNullable];
-    const fieldLength = inputData[dbConf.fieldLength];
-    const fieldPrecision = inputData[dbConf.fieldPrecision];
+
+    const fieldNewType = stdType;
+    const fieldLength = length;
+    const fieldPrecision = precision;
 
     ///region 允许为空, 暂时只修改字段类型, 故废弃
     // const sql = `\n

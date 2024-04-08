@@ -1,7 +1,6 @@
 <script setup>
 import Main from './views/Main.vue';
 import logo from './assets/logo.gif'
-import SearchSelect from "@/components/SearchSelect.vue";
 </script>
 
 <template>

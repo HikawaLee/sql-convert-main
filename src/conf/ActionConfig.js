@@ -98,46 +98,11 @@ const actions = [
                     [tableConfKeys.PLACEHOLDER]: "",
                     [tableConfKeys.VALUE]: {
                         [tableConfKeys.COMPONENT_TYPE]: String,
-                        [tableConfKeys.DEFAULT]: dbConf.STDstr,
+                        [tableConfKeys.DEFAULT]: optionsKeyArr[0],
                     },
                     [tableConfKeys.OPTIONS]: optionsKeyArr,
                 },
-                {
-                    [tableConfKeys.COMPONENT_TYPE]: inputType.INPUT,
-                    [tableConfKeys.TITLE]: dbConf.fieldLength,
-                    [tableConfKeys.VALUE]: {
-                        [tableConfKeys.COMPONENT_TYPE]: Number,
-                        [tableConfKeys.DEFAULT]: 16, ////TODO 数据库的各种类型的长度限制该如何统一管理?
-                    },
-                    [tableConfKeys.DESC]: "请输入字段长度, 例如: 10",
-                    [tableConfKeys.RULES]: {
-                        [rulesType.dataType]: rulesType.numberRegex,
-                        [rulesType.min]: 1,
-                    }
-
-                },
-                {
-                  type: inputType.INPUT,
-                  title: dbConf.fieldPrecision,
-                    value: {
-                        type: Number,
-                        default: 0,
-                    },
-                    [tableConfKeys.RULES]: {
-                        [rulesType.dataType]: rulesType.numberRegex,
-                        [rulesType.min]: 0,
-                    }
-                },
-                {
-                    [tableConfKeys.COMPONENT_TYPE]: inputType.INPUT,
-                    [tableConfKeys.TITLE]: dbConf.setDefault,
-                    [tableConfKeys.VALUE]: {
-                        [tableConfKeys.COMPONENT_TYPE]: String,
-                        [tableConfKeys.DEFAULT]: "",
-                    },
-                    [tableConfKeys.DESC]: "Oracle数据库不支持设置默认值; MySQL数据库设置数值类型默认值时,会使用parseInt()函数转换,设置NULL时,请填入null字符串,另外不支持time相关类型设置默认值;更多限制见说明文档",
-                },
-                generateDbMetaConf()
+                // generateDbMetaConf()
             ],
     },
     {
@@ -177,6 +142,25 @@ const actions = [
             },
             {
                 [tableConfKeys.COMPONENT_TYPE]: inputType.INPUT,
+                [tableConfKeys.TITLE]: dbConf.hisTableName,
+                [tableConfKeys.VALUE]: {
+                    [tableConfKeys.COMPONENT_TYPE]: String,
+                    [tableConfKeys.DEFAULT]: "histest_user",
+                },
+                [tableConfKeys.DESC]: "请填入历史表的表名, 默认为表名前加his前缀, 例如: histest_user",
+                [tableConfKeys.PLACEHOLDER]: "表名不能含有空格",
+            },
+            {
+                [tableConfKeys.COMPONENT_TYPE]: inputType.TOGGLE,
+                [tableConfKeys.TITLE]: dbConf.genHistoryTable,
+                [tableConfKeys.VALUE]: {
+                    [tableConfKeys.COMPONENT_TYPE]: String,
+                    [tableConfKeys.DEFAULT]: "否",
+                },
+                [tableConfKeys.OPTIONS]: ["是", "否"],
+            },
+            {
+                [tableConfKeys.COMPONENT_TYPE]: inputType.INPUT,
                 [tableConfKeys.TITLE]: dbConf.fieldName,
                 [tableConfKeys.REQUIRED]: {
                     [tableConfKeys.REQUIRED_MSG]: "请填入字段名, 例如: test",
@@ -190,7 +174,7 @@ const actions = [
                     [rulesType.dataType]: rulesType.alphaRegex,
                 },
             },
-            generateDbMetaConf(),
+            // generateDbMetaConf(),
         ],
     },
     {
@@ -230,6 +214,25 @@ const actions = [
             },
             {
                 [tableConfKeys.COMPONENT_TYPE]: inputType.INPUT,
+                [tableConfKeys.TITLE]: dbConf.hisTableName,
+                [tableConfKeys.VALUE]: {
+                    [tableConfKeys.COMPONENT_TYPE]: String,
+                    [tableConfKeys.DEFAULT]: "histest_user",
+                },
+                [tableConfKeys.DESC]: "请填入历史表的表名, 默认为表名前加his前缀, 例如: histest_user",
+                [tableConfKeys.PLACEHOLDER]: "表名不能含有空格",
+            },
+            {
+                [tableConfKeys.COMPONENT_TYPE]: inputType.TOGGLE,
+                [tableConfKeys.TITLE]: dbConf.genHistoryTable,
+                [tableConfKeys.VALUE]: {
+                    [tableConfKeys.COMPONENT_TYPE]: String,
+                    [tableConfKeys.DEFAULT]: "否",
+                },
+                [tableConfKeys.OPTIONS]: ["是", "否"],
+            },
+            {
+                [tableConfKeys.COMPONENT_TYPE]: inputType.INPUT,
                 [tableConfKeys.TITLE]: dbConf.fieldName,
                 [tableConfKeys.REQUIRED]: {
                     [tableConfKeys.REQUIRED_MSG]: "请填入字段名, 例如: test",
@@ -252,25 +255,9 @@ const actions = [
                 [tableConfKeys.PLACEHOLDER]: "",
                 [tableConfKeys.VALUE]: {
                     [tableConfKeys.COMPONENT_TYPE]: String,
-                    [tableConfKeys.DEFAULT]: dbConf.STDstr,
+                    [tableConfKeys.DEFAULT]: optionsKeyArr[0],
                 },
-                [tableConfKeys.OPTIONS]: [
-                    dbConf.STDint2_t,
-                    dbConf.STDint3_t,
-                    dbConf.STDint4_t,
-                    dbConf.STDint6_t,
-                    dbConf.STDint8_t,
-                    dbConf.STDint10_t,
-                    dbConf.STDdouble,
-                    dbConf.STDchar,
-                    dbConf.STDstr,
-                    dbConf.STDdate,
-                    dbConf.STDtime,
-                    dbConf.STDdatetime,
-                    dbConf.STDtimestamp,
-                    dbConf.STDclob,
-                    dbConf.STDBlob,
-                ],
+                [tableConfKeys.OPTIONS]: optionsKeyArr,
             },
             {
                 [tableConfKeys.COMPONENT_TYPE]: inputType.SELECT,
@@ -281,53 +268,11 @@ const actions = [
                 [tableConfKeys.PLACEHOLDER]: "",
                 [tableConfKeys.VALUE]: {
                     [tableConfKeys.COMPONENT_TYPE]: String,
-                    [tableConfKeys.DEFAULT]: dbConf.STDstr,
+                    [tableConfKeys.DEFAULT]: optionsKeyArr[0],
                 },
-                [tableConfKeys.OPTIONS]: [
-                    dbConf.STDint2_t,
-                    dbConf.STDint3_t,
-                    dbConf.STDint4_t,
-                    dbConf.STDint6_t,
-                    dbConf.STDint8_t,
-                    dbConf.STDint10_t,
-                    dbConf.STDdouble,
-                    dbConf.STDchar,
-                    dbConf.STDstr,
-                    dbConf.STDdate,
-                    dbConf.STDtime,
-                    dbConf.STDdatetime,
-                    dbConf.STDtimestamp,
-                    dbConf.STDclob,
-                    dbConf.STDBlob,
-                ],
+                [tableConfKeys.OPTIONS]: optionsKeyArr,
             },
-            {
-                [tableConfKeys.COMPONENT_TYPE]: inputType.INPUT,
-                [tableConfKeys.TITLE]: dbConf.fieldLength,
-                [tableConfKeys.VALUE]: {
-                    [tableConfKeys.COMPONENT_TYPE]: Number,
-                    [tableConfKeys.DEFAULT]: 16, ////TODO 数据库的各种类型的长度限制该如何统一管理?
-                },
-                [tableConfKeys.DESC]: "请输入字段长度, 例如: 10",
-                [tableConfKeys.RULES]: {
-                    [rulesType.dataType]: rulesType.numberRegex,
-                    [rulesType.min]: 1,
-                }
-
-            },
-            {
-                type: inputType.INPUT,
-                title: dbConf.fieldPrecision,
-                value: {
-                    type: Number,
-                    default: 0,
-                },
-                [tableConfKeys.RULES]: {
-                    [rulesType.dataType]: rulesType.numberRegex,
-                    [rulesType.min]: 0,
-                }
-            },
-            generateDbMetaConf(),
+            // generateDbMetaConf(),
             {
                 [tableConfKeys.COMPONENT_TYPE]: inputType.TOGGLE,
                 [tableConfKeys.TITLE]: dbConf.setNullable,
@@ -402,7 +347,7 @@ const actions = [
                 },
                 [tableConfKeys.RULES]: {},
             },
-            generateDbMetaConf(),
+            // generateDbMetaConf(),
         ],
     },
 
@@ -457,7 +402,7 @@ const actions = [
                     [rulesType.dataType]: rulesType.alphaRegex,
                 },
             },
-            generateDbMetaConf(),
+            // generateDbMetaConf(),
 
         ],
 
@@ -498,7 +443,7 @@ const actions = [
                     [rulesType.dataType]: rulesType.alphaRegex
                 },
             },
-            generateDbMetaConf(),
+            // generateDbMetaConf(),
         ],
     },
     {
@@ -551,9 +496,7 @@ const actions = [
                     [rulesType.dataType]: rulesType.alphaRegex,
                 },
             },
-
-
-            generateDbMetaConf(),
+            // generateDbMetaConf(),
         ],
     },
 ]
@@ -561,7 +504,7 @@ const actions = [
 
 export default actions.map((action) => {
     return {
-        name: action.desc,
+        name: action[tableConfKeys.DESC],
         action: action
     }
 })
