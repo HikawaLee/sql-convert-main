@@ -74,5 +74,11 @@ export default {
     fieldExpression: '表达式',
     fieldFunction: '函数',
     fieldConstraint: '约束',
+    //endregion
+
+    //region SQL label
+    originTableSQL: '原表SQL',
+    historyTableSQL: '历史表SQL',
+
 
 }

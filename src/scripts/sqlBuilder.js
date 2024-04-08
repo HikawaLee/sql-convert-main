@@ -35,15 +35,12 @@ function generateSQL(inputData, actionType) {
         throw new Error('目标数据库类型不能为空');
     }
 
-
-
+    //如果生成历史表, 则历史表名不能为空
     const historyTable = userData[dbConf.hisTableName];
     const genHistoryTable = userData[dbConf.genHistoryTable];
     if(genHistoryTable && !historyTable) {
         throw new Error('生成历史表时, 历史表名不能为空');
     }
-
-
 
 
     //遍历数据库--sql模板Map获取到对应的SQL模板函数, 并执行生成SQL
@@ -53,16 +50,30 @@ function generateSQL(inputData, actionType) {
 
         if (sqlTemplate) {
             const sql = sqlTemplate(userData);
+
             if(historyTable && genHistoryTable === '是') {
                 const historySql = sqlTemplate({...userData, [dbConf.tableName]: historyTable});
                 result.push({
-                    sql,
-                    historySql,
+                    sqls: [
+                        {
+                            label: dbConf.originTableSQL,
+                            sql: sql,
+                        },
+                        {
+                            label: dbConf.historyTableSQL,
+                            sql: historySql,
+                        },
+                    ],
                     dbType: dbName,
                 });
             } else {
                 result.push({
-                    sql: sql,
+                    sqls: [
+                        {
+                            label: dbConf.originTableSQL,
+                            sql: sql,
+                        },
+                    ],
                     dbType: dbName,
                 });
             }
