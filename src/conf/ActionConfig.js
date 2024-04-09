@@ -3,7 +3,6 @@ import actionType from "@/types/actionType.js";
 import dbConf from "@/types/dbConf.js";
 import rulesType from "@/types/rulesType.js";
 import tableConfKeys from "@/types/tableConfKeys.js";
-import generateDbMetaConf from "@/conf/generateDbMetaConf.js";
 
 
 
@@ -102,7 +101,6 @@ const actions = [
                     },
                     [tableConfKeys.OPTIONS]: optionsKeyArr,
                 },
-                // generateDbMetaConf()
             ],
     },
     {
@@ -174,7 +172,7 @@ const actions = [
                     [rulesType.dataType]: rulesType.alphaRegex,
                 },
             },
-            // generateDbMetaConf(),
+
         ],
     },
     {
@@ -272,7 +270,7 @@ const actions = [
                 },
                 [tableConfKeys.OPTIONS]: optionsKeyArr,
             },
-            // generateDbMetaConf(),
+
             {
                 [tableConfKeys.COMPONENT_TYPE]: inputType.TOGGLE,
                 [tableConfKeys.TITLE]: dbConf.setNullable,
@@ -322,6 +320,25 @@ const actions = [
             },
             {
                 [tableConfKeys.COMPONENT_TYPE]: inputType.INPUT,
+                [tableConfKeys.TITLE]: dbConf.hisTableName,
+                [tableConfKeys.VALUE]: {
+                    [tableConfKeys.COMPONENT_TYPE]: String,
+                    [tableConfKeys.DEFAULT]: "histest_user",
+                },
+                [tableConfKeys.DESC]: "请填入历史表的表名, 默认为表名前加his前缀, 例如: histest_user",
+                [tableConfKeys.PLACEHOLDER]: "表名不能含有空格",
+            },
+            {
+                [tableConfKeys.COMPONENT_TYPE]: inputType.TOGGLE,
+                [tableConfKeys.TITLE]: dbConf.genHistoryTable,
+                [tableConfKeys.VALUE]: {
+                    [tableConfKeys.COMPONENT_TYPE]: String,
+                    [tableConfKeys.DEFAULT]: "否",
+                },
+                [tableConfKeys.OPTIONS]: ["是", "否"],
+            },
+            {
+                [tableConfKeys.COMPONENT_TYPE]: inputType.INPUT,
                 [tableConfKeys.TITLE]: dbConf.fieldName,
                 [tableConfKeys.REQUIRED]: {
                     [tableConfKeys.REQUIRED_MSG]: "请填入字段名, 例如: test",
@@ -347,7 +364,7 @@ const actions = [
                 },
                 [tableConfKeys.RULES]: {},
             },
-            // generateDbMetaConf(),
+
         ],
     },
 
@@ -386,7 +403,25 @@ const actions = [
                     [rulesType.dataType]: rulesType.alphaRegex
                 },
             },
-
+            {
+                [tableConfKeys.COMPONENT_TYPE]: inputType.INPUT,
+                [tableConfKeys.TITLE]: dbConf.hisTableName,
+                [tableConfKeys.VALUE]: {
+                    [tableConfKeys.COMPONENT_TYPE]: String,
+                    [tableConfKeys.DEFAULT]: "histest_user",
+                },
+                [tableConfKeys.DESC]: "请填入历史表的表名, 默认为表名前加his前缀, 例如: histest_user",
+                [tableConfKeys.PLACEHOLDER]: "表名不能含有空格",
+            },
+            {
+                [tableConfKeys.COMPONENT_TYPE]: inputType.TOGGLE,
+                [tableConfKeys.TITLE]: dbConf.genHistoryTable,
+                [tableConfKeys.VALUE]: {
+                    [tableConfKeys.COMPONENT_TYPE]: String,
+                    [tableConfKeys.DEFAULT]: "否",
+                },
+                [tableConfKeys.OPTIONS]: ["是", "否"],
+            },
             {
                 [tableConfKeys.COMPONENT_TYPE]: inputType.INPUT,
                 [tableConfKeys.TITLE]: dbConf.fieldName,
@@ -402,7 +437,6 @@ const actions = [
                     [rulesType.dataType]: rulesType.alphaRegex,
                 },
             },
-            // generateDbMetaConf(),
 
         ],
 
@@ -443,7 +477,25 @@ const actions = [
                     [rulesType.dataType]: rulesType.alphaRegex
                 },
             },
-            // generateDbMetaConf(),
+            {
+                [tableConfKeys.COMPONENT_TYPE]: inputType.INPUT,
+                [tableConfKeys.TITLE]: dbConf.hisTableName,
+                [tableConfKeys.VALUE]: {
+                    [tableConfKeys.COMPONENT_TYPE]: String,
+                    [tableConfKeys.DEFAULT]: "histest_user",
+                },
+                [tableConfKeys.DESC]: "请填入历史表的表名, 默认为表名前加his前缀, 例如: histest_user",
+                [tableConfKeys.PLACEHOLDER]: "表名不能含有空格",
+            },
+            {
+                [tableConfKeys.COMPONENT_TYPE]: inputType.TOGGLE,
+                [tableConfKeys.TITLE]: dbConf.genHistoryTable,
+                [tableConfKeys.VALUE]: {
+                    [tableConfKeys.COMPONENT_TYPE]: String,
+                    [tableConfKeys.DEFAULT]: "否",
+                },
+                [tableConfKeys.OPTIONS]: ["是", "否"],
+            },
         ],
     },
     {
@@ -483,6 +535,25 @@ const actions = [
             },
             {
                 [tableConfKeys.COMPONENT_TYPE]: inputType.INPUT,
+                [tableConfKeys.TITLE]: dbConf.hisTableName,
+                [tableConfKeys.VALUE]: {
+                    [tableConfKeys.COMPONENT_TYPE]: String,
+                    [tableConfKeys.DEFAULT]: "histest_user",
+                },
+                [tableConfKeys.DESC]: "请填入历史表的表名, 默认为表名前加his前缀, 例如: histest_user",
+                [tableConfKeys.PLACEHOLDER]: "表名不能含有空格",
+            },
+            {
+                [tableConfKeys.COMPONENT_TYPE]: inputType.TOGGLE,
+                [tableConfKeys.TITLE]: dbConf.genHistoryTable,
+                [tableConfKeys.VALUE]: {
+                    [tableConfKeys.COMPONENT_TYPE]: String,
+                    [tableConfKeys.DEFAULT]: "否",
+                },
+                [tableConfKeys.OPTIONS]: ["是", "否"],
+            },
+            {
+                [tableConfKeys.COMPONENT_TYPE]: inputType.INPUT,
                 [tableConfKeys.TITLE]: dbConf.fieldName,
                 [tableConfKeys.REQUIRED]: {
                     [tableConfKeys.REQUIRED_MSG]: "请填入字段名, 例如: test",
@@ -496,7 +567,6 @@ const actions = [
                     [rulesType.dataType]: rulesType.alphaRegex,
                 },
             },
-            // generateDbMetaConf(),
         ],
     },
 ]
