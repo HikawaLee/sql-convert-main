@@ -1,6 +1,6 @@
 <template>
 <!--  各类型SQL语句输出框-->
-  <template v-for="(sqlsWithDB, idx) in props.sqlList">
+  <template v-for="(sqlsWithDB, idx) in markdownSqlList">
     <div class="bg-white rounded-md">
       <div class="pt-2.5 text-center text-2xl">{{sqlsWithDB.dbType}}</div>
 
@@ -9,7 +9,7 @@
           <div class="divider divider-neutral">{{sql.label}}</div>
           <!--        复制按钮-->
           <div class="tooltip" :data-tip="copyTips" @mouseout="handleMouseOut">
-            <button class="my-btn hover:-translate-x-px" @click="handlerCopy(index)">
+            <button class="my-btn hover:-translate-x-px" @click="handlerCopy(idx, index)">
               <svg t="1710756661984" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2837" width="24" height="24"><path d="M808.768 197.312c10.432 0 17.408 6.912 17.408 17.344l0 485.568c0 10.368-6.976 17.344-17.408 17.344l-87.296 0c-19.136 0-34.944 15.552-34.944 34.624 0 19.136 15.808 34.688 34.944 34.688l104.768 0c38.464 0 69.824-31.168 69.824-69.312l0-520.32C896 159.168 864.64 128 826.176 128l-384 0c-38.4 0-69.824 31.232-69.824 69.312l0 34.688c0 19.072 15.68 34.688 34.88 34.688 19.2 0 34.88-15.616 34.88-34.688L442.112 214.656c0-10.432 6.976-17.344 17.408-17.344L808.768 197.312z" fill="#231F20" p-id="2838"></path><path d="M128 363.968l0 469.376C128 867.84 160.32 896 199.808 896l394.944 0c39.488 0 71.872-28.16 71.872-62.656L666.624 363.968c0-34.432-32.384-62.592-71.872-62.592L199.808 301.376C160.32 301.376 128 329.536 128 363.968z" fill="#515151" p-id="2839"></path></svg>
             </button>
           </div>
@@ -61,22 +61,33 @@ const props = defineProps({
 //endregion
 
 //region 添加```sql前缀和```后缀实现markdown语法高亮
-const markedSql = (sql) => {
-  return 'aaa'
-}
+// const markedSql = (sql) => {
+//   return '```sql\n' + sql + '\n```';
+// }
 //endregion
 
 const copyTips = ref('点击复制')
 
 
-const { toClipboard } = useClipboard()
-const copiedSql = computed(() => {
+
+const markdownSqlList = props.sqlList.map((sqlsWithDB) => {
+  return {
+    dbType: sqlsWithDB.dbType,
+    sqls: sqlsWithDB.sqls.map((sql) => {
+      return {
+        label: sql.label,
+        sql: '```sql\n' + sql.sql + '\n```'
+      }
+    })
+  }
 })
 
+const { toClipboard } = useClipboard()
+
 //region 复制按钮点击事件
-const handlerCopy = async (index) => {
+const handlerCopy = async (idx, index) => {
   try {
-    // await toClipboard(props.sqlList[index].sql)
+    await toClipboard(markdownSqlList[idx].sqls[index].sql.substring(7, markdownSqlList[idx].sqls[index].sql.length - 4))
     copyTips.value = '复制成功'
   } catch (err) {
     console.log(err)
