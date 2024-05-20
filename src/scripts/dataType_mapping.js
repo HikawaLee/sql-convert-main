@@ -10,6 +10,9 @@ const biz_dataType = (type, stdType, length, precision, defaultValue) => {
 }
 
 
+
+
+
 export default {
     HsAddress: biz_dataType('HsAddress', 'STDstr', 128, 0, 'strDefaultValue'),
     HsAmount: biz_dataType('HsAmount', 'STDdouble', 20, 4, 'doubleDefaultValue'),

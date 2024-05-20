@@ -458,6 +458,7 @@ function getType(type, L = dbConf.mysqlDecimalP, P = dbConf.mysqlDecimalD) {
  * @returns {string} 返回默认值
  */
 const getDefault = (type, defaultValue) => {
+    console.log("当前defaultValue = " + defaultValue)
     if(defaultValue === undefined || defaultValue === 'undefined'
         || defaultValue === '' || defaultValue === null
         || defaultValue === 'null' || defaultValue === 'NULL') { //FIXME 条件判断不严谨
@@ -471,12 +472,12 @@ const getDefault = (type, defaultValue) => {
         case dbConf.STDint8_t:
         case dbConf.STDint10_t:
         case dbConf.STDdouble:
-            defaultValue = parseFloat(defaultValue);
+            defaultValue = parseFloat(AresDefaultValBridge2Mysql(defaultValue));
             if(isNaN(defaultValue)) return '';
-            else return `DEFAULT ${defaultValue}`;
+            else return `DEFAULT ${AresDefaultValBridge2Mysql(defaultValue)}`;
         case dbConf.STDchar:
         case dbConf.STDstr:
-            return `DEFAULT ''${defaultValue}''`;
+            return `DEFAULT ''${AresDefaultValBridge2Mysql(defaultValue)}`;
         case dbConf.STDdate:
         case dbConf.STDtime:
         case dbConf.STDdatetime:
@@ -491,6 +492,53 @@ const getDefault = (type, defaultValue) => {
     }
 }
 
+
+
+
+
+const AresDefaultValBridge2Mysql = (AresDefaultVal) => {
+
+
+
+
+    if(AresDefaultVal === undefined || AresDefaultVal === 'undefined'
+        || AresDefaultVal === '' || AresDefaultVal === null
+        || AresDefaultVal === 'null' || AresDefaultVal === 'NULL') { //FIXME 条件判断不严谨
+        console.log("默认值处理出错, 默认值为空")
+    }
+
+
+
+
+    if(AresDefaultVal === 'int2_tDefaultValue' || 'int3_tDefaultValue' ||
+        'int4_tDefaultValue' || 'int6_tDefaultValue'
+        || 'int8_tDefaultValue' || 'int10_tDefaultValue'
+        || 'int12_tDefaultValue' || 'int14_tDefaultValue'
+        || 'int15_tDefaultValue' || 'int16_tDefaultValue'
+        || 'int27_tDefaultValue' || 'int32_tDefaultValue'
+        || 'int64_tDefaultValue') {
+        console.log(AresDefaultVal + ' int类型默认值处理')
+        return 0;
+    } else if(AresDefaultVal === 'doubleDefaultValue') {
+        console.log('double类型默认值处理')
+        return 0.0;
+    } else if(AresDefaultVal === 'charDefaultValue' || 'strDefaultValue') {
+        console.log('char/str类型默认值处理')
+        return '';
+    } else if(AresDefaultVal === 'charDefaultValue0') {
+        console.log('char0类型默认值处理')
+        return '0';
+    } else if(AresDefaultVal === 'charDefaultValue1') {
+        console.log('char1类型默认值处理')
+        return '1';
+    } else if(AresDefaultVal === 'ZERO_INT') {
+        return 0;
+    }
+
+
+
+
+}
 
 
 export default {
