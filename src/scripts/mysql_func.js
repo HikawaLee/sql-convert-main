@@ -1,4 +1,5 @@
 import dbConf from "../types/dbConf.js";
+import AresDefaultValType from "@/types/AresDefaultValType.js";
 /**
  * mysql生成添加字段的 SQL 语句
  * @param inputData 父组件收集到的数据
@@ -7,6 +8,7 @@ import dbConf from "../types/dbConf.js";
  */
 
 import bizOptions from '@/scripts/dataType_mapping.js';
+
 const generateAddColumnSQL = (inputData, opts = {}) => {
 
     const dbName = inputData[dbConf.dbName];
@@ -14,7 +16,7 @@ const generateAddColumnSQL = (inputData, opts = {}) => {
     const fieldName = inputData[dbConf.fieldName];
 
     const bizFieldType = inputData[dbConf.fieldType];
-    const { stdType, length, precision , defaultValue} = bizOptions[bizFieldType];
+    const {stdType, length, precision, defaultValue} = bizOptions[bizFieldType];
 
     const fieldType = stdType;
     const fieldLength = length;
@@ -22,8 +24,8 @@ const generateAddColumnSQL = (inputData, opts = {}) => {
     const fieldDefault = defaultValue;
 
 
-    if(fieldDefault === undefined || fieldDefault === 'undefined' || fieldDefault === '' || fieldDefault === null) {
-      return `\n
+    if (fieldDefault === undefined || fieldDefault === 'undefined' || fieldDefault === '' || fieldDefault === null) {
+        return `\n
         SELECT '${tableName}表中新增字段${fieldName}';
         SET @hs_sql = 'select 1 from dual;';
         SELECT
@@ -148,14 +150,14 @@ function generateModifyColumnSQL(inputData, opts = {}) {
     const tableName = inputData[dbConf.tableName];
     const fieldName = inputData[dbConf.fieldName];
     const newBizFieldType = inputData[dbConf.setNewFieldType];
-    const { stdType, length, precision} = bizOptions[newBizFieldType];
+    const {stdType, length, precision} = bizOptions[newBizFieldType];
 
     const fieldNullable = inputData[dbConf.setNullable];
 
     const fieldNewType = stdType;
     const fieldLength = length;
     const fieldPrecision = precision;
-    if(fieldNullable === '是') {
+    if (fieldNullable === '是') {
         return `\n
         SELECT '修改${tableName}表非主键字段${fieldName}允许为空';
         SET @hs_sql = 'select 1 from dual;';
@@ -213,8 +215,6 @@ function generateModifyColumnSQL(inputData, opts = {}) {
 }
 
 
-
-
 /**
  * mysql生成添加索引的 SQL 语句
  * @param inputData 父组件收集到的数据
@@ -249,9 +249,6 @@ function generateAddIndexSQL(inputData, opts = {}) {
         \n`;
     return sql;
 }
-
-
-
 
 
 /**
@@ -424,7 +421,7 @@ function getType(type, L = dbConf.mysqlDecimalP, P = dbConf.mysqlDecimalD) {
         case dbConf.STDint10_t:
             return 'INT';
         case dbConf.STDdouble:
-            if(L > 65 || L < 1 || P < 0 || P > 30 || P > L) {
+            if (L > 65 || L < 1 || P < 0 || P > 30 || P > L) {
                 console.log(`L's type is ${typeof L} , P's type is ${typeof P}\n`)
                 console.log(`L > 65 ? ${L > 65} , L < 1 ? ${L < 1} , P < 0 ? ${P < 0} , P > 30 ? ${P > 30} , P > L ? ${P > L}\n`)
                 console.log(`L is ${L} , P is ${P} ,Invalid input. Please provide valid type, L, and P values.`);
@@ -458,8 +455,8 @@ function getType(type, L = dbConf.mysqlDecimalP, P = dbConf.mysqlDecimalD) {
  * @returns {string} 返回默认值
  */
 const getDefault = (type, defaultValue) => {
-    console.log("当前defaultValue = " + defaultValue)
-    if(defaultValue === undefined || defaultValue === 'undefined'
+    console.log(`当前type=${type}\ndefaultValue = ` + defaultValue)
+    if (defaultValue === undefined || defaultValue === 'undefined'
         || defaultValue === '' || defaultValue === null
         || defaultValue === 'null' || defaultValue === 'NULL') { //FIXME 条件判断不严谨
         return 'DEFAULT NULL';
@@ -472,18 +469,18 @@ const getDefault = (type, defaultValue) => {
         case dbConf.STDint8_t:
         case dbConf.STDint10_t:
         case dbConf.STDdouble:
-            defaultValue = parseFloat(AresDefaultValBridge2Mysql(defaultValue));
-            if(isNaN(defaultValue)) return '';
-            else return `DEFAULT ${AresDefaultValBridge2Mysql(defaultValue)}`;
+            defaultValue = 0;
+            if (isNaN(defaultValue)) return '';
+            else return `DEFAULT 0`;
         case dbConf.STDchar:
         case dbConf.STDstr:
-            return `DEFAULT ''${AresDefaultValBridge2Mysql(defaultValue)}`;
+            return `DEFAULT ''''`;
         case dbConf.STDdate:
         case dbConf.STDtime:
         case dbConf.STDdatetime:
         case dbConf.STDtimestamp:
-           console.warn('时间类型默认值暂不支持,因为标准字段类型为字符串,故无法使用current_timestamp等关键字,请手动添加默认值')
-            return '';
+            console.warn('时间类型默认值暂不支持,因为标准字段类型为字符串,故无法使用current_timestamp等关键字,请手动添加默认值')
+            return '\'\'';
         case dbConf.STDclob:
         case dbConf.STDBlob:
             return 'DEFAULT NULL';
@@ -493,52 +490,33 @@ const getDefault = (type, defaultValue) => {
 }
 
 
-
-
-
-const AresDefaultValBridge2Mysql = (AresDefaultVal) => {
-
-
-
-
-    if(AresDefaultVal === undefined || AresDefaultVal === 'undefined'
-        || AresDefaultVal === '' || AresDefaultVal === null
-        || AresDefaultVal === 'null' || AresDefaultVal === 'NULL') { //FIXME 条件判断不严谨
-        console.log("默认值处理出错, 默认值为空")
-    }
-
-
-
-
-    if(AresDefaultVal === 'int2_tDefaultValue' || 'int3_tDefaultValue' ||
-        'int4_tDefaultValue' || 'int6_tDefaultValue'
-        || 'int8_tDefaultValue' || 'int10_tDefaultValue'
-        || 'int12_tDefaultValue' || 'int14_tDefaultValue'
-        || 'int15_tDefaultValue' || 'int16_tDefaultValue'
-        || 'int27_tDefaultValue' || 'int32_tDefaultValue'
-        || 'int64_tDefaultValue') {
-        console.log(AresDefaultVal + ' int类型默认值处理')
-        return 0;
-    } else if(AresDefaultVal === 'doubleDefaultValue') {
-        console.log('double类型默认值处理')
-        return 0.0;
-    } else if(AresDefaultVal === 'charDefaultValue' || 'strDefaultValue') {
-        console.log('char/str类型默认值处理')
-        return '';
-    } else if(AresDefaultVal === 'charDefaultValue0') {
-        console.log('char0类型默认值处理')
-        return '0';
-    } else if(AresDefaultVal === 'charDefaultValue1') {
-        console.log('char1类型默认值处理')
-        return '1';
-    } else if(AresDefaultVal === 'ZERO_INT') {
-        return 0;
-    }
-
-
-
-
-}
+// function AresDefaultValBridge2Mysql (AresDefaultVal) {
+//     switch (AresDefaultVal) {
+//         case AresDefaultValType.int2_tDefaultValue:
+//         case AresDefaultValType.int3_tDefaultValue:
+//         case AresDefaultValType.int4_tDefaultValue:
+//         case AresDefaultValType.int6_tDefaultValue:
+//         case AresDefaultValType.int8_tDefaultValue:
+//         case AresDefaultValType.int10_tDefaultValue:
+//         case AresDefaultValType.int12_tDefaultValue:
+//         case AresDefaultValType.int14_tDefaultValue:
+//         case AresDefaultValType.int16_tDefaultValue:
+//         case AresDefaultValType.int27_tDefaultValue:
+//         case AresDefaultValType.int32_tDefaultValue:
+//         case AresDefaultValType.int64_tDefaultValue:
+//         case AresDefaultValType.ZERO_INT:
+//             return 0;
+//         case AresDefaultValType.doubleDefaultValue:
+//             return 0.0;
+//         case AresDefaultValType.charDefaultValue:
+//         case AresDefaultValType.strDefaultValue:
+//             return '';
+//         case AresDefaultValType.charDefaultValue0:
+//             return '0';
+//         case AresDefaultValType.charDefaultValue1:
+//             return '1';
+//     }
+// }
 
 
 export default {

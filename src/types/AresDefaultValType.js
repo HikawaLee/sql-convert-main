@@ -1,7 +1,27 @@
 export default {
+    int2_tDefaultValue: 'int2_tDefaultValue',
+    int3_tDefaultValue: 'int3_tDefaultValue',
+    int4_tDefaultValue: 'int4_tDefaultValue',
+    int6_tDefaultValue: 'int6_tDefaultValue',
     int8_tDefaultValue: 'int8_tDefaultValue',
     int10_tDefaultValue: 'int8_tDefaultValue',
-
-
-
+    int12_tDefaultValue: 'int12_tDefaultValue',
+    int14_tDefaultValue: 'int14_tDefaultValue',
+    int15_tDefaultValue: 'int15_tDefaultValue',
+    int16_tDefaultValue: 'int16_tDefaultValue',
+    int27_tDefaultValue: 'int27_tDefaultValue',
+    int32_tDefaultValue: 'int32_tDefaultValue',
+    int64_tDefaultValue: 'int64_tDefaultValue',
+    doubleDefaultValue: 'doubleDefaultValue',
+    charDefaultValue: 'charDefaultValue',
+    charDefaultValue0: 'charDefaultValue0',
+    charDefaultValue1: 'charDefaultValue1',
+    strDefaultValue: 'strDefaultValue',
+    datetimeDefaultValue: 'datetimeDefaultValue',
+    clobDefaultValue: 'clobDefaultValue',
+    blobDefaultValue: 'blobDefaultValue',
+    packerDefault: 'packerDefault',
+    unpackerDefault: 'unpackerDefault',
+    voidDefaultValue: 'voidDefaultValue',
+    ZERO_INT: 'ZERO_INT',
 }
