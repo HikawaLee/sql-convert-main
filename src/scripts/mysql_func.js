@@ -403,7 +403,7 @@ function generateModifyPrimaryKeySQL(inputData, opts = {}) {
  * @param {number} P 表示有效位数的精度。 P 的范围是 1 到 65
  * @return {string} 返回 MySQL 的类型
  */
-function getType(type, L = dbConf.mysqlDecimalP, P = dbConf.mysqlDecimalD) {
+export function getType(type, L = dbConf.mysqlDecimalP, P = dbConf.mysqlDecimalD) {
     L = parseInt(L);
     P = parseInt(P);
     // 参数校验
