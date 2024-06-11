@@ -468,13 +468,12 @@ const getDefault = (type, defaultValue) => {
         case dbConf.STDint6_t:
         case dbConf.STDint8_t:
         case dbConf.STDint10_t:
+            return defaultValueHelper(defaultValue, 0);
         case dbConf.STDdouble:
-            defaultValue = 0;
-            if (isNaN(defaultValue)) return '';
-            else return `DEFAULT 0`;
+            return defaultValueHelper(defaultValue, 0.0.toFixed(1));
         case dbConf.STDchar:
         case dbConf.STDstr:
-            return `DEFAULT ''''`;
+            return defaultValueHelper(defaultValue, '\'\'');
         case dbConf.STDdate:
         case dbConf.STDtime:
         case dbConf.STDdatetime:
@@ -490,34 +489,57 @@ const getDefault = (type, defaultValue) => {
 }
 
 
-// function AresDefaultValBridge2Mysql (AresDefaultVal) {
-//     switch (AresDefaultVal) {
-//         case AresDefaultValType.int2_tDefaultValue:
-//         case AresDefaultValType.int3_tDefaultValue:
-//         case AresDefaultValType.int4_tDefaultValue:
-//         case AresDefaultValType.int6_tDefaultValue:
-//         case AresDefaultValType.int8_tDefaultValue:
-//         case AresDefaultValType.int10_tDefaultValue:
-//         case AresDefaultValType.int12_tDefaultValue:
-//         case AresDefaultValType.int14_tDefaultValue:
-//         case AresDefaultValType.int16_tDefaultValue:
-//         case AresDefaultValType.int27_tDefaultValue:
-//         case AresDefaultValType.int32_tDefaultValue:
-//         case AresDefaultValType.int64_tDefaultValue:
-//         case AresDefaultValType.ZERO_INT:
-//             return 0;
-//         case AresDefaultValType.doubleDefaultValue:
-//             return 0.0;
-//         case AresDefaultValType.charDefaultValue:
-//         case AresDefaultValType.strDefaultValue:
-//             return '';
-//         case AresDefaultValType.charDefaultValue0:
-//             return '0';
-//         case AresDefaultValType.charDefaultValue1:
-//             return '1';
-//     }
-// }
+function AresDefaultValBridge2Mysql(AresDefaultVal) {
+    switch (AresDefaultVal) {
+        case AresDefaultValType.int2_tDefaultValue:
+        case AresDefaultValType.int3_tDefaultValue:
+        case AresDefaultValType.int4_tDefaultValue:
+        case AresDefaultValType.int6_tDefaultValue:
+        case AresDefaultValType.int8_tDefaultValue:
+        case AresDefaultValType.int10_tDefaultValue:
+        case AresDefaultValType.int12_tDefaultValue:
+        case AresDefaultValType.int14_tDefaultValue:
+        case AresDefaultValType.int16_tDefaultValue:
+        case AresDefaultValType.int27_tDefaultValue:
+        case AresDefaultValType.int32_tDefaultValue:
+        case AresDefaultValType.int64_tDefaultValue:
+        case AresDefaultValType.ZERO_INT:
+            console.log('now switch to ' + AresDefaultValType.int10_tDefaultValue)
+            console.log('matched, return 0')
+            return 0;
+        case AresDefaultValType.doubleDefaultValue:
+            console.log('matched, return 0.0')
+            return 0.0.toFixed(1);
+        case AresDefaultValType.charDefaultValue:
+        case AresDefaultValType.strDefaultValue:
+            console.log('matched, return empty string')
+            return '\'\'';
+        case AresDefaultValType.charDefaultValue0:
+            console.log('matched, return \'\'0\'\'')
+            return '\'0\'';
+        case AresDefaultValType.charDefaultValue1:
+            console.log('matched, return \'\'1\'\'')
+            return '\'1\'';
+        default:
+            console.log('not matched, return undefined')
+            return undefined;
+    }
+}
 
+
+const defaultValueHelper = (defaultValue, stdDefaultValue) => {
+    console.log('typeof stdDefaultValue is ' + typeof stdDefaultValue + '\t stdDefaultValue is ' + stdDefaultValue)
+    const AresDefaultValValidate = AresDefaultValBridge2Mysql(defaultValue);
+    if (!(stdDefaultValue === AresDefaultValValidate)) throw new Error(`stdDefaultValue is ${stdDefaultValue},
+    \tAresDefaultValValidate is ${AresDefaultValValidate}
+    \nAresStudio字段默认值配置有误, 暂时以根据字段名推断得到的默认值为准`)
+
+    if(typeof stdDefaultValue === 'string') {
+        console.log(`defaultValueHelper: stdDefaultValue is ${stdDefaultValue}, 字符串可能发生转义, 请注意`)
+        return `DEFAULT '${stdDefaultValue}'`;
+    }
+    return `DEFAULT ${stdDefaultValue}`;
+}
 
 export default {
     generateAddColumnSQL,

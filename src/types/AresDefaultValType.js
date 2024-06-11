@@ -4,7 +4,7 @@ export default {
     int4_tDefaultValue: 'int4_tDefaultValue',
     int6_tDefaultValue: 'int6_tDefaultValue',
     int8_tDefaultValue: 'int8_tDefaultValue',
-    int10_tDefaultValue: 'int8_tDefaultValue',
+    int10_tDefaultValue: 'int10_tDefaultValue',
     int12_tDefaultValue: 'int12_tDefaultValue',
     int14_tDefaultValue: 'int14_tDefaultValue',
     int15_tDefaultValue: 'int15_tDefaultValue',
